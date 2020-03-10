@@ -44,7 +44,6 @@
     font-weight: bold;
     text-decoration: none;
     color: gray;
-    font-family: Quattrocento;
   }
   .navbar li a:hover {
     color: #404040;

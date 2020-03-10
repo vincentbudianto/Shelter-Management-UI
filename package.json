@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "chart.js": "^2.9.3",
     "mime": "^2.4.4",
     "mime-types": "^2.1.26",
     "moment": "^2.24.0",
