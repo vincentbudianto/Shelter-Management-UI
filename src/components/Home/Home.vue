@@ -2,28 +2,64 @@
   <div class="bg">
     <div class="content">
       <h1>Home</h1>
-      <canvas id="victim-by-gender" height=80% width=70%></canvas>
-      <canvas id="victim-by-age" height=80% width=70%></canvas>
-      <canvas id="victim-by-condition" height=80% width=70%></canvas>
+      <l-map 
+        :center="[-23.752961, -57.854357]" 
+        :zoom="6" 
+        style="height: 500px;" 
+        :options="mapOptions">
+          <l-choropleth-layer 
+            :data="pyDepartmentsData" 
+            titleKey="department_name" 
+            idKey="department_id" 
+            :value="value" 
+            :extraValues="extraValues" 
+            geojsonIdKey="dpto" 
+            :geojson="paraguayGeojson" 
+            :colorScale="colorScale">
+              <template slot-scope="props">
+                <l-info-control 
+                  :item="props.currentItem" 
+                  :unit="props.unit" 
+                  title="Department" 
+                  placeholder="Hover over a department"/>
+                <l-reference-chart 
+                  title="Girls school enrolment" 
+                  :colorScale="colorScale" 
+                  :min="props.min" 
+                  :max="props.max" 
+                  position="topright"/>
+              </template>
+          </l-choropleth-layer>
+      </l-map>
+      <canvas id="victim-by-gender"></canvas>
+      <canvas id="victim-by-age"></canvas>
+      <canvas id="victim-by-condition"></canvas>
     </div>
   </div>
 </template>
 
 <style scoped>
-h1 {
-  color: blue
-}
-.bg {
-  background-color: #d9d9d9;
-}
-.content {
-  max-width: 960px;
-  margin: auto;
-  background-color: white;
-}
+  @import "~leaflet/dist/leaflet.css";
+  h1 {
+    color: blue
+  }
+  .bg {
+    background-color: #d9d9d9;
+  }
+  .content {
+    max-width: 960px;
+    margin: auto;
+    background-color: white;
+  }
 </style>
 
 <script>
+  import { InfoControl, ReferenceChart, ChoroplethLayer } from 'vue-choropleth'
+  import { geojson } from '../../data/py-departments-geojson'
+  import paraguayGeojson from '../../data/paraguay.json'
+  import { pyDepartmentsData } from '../../data/py-departments-data'
+  import {LMap} from 'vue2-leaflet';
+
   var victimTemplateChart = {
     type: 'horizontalBar',
     data: {
@@ -33,7 +69,7 @@ h1 {
           label: '',
           data: [],
           backgroundColor: [],
-          borderWidth: 3
+          borderWidth: 1.5
         }
       ]
     },
@@ -72,13 +108,36 @@ h1 {
       label: ["Hidup", "Meninggal"],
       count: [55, 30]
     }
-  }
+  } 
+
 
 export default {
+  components: { 
+    LMap,
+    'l-info-control': InfoControl, 
+    'l-reference-chart': ReferenceChart, 
+    'l-choropleth-layer': ChoroplethLayer 
+  },
+
   data () {
     return {
       victimTemplateChart,
-      victimData
+      victimData,
+      pyDepartmentsData,
+      paraguayGeojson,
+      colorScale: ["e7d090", "e9ae7b", "de7062"],
+      value: {
+        key: "amount_w",
+        metric: "% girls"
+      },
+      extraValues: [{
+        key: "amount_m",
+        metric: "% boys"
+      }],
+      mapOptions: {
+        attributionControl: false
+      },
+      currentStrokeColor: '3d3213'
     }
   },
 
