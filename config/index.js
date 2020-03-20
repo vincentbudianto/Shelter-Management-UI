@@ -2,6 +2,7 @@
 
 // see http://vuejs-templates.github.io/webpack for documentation.
 const path = require('path')
+var mime = require('mime-types')
 
 module.exports = {
   build: {
@@ -31,7 +32,7 @@ module.exports = {
   },
   dev: {
     env: require('./dev.env'),
-    port: 8080,
+    port: 8000,
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
