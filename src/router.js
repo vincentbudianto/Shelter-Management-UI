@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Vuelayers from 'vuelayers'
+import 'vuelayers/lib/style.css'
 
 // Page content
 import Home from '@/components/Home/Home'
@@ -13,6 +15,9 @@ import Details from '@/components/Details/Details'
 // import PageNotFound from '@/components/PageNotFound'
 
 Vue.use(Router)
+Vue.use(Vuelayers, {
+  dataProjection: 'EPSG:4326',
+})
 
 export default new Router({
   routes: [
