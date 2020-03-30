@@ -3,7 +3,7 @@
     <div class="content">
       <div class="box" id="identity">
         <img v-bind:src="'data:image/png;base64,' +detail.Photo">
-        <table class="details">
+        <table class="details" id="details">
           <col width="10%">
           <col width="5%">
           <tr><td>NIK</td><td>:</td><td>{{detail.NIK}}</td></tr>
@@ -28,20 +28,24 @@
             <td>{{location.Timestamp | moment}}</td>
           </tr>
         </table>
+        <button type="button" class="btn" @click="showLocationModal">
+                Change
+        </button>
       </div>
       <div class="box" id="condAndNeeds">
         <table class="details" id="conditions">
           <col width="20%">
-          <col width="60%">
+          <col width="45%">
           <tr>
             <td>Condition</td>
             <td>Description</td>
+            <td>Status</td>
             <td>Time</td>
           </tr>
           <tr v-for="condition in conditions">
             <td>{{condition.Name}}</td>
             <td>{{condition.Desc}}</td>
-
+            <td>{{condition.Status}}</td>
             <td>{{condition.Timestamp | moment}}</td>
           </tr>
         </table>
@@ -56,8 +60,17 @@
             <td>{{need.Timestamp | moment}}</td>
           </tr>
         </table>
+        <button type="button" class="btn" @click="showConditionModal">
+                Change
+        </button>
+        <button type="button" class="btn" @click="showNeedsModal">
+                Change
+        </button>
       </div>
     </div>
+    <modalLocation v-show="locationModalVisible" @close="closeLocationModal"/>
+    <modalCondition v-show="conditionModalVisible" @close="closeConditionModal"/>
+    <modalNeeds v-show="needsModalVisible" @close="closeNeedsModal"/>
   </div>
 </template>
 
@@ -67,19 +80,20 @@ h1 {
 }
 table{
   background-color: white;
-  padding: 20px;
-  margin-left: 20px;
-  margin-right: 20px;
+  padding: 20%;
+  margin-left: 1%;
+  margin-right: 1%;
   border-radius: 25px;
   width: 100%
 }
 td{
-  padding: 10px;
+  padding: 2%;
   font-family: Quattrocento;
 }
 img{
   align-self: center;
-  max-width: 170px;
+  max-width: 25%;
+  margin: 2%;
 }
 
 .bg{
@@ -98,23 +112,36 @@ img{
   height: 40%;
   background-color: #C4C4C4;
   border-radius: 25px;
-  padding: 25px;
-  margin: 20px;
+  padding: 2%;
+  margin: 2%;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.btn{
+  margin: 1%;
+  width: 48%;
 }
 
 #condAndNeeds{
-  width: 92%;
+  width: 93%;
   height: 100%;
 }
 #conditions{
   height: 50%;
+  width: 48%
+}
+#details{
+  width: 70%;
 }
 </style>
 
 <script>
 import axios from 'axios';
 import moment from 'moment';
+import modalLocation from './ModalLocation.vue';
+import modalCondition from './ModalCondition.vue';
+import modalNeeds from './ModalNeeds.vue';
 
 export default {
   data() {
@@ -123,8 +150,16 @@ export default {
       conditions: [],
       needs : [],
       locations:[],
-      errors: []
+      errors: [],
+      locationModalVisible: false,
+      conditionModalVisible: false,
+      needsModalVisible: false
     }
+  },
+  components: {
+    modalLocation,
+    modalCondition,
+    modalNeeds
   },
 
   mounted(){
@@ -172,6 +207,28 @@ export default {
         this.errors.push(e)
       })
     },
+
+    showLocationModal(){
+      this.locationModalVisible = true
+    },
+    closeLocationModal(){
+      this.locationModalVisible = false
+    },
+
+    showConditionModal(){
+      this.conditionModalVisible = true
+    },
+    closeConditionModal(){
+      this.conditionModalVisible = false
+    },
+
+    showNeedsModal(){
+      this.needsModalVisible = true
+    },
+    closeNeedsModal(){
+      this.needsModalVisible = false
+    }
+
   },
   filters:{
     moment: function(date){
