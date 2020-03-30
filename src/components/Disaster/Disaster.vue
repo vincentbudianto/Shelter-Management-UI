@@ -6,7 +6,7 @@
       <v-row v-for="disaster in disasterList" v-bind:key="disaster.DisasterID">
         <a>Nama Bencana: {{disaster.Name}}<br/>
         Skala Bencana: {{disaster.Scale}}<br/>
-        Koordinat Bencana: {{disaster.Latitude + "," + disaster.Longitude}}</a>
+        Koordinat Bencana: {{disaster.Latitude + "," + disaster.Longitude}}<br/><br/></a>
       </v-row>
     </v-col >
     <v-btn v-if="!inputMode" v-on:click="addDisasterClick">Tambah Bencana</v-btn>

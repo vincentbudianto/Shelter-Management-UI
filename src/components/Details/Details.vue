@@ -140,6 +140,7 @@ export default {
       .then(response => {
         // JSON responses are automatically parsed.
         this.detail = response.data.data;
+        console.log(response.data.data)
       })
       .catch(e => {
         this.errors.push(e)
@@ -149,6 +150,7 @@ export default {
       axios.get('http://localhost:3000/victim/history/condition?id='+ this.$route.params.id)
       .then(response =>{
         this.conditions = response.data.data;
+        console.log(response.data.data)
       })
       .catch(e=>{
         this.errors.push(e)
@@ -158,6 +160,7 @@ export default {
       axios.get('http://localhost:3000/victim/history/need?id=' + this.$route.params.id)
       .then(response =>{
         this.needs = response.data.data;
+        console.log(response.data.data)
       })
       .catch(e =>{
         this.errors.push(e)
@@ -167,6 +170,7 @@ export default {
       axios.get('http://localhost:3000/victim/history/shelter?id=' + this.$route.params.id)
       .then(response =>{
         this.locations = response.data.data;
+        console.log(response.data.data)
       })
       .catch(e =>{
         this.errors.push(e)
