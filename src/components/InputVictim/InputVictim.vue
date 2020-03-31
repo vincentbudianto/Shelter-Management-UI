@@ -17,6 +17,9 @@
                 <span>Umur</span><br>
                 <input type="text" id="umur_placeholder" name="umur" value="">
                 <br>
+                <span>ID Shelter</span><br>
+                <input type="text" id="idshelter_placeholder" name="idshelter" value="">
+                <br>
                 <span>Foto</span><br>
                 <div class="upload-btn-wrapper">
                     <input type="file" id="real-upload-button" name="foto"/>
