@@ -8,6 +8,9 @@
                 <span>NIK</span><br>
                 <input type="text" id="nik_placeholder" name="nik" value="">
                 <br>
+                <span>No. KK</span><br>
+                <input type="text" id="nokk_placeholder" name="nokk" value="">
+                <br>
                 <span>Nama</span><br>
                 <input type="text" id="nama_placeholder" name="nama" value="">
                 <br>
