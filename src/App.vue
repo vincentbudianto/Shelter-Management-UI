@@ -13,17 +13,30 @@
             <li class="nav-item active">
               <router-link class="nav-link text-light" :to="links[2].to">{{ links[2].name }}</router-link>
             </li>
+
             <li class="nav-item">
               <router-link class="nav-link text-light" :to="links[3].to">{{ links[3].name }}</router-link>
             </li>
+
             <li class="nav-item">
               <router-link class="nav-link text-light" :to="links[4].to">{{ links[4].name }}</router-link>
             </li>
           </ul>
-          <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Type a victim's name" aria-label="Search">
-            <button class="btn my-2 my-sm-0" type="submit">Search</button>
-          </form>
+
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Type a victim's name" aria-label="Search">
+                <button class="nav-link text-light" type="submit">Search</button>
+              </form>
+            </li>
+
+            <li class="nav-item">
+                <button class="nav-link text-light" type="button" @click="showModal">Add Shelter</button>
+            </li>
+          </ul>
+
+          <modal v-show="isModalVisible" @close="closeModal"/>
         </div>
       </nav>
       <main>
@@ -56,38 +69,53 @@
 </style>
 
 <script>
-export default {
-  data: () => ({
-    links: [
-      {
-        name: 'Disaster Management System',
-        to: '/'
+  import modal from './components/Shelter/AddShelter.vue';
+
+  export default {
+    name: 'app',
+    components: {
+      modal,
+    },
+    methods: {
+      showModal() {
+        this.isModalVisible = true;
       },
-      {
-        name: 'Search',
-        to: '/search'
-      },
-      {
-        name: 'Disaster',
-        to: '/disaster'
-      },
-      {
-        name: 'Shelter',
-        to: '/shelter'
-      },
-      {
-        name: 'Login',
-        to: '/login'
+      closeModal() {
+        this.isModalVisible = false;
       }
-    ],
-    icons: [
-      {
-        icon: 'home',
-        link: '/static/assets/Red Cross Icon.png'
-      }
-    ]
-  })
-}
+    },
+    data: () => ({
+      isModalVisible: false,
+      links: [
+        {
+          name: 'Disaster Management System',
+          to: '/'
+        },
+        {
+          name: 'Search',
+          to: '/search'
+        },
+        {
+          name: 'Disaster',
+          to: '/disaster'
+        },
+        {
+          name: 'Shelter',
+          to: '/shelter'
+        },
+        {
+          name: 'Login',
+          to: '/login'
+        }
+      ],
+      icons: [
+        {
+          icon: 'home',
+          link: '/static/assets/Red Cross Icon.png'
+        }
+      ],
+    })
+  }
 </script>
 <!--
 <template>
