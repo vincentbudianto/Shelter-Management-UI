@@ -5,9 +5,11 @@
       <h4>Disaster List</h4>
       <v-row class="row" v-for="disaster in disasterList" v-bind:key="disaster.DisasterID">
         <v-col>
-          <a>Nama Bencana: {{disaster.Name}}<br/>
-             Skala Bencana: {{disaster.Scale}}<br/>
-             Koordinat Bencana: {{disaster.Latitude + "," + disaster.Longitude}}</a>
+          <a>
+            Nama Bencana: {{disaster.Name}}<br/>
+            Skala Bencana: {{disaster.Scale}}<br/>
+            Koordinat Bencana: {{disaster.Latitude + "," + disaster.Longitude}}
+          </a>
         </v-col>
         <v-col>
           <v-btn v-on:click="showModal(disaster)">Update Disaster</v-btn>
