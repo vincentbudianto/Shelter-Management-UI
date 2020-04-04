@@ -12,31 +12,22 @@
 
         <section class="modal-body" id="modalDescription">
           <slot name="body">
-			<form>
-				<p class="h4 text-center py-4">Update Disaster</p>
-
-				<label for="defaultFormCardNameEx" class="grey-text font-weight-light">id</label>
-				<input type="text" id="defaultFormCardNameEx" class="form-control">
-
-				<br>
-
-				<label for="defaultFormCardEmailEx" class="grey-text font-weight-light">Disaster Title</label>
-				<input type="email" id="defaultFormCardEmailEx" class="form-control">
-
-				<br>
-
-				<label for="defaultFormCardEmailEx" class="grey-text font-weight-light">Disaster Description</label>
-				<input type="email" id="defaultFormCardEmailEx" class="form-control">
-
-				<br>
-
-				<label for="defaultFormCardEmailEx" class="grey-text font-weight-light">Disaster Status</label>
-				<input type="email" id="defaultFormCardEmailEx" class="form-control">
-
-				<div class="text-center py-4 mt-3">
-					<button class="btn btn-outline-purple" type="submit">Update<i class="far fa-paper-plane ml-2"></i></button>
-				</div>
-			</form>
+            <p class="h4 text-center py-4">Update disaster {{disaster.Name}}</p>
+            <v-form ref="form">
+              <v-text-field
+                v-model="inputDescription"
+                label="Disaster Description"
+              ></v-text-field>
+            </v-form>
+            <v-form ref="form">
+              <v-text-field
+                v-model="inputStatus"
+                label="Disaster Status"
+              ></v-text-field>
+            </v-form>
+            <div class="text-center py-4 mt-3">
+              <v-btn v-on:click="submitUpdateDisasterClick">Update</v-btn>
+            </div>
           </slot>
         </section>
       </div>
@@ -69,8 +60,7 @@
   .modal-header {
     padding: 10px;
     display: flex;
-    border-bottom: 1px solid #eeeeee;
-    color: #4AAE9B;
+    border-bottom: 1px solid #232322;
     justify-content: flex-end;
   }
 
@@ -83,21 +73,58 @@
   .btn-close {
     border: none;
     font-size: 20px;
-	padding-right: 10px;
+	  padding-right: 10px;
     cursor: pointer;
     font-weight: bold;
-    color: #4AAE9B;
+    color: #B7141F;
     background: transparent;
   }
 </style>
 
 <script>
+  import axios from 'axios';
+
   export default {
     name: 'modal',
+    props: ['disaster'],
+    data () {
+      var data = {
+        inputId: "",
+        inputTitle: "",
+        inputDescription: "",
+        inputStatus: ""
+      }
+
+      return data;
+    },
+    watch: {
+      disaster: {
+        handler() {
+          this.inputId = this.disaster.DisasterID;
+          this.inputTitle = this.disaster.Name;
+        }
+      }
+    },
     methods: {
       close() {
         this.$emit('close');
       },
-    },
+      submitUpdateDisasterClick: function (event) {
+        var inputDisasterPostData = {
+          "id": this.inputId,
+          "disasterTitle": this.inputTitle,
+          "disasterDesc": this.inputDescription,
+          "disasterStatus": this.inputStatus
+        }
+
+        axios.post('http://localhost:3000/disaster/history/condition', inputDisasterPostData)
+        .then(response => {
+          console.log(response)
+        })
+        .catch(e => {
+          this.errors.push(e)
+        })
+      }
+    }
   };
 </script>
