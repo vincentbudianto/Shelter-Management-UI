@@ -1,3 +1,93 @@
+<template>
+  <transition name="modal-fade">
+    <div class="modal-backdrop">
+      <div class="modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalDescription">
+        <header class="modal-header" id="modalTitle">
+          <slot name="header">
+            <button type="button" class="btn-close" @click="close" aria-label="Close modal">
+              x
+            </button>
+          </slot>
+        </header>
+
+        <section class="modal-body" id="modalDescription">
+          <slot name="body">
+            <p class="h4 text-center">Update victim condition</p>
+            <v-form ref="form">
+              <v-text-field
+                v-model="condition"
+                label="Victim Condition"
+              ></v-text-field>
+            </v-form>
+            <v-form ref="form">
+              <v-text-field
+                v-model="desc"
+                label="Victim Condition Description"
+              ></v-text-field>
+            </v-form>
+            <v-form ref="form">
+              <v-text-field
+                v-model="status"
+                label="Victim Condition Status"
+              ></v-text-field>
+            </v-form>
+            <div class="text-center py-4">
+              <v-btn v-on:click="sendVictimCondition">Save Changes</v-btn>
+            </div>
+          </slot>
+        </section>
+      </div>
+    </div>
+  </transition>
+</template>
+
+<style>
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal {
+    background: #FFFFFF;
+    box-shadow: 2px 2px 20px 1px;
+    width: 50%;
+    overflow-x: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal-header {
+    padding: 10px;
+    display: flex;
+    border-bottom: 1px solid #232322;
+    justify-content: flex-end;
+  }
+
+  .modal-body {
+    position: relative;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .btn-close {
+    border: none;
+    font-size: 20px;
+	  padding-right: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #B7141F;
+    background: transparent;
+  }
+</style>
+
 <script>
   import axios from 'axios';
   export default {
@@ -14,7 +104,7 @@
         this.$emit('close');
       },
       sendVictimCondition: function(){
-        axios.post('http://localhost:3000/victim/history/condition', 
+        axios.post('http://localhost:3000/victim/history/condition',
         {
           id:this.$route.params.id,
           conditionName:this.condition,
@@ -32,123 +122,3 @@
     },
   };
 </script>
-<template>
-  <transition name="modal-fade">
-    <div class="modal-backdrop">
-      <div class="modal"
-        role="dialog"
-        aria-labelledby="modalTitle"
-        aria-describedby="modalDescription"
-      >
-        <header
-          class="modal-header"
-          id="modalTitle"
-        >
-          <slot name="header">
-            Change Condition
-
-            <button
-              type="button"
-              class="btn-close"
-              @click="close"
-              aria-label="Close modal"
-            >
-              x
-            </button>
-          </slot>
-        </header>
-        <section
-          class="modal-body"
-          id="modalDescription"
-        >
-          <slot name="body">
-            <form id="conditionForm">
-              <label for="condition">Condition :</label><br>
-              <input type="text" id="condition" name="condition" v-model="condition"><br>
-              <label for="description">Description :</label><br>
-              <textarea type="text"  name="description" cols="50" rows="5" form="conditionForm" v-model="desc">
-              </textarea><br>
-              <label for="status">Status :</label><br>
-              <input type="number" id="status" name="status" v-model="status"><br>
-            </form>
-          </slot>
-        </section>
-        <footer class="modal-footer">
-          <slot name="footer">
-            <button
-              type="submit"
-              class="btn-green"
-              @click="sendVictimCondition"
-              aria-label="Close modal"
-            >
-              Save Changes
-            </button>
-          </slot>
-        </footer>
-      </div>
-    </div>
-  </transition>
-</template>
-<style>
-  .modal-backdrop {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .modal {
-    position: relative;
-    background: #FFFFFF;
-    box-shadow: 2px 2px 20px 1px;
-    width: 30%;
-    /* height: 30%; */
-    overflow-x: auto;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .modal-header,
-  .modal-footer {
-    padding: 2%;
-    display: flex;
-  }
-
-  .modal-header {
-    border-bottom: 1px solid #eeeeee;
-    color: #4AAE9B;
-    justify-content: space-between;
-  }
-
-  .modal-footer {
-    border-top: 1px solid #eeeeee;
-    justify-content: flex-end;
-  }
-
-  .modal-body {
-    position: relative;
-    padding: 20px 10px;
-  }
-
-  .btn-close {
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    font-weight: bold;
-    color: #4AAE9B;
-    background: transparent;
-  }
-
-  .btn-green {
-    color: white;
-    background: #4AAE9B;
-    border: 1px solid #4AAE9B;
-    border-radius: 2px;
-  }
-</style>
