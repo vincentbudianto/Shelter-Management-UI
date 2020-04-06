@@ -2,35 +2,94 @@
   <div class="bg">
     <div class="content">
       <h1>Home</h1>
-      <l-map 
-        :center="[-23.752961, -57.854357]" 
-        :zoom="6" 
-        style="height: 500px;" 
-        :options="mapOptions">
-          <l-choropleth-layer 
-            :data="pyDepartmentsData" 
-            titleKey="department_name" 
-            idKey="department_id" 
-            :value="value" 
-            :extraValues="extraValues" 
-            geojsonIdKey="dpto" 
-            :geojson="paraguayGeojson" 
-            :colorScale="colorScale">
-              <template slot-scope="props">
-                <l-info-control 
-                  :item="props.currentItem" 
-                  :unit="props.unit" 
-                  title="Department" 
-                  placeholder="Hover over a department"/>
-                <l-reference-chart 
-                  title="Girls school enrolment" 
-                  :colorScale="colorScale" 
-                  :min="props.min" 
-                  :max="props.max" 
-                  position="topright"/>
-              </template>
-          </l-choropleth-layer>
-      </l-map>
+
+      <!-- Selection Section  -->
+       <v-col align="center">
+        <v-row>
+          <h2>Pilih Bencana</h2>  
+        </v-row>
+        <v-row>
+          <v-select
+            :items="shelterDisasterNames"
+            v-model="selectedShelterDisasterName"
+          ></v-select>
+        </v-row>
+      </v-col>
+      <v-col align="center">
+        <v-row>
+          <h2>Pilih Posko</h2>  
+        </v-row>
+        <v-row>
+          <v-select
+            :items="shelterNames"
+            v-model="selectedShelterName"
+          ></v-select>
+        </v-row>
+      </v-col>
+      <v-btn v-on:click="btnClickLihat">Lihat</v-btn>
+
+      <!-- Map Section-->
+      <div>
+        <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true" data-projection="EPSG:4326" style="height: 400px">
+          <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
+
+          <vl-layer-tile>
+            <vl-source-osm></vl-source-osm>
+          </vl-layer-tile>
+
+          <vl-layer-vector>
+            <vl-feature>
+
+              <vl-geom-point
+                :coordinates="[12.492442,41.890170]"
+              ></vl-geom-point>
+              <!-- <vl-style-box>
+                <vl-style-circle :radius="20">
+                  <vl-style-fill color="white"></vl-style-fill>
+                  <vl-style-stroke color="red"></vl-style-stroke>
+                </vl-style-circle>
+              </vl-style-box> -->
+
+              <vl-geom-point
+                :coordinates="[-1,2]"
+              ></vl-geom-point>
+              <vl-style-box>
+                <vl-style-circle :radius="20">
+                  <vl-style-fill color="red"></vl-style-fill>
+                  <vl-style-stroke color="white"></vl-style-stroke>
+                </vl-style-circle>
+              </vl-style-box>
+
+            </vl-feature>
+
+            <vl-feature>
+
+              <vl-geom-point
+                :coordinates="[12.492442,41.890170]"
+              ></vl-geom-point>
+              <!-- <vl-style-box>
+                <vl-style-circle :radius="20">
+                  <vl-style-fill color="white"></vl-style-fill>
+                  <vl-style-stroke color="red"></vl-style-stroke>
+                </vl-style-circle>
+              </vl-style-box> -->
+
+              <!-- <vl-geom-point
+                :coordinates="[-1,2]"
+              ></vl-geom-point> -->
+              <vl-style-box>
+                <vl-style-circle :radius="20">
+                  <vl-style-fill color="red"></vl-style-fill>
+                  <vl-style-stroke color="white"></vl-style-stroke>
+                </vl-style-circle>
+              </vl-style-box>
+
+            </vl-feature>
+          </vl-layer-vector>
+        </vl-map>
+      </div>
+
+
       <canvas id="victim-by-gender"></canvas>
       <canvas id="victim-by-age"></canvas>
       <canvas id="victim-by-condition"></canvas>
@@ -54,11 +113,7 @@
 </style>
 
 <script>
-  import { InfoControl, ReferenceChart, ChoroplethLayer } from 'vue-choropleth'
-  import { geojson } from '../../data/py-departments-geojson'
-  import paraguayGeojson from '../../data/paraguay.json'
-  import { pyDepartmentsData } from '../../data/py-departments-data'
-  import {LMap} from 'vue2-leaflet';
+  import axios from 'axios';
 
   var victimTemplateChart = {
     type: 'horizontalBar',
@@ -112,34 +167,43 @@
 
 
 export default {
-  components: { 
-    LMap,
-    'l-info-control': InfoControl, 
-    'l-reference-chart': ReferenceChart, 
-    'l-choropleth-layer': ChoroplethLayer 
-  },
 
   data () {
     return {
       victimTemplateChart,
       victimData,
-      pyDepartmentsData,
-      paraguayGeojson,
-      colorScale: ["e7d090", "e9ae7b", "de7062"],
-      value: {
-        key: "amount_w",
-        metric: "% girls"
-      },
-      extraValues: [{
-        key: "amount_m",
-        metric: "% boys"
-      }],
+
+      //general data
+      dashboardData: [],
+      disastersData: [],
+
+      //selection section
+      shelterList: [],
+      shelterDisasterNames: [],
+      selectedShelterDisasterName: "",
+      selectedShelterName: "",
+      shelterNames: [],
+      shelterDisasterCoordinates: null,
+
+      //map section
+      zoom: 15,
+      center: [12.492442,41.890170],
+      rotation: 0,
+
       mapOptions: {
         attributionControl: false
       },
       currentStrokeColor: '3d3213'
     }
   },
+
+  watch: {
+      selectedShelterDisasterName: function (val) {
+        this.shelterNames = this.shelterList.filter(function(obj){
+          return obj.DisasterName == val
+          }).map(x=>x.Name)
+      },
+    },
 
   methods: {
     createChart(chartId) {
@@ -155,8 +219,6 @@ export default {
         var chartData = this.fillData("Condition")
       }
 
-      console.log(chartId, chartData)
-
       const myChart = new Chart(ctx, {
         type: chartData.type,
         data: chartData.data,
@@ -164,11 +226,16 @@ export default {
       });
     },
 
+    btnClickLihat (event) {
+      console.log("Button CLicked")
+    },
+
+
     fillData(idx){
       let label = this.victimData[idx].label
       let count = this.victimData[idx].count
       let title = this.victimData[idx].title
-      console.log(label, count, title)
+
       var result = this.victimTemplateChart
       result.data.labels = label
       result.data.datasets[0].data = count
@@ -179,12 +246,29 @@ export default {
       //   dataColor.push('#8b0000') 
       //   }
       result.data.datasets.backgroundColor = dataColor
-      console.log(result)
       return result
-    }
+    },
   },
 
   mounted () {
+    axios.all([
+      axios.get("http://localhost:3000/shelter"),
+      axios.get("http://localhost:3000/disaster"),
+      axios.get("http://localhost:3000/dashboard"),
+    ])
+      .then(response => {
+        this.shelterList = response[0].data.data
+        this.disastersData = response[1].data.data
+        this.dashboardData = response[2].data.data
+
+        this.shelterDisasterNames = this.disastersData.map(x=>x.Name)
+        this.shelterDisasterCoordinates = this.disastersData.map(x=>[x.Latitude, x.Longitude])
+      })
+      .catch(error => {
+        this.errors.push(error)
+        console.log(error)
+      })
+
     this.createChart('victim-by-gender');
     this.createChart('victim-by-age');
     this.createChart('victim-by-condition');
@@ -192,3 +276,4 @@ export default {
 }
 
 </script>
+
