@@ -39,9 +39,9 @@
           </vl-layer-tile>
 
             <!-- Render points and information per disaster -->
-              <vl-feature v-for="coordinate in renderedCoordinates" v-bind:key="coordinate.DisasterID">
+              <vl-feature v-for="coordinate in renderedCoordinates" v-bind:key="coordinate.ID">
                 <vl-geom-point
-                  :coordinates="[coordinate.Longitude, coordinate.Latitude]"
+                  :coordinates="[parseFloat(coordinate.Longitude), parseFloat(coordinate.Latitude)]"
                 ></vl-geom-point>
                 <vl-style-box>
                   <vl-style-circle :radius="20">
@@ -50,9 +50,12 @@
                   </vl-style-circle>
                 </vl-style-box>
 
-                <vl-overlay :position="[coordinate.Longitude, coordinate.Latitude]">
-                  <div class="overlay-content">
-                    {{disastersData[coordinate.DisasterID - 1].Name}}
+                <vl-overlay :position="[parseFloat(coordinate.Longitude), parseFloat(coordinate.Latitude)]">
+                  <div class="overlay-content" v-if="currentDashboardScope == 'Pada seluruh bencana' || currentDashboardScope == 'Pada bencana'">
+                    {{disasterData[coordinate.ID - 1].Name}}
+                  </div>
+                  <div class="overlay-content" v-if="currentDashboardScope == 'Pada posko'">
+                    {{shelterData[coordinate.ID - 1].Name}}
                   </div>
                 </vl-overlay>
               </vl-feature>
@@ -62,9 +65,12 @@
 
       <!-- chart section -->
       <div>
-        <div v-if="selectedShelterDisasterName">
+        <div v-if="currentDashboardScope == 'Pada bencana'">
           <a>{{selectedShelterDisasterName}}</a>
           <a>Skala:{{selectedShelterDisasterScale}}</a>
+        </div>
+        <div v-if="currentDashboardScope == 'Pada posko'">
+          <a>{{selectedShelterName}}</a>
         </div>
         <div>
           <a>Jumlah Korban</a>
@@ -135,24 +141,6 @@
       }
     }
   }
-  
-  // victimData = {
-  //   Gender: {
-  //     title: "Gender",
-  //     label: ["Laki-laki", "Perempuan"],
-  //     count: [20, 40]
-  //   },
-  //   Age: {
-  //     title: "Age",
-  //     label: ["<10", "10-19", "20-39", "40-59", "60-79", ">79"],
-  //     count: [10, 20, 40, 15, 20, 30, 10, 5]
-  //   },
-  //   Condition: {
-  //     title: "Condition",
-  //     label: ["Hidup", "Meninggal"],
-  //     count: [55, 30]
-  //   }
-  // } 
 
 
 export default {
@@ -162,11 +150,12 @@ export default {
 
       //general data
       dashboardData: [],
-      disastersData: [],
+      disasterData: [],
       renderedDashboardData: [],
+      shelterData: [],
+      renderScope: "",
 
       //selection section
-      shelterList: [],
       shelterDisasterNames: [],
       selectedShelterDisasterName: "",
       selectedShelterDisasterScale: "",
@@ -213,7 +202,7 @@ export default {
 
   watch: {
       selectedShelterDisasterName: function (val) {
-        this.shelterNames = this.shelterList.filter(function(obj){
+        this.shelterNames = this.shelterData.filter(function(obj){
           return obj.DisasterName == val
           }).map(x=>x.Name)
       },
@@ -228,38 +217,72 @@ export default {
       //filter data to current disaster only
       var selectedData = this.searchSelectedDisasterData(this.selectedShelterDisasterName)[0]
       this.selectedShelterDisasterScale = selectedData.Scale
-      this.renderedCoordinates = [{"DisasterID":selectedData.DisasterID, "Latitude":selectedData.Latitude, "Longitude":selectedData.Longitude}]
-      this.countVictimInCurrentScope = this.countVictimInDisasterScope(selectedData.DisasterID)
+      this.renderedCoordinates = [{"ID":selectedData.DisasterID, "Latitude":selectedData.Latitude, "Longitude":selectedData.Longitude}]
+      this.center = [parseFloat(selectedData.Longitude), parseFloat(selectedData.Latitude)]
+      this.countVictimInCurrentScope = this.countVictimInScope(selectedData.DisasterID, 'disaster')
       this.renderedDashboardData = this.searchSelectedDashboardData(selectedData.DisasterID)
-      console.log("current rendered data: ", this.renderedDashboardData)
+      this.currentDashboardScope = "Pada bencana"
     },
 
     btnClickLihatPosko (event) {
-      console.log("button licked")
+      var selectedData = this.searchSelectedShelterData(this.selectedShelterName)[0]
+      this.selectedShelterDisasterScale = ""
+      this.renderedCoordinates = [{"ID":selectedData.ShelterID, "Latitude":selectedData.Latitude, "Longitude":selectedData.Longitude}]
+      this.center = [parseFloat(selectedData.Longitude), parseFloat(selectedData.Latitude)]
+      this.countVictimInCurrentScope = this.countVictimInScope(selectedData.ShelterID, 'shelter')
+      this.renderedDashboardData = this.searchSelectedDashboardData(selectedData.ShelterID)
+      console.log(this.renderedCoordinates)
+      this.currentDashboardScope = "Pada posko"
     }, 
-
+    
     searchSelectedDisasterData (selectedShelterDisasterName) {
       return (
-        this.disastersData.filter(function (disaster) {
+        this.disasterData.filter(function (disaster) {
           return disaster.Name == selectedShelterDisasterName
         })
       )
     },
 
-    searchSelectedDashboardData (disasterID) {
+    searchSelectedShelterData (selectedShelterName){
       return (
-        this.dashboardData.filter(function (data) {
-          return data.DisasterID == disasterID
+        this.shelterData.filter(function (shelter) {
+          return shelter.Name == selectedShelterName
         })
       )
+    }, 
+
+    searchSelectedDashboardData (ID, scope) {
+      if (scope == 'disaster'){
+        return (
+          this.dashboardData.filter(function (data) {
+            return data.DisasterID == ID
+          })
+        )
+      }
+      else{
+        return (
+          this.dashboardData.filter(function (data) {
+            return data.ShelterID == ID
+          })
+        )
+      }
     },
 
-    countVictimInDisasterScope (disasterID) {
-      return (
-        this.dashboardData.filter(function (victimData) {
-          return victimData.DisasterID == disasterID
-        }).length
-      )
+    countVictimInScope (ID, scope) {
+      if (scope == 'disaster') {
+        return (
+          this.dashboardData.filter(function (victimData) {
+            return victimData.DisasterID == ID
+          }).length
+        )
+      }
+      else {
+        return (
+          this.dashboardData.filter(function (victimData) {
+            return victimData.ShelterID == ID
+          }).length
+        )
+      }
     },
 
     createChart(chartId) {
@@ -332,15 +355,15 @@ export default {
       axios.get("http://localhost:3000/dashboard"),
     ])
       .then(response => {
-        this.shelterList = response[0].data.data
-        this.disastersData = response[1].data.data
+        this.shelterData = response[0].data.data
+        this.disasterData = response[1].data.data
         this.dashboardData = response[2].data.data
 
-        this.shelterDisasterNames = this.disastersData.map(x=>x.Name)
-        this.shelterDisasterCoordinates = this.disastersData.map(x=>({"DisasterID":x.DisasterID, "Latitude":x.Latitude, "Longitude":x.Longitude}))
+        this.shelterDisasterNames = this.disasterData.map(x=>x.Name)
+        this.shelterDisasterCoordinates = this.disasterData.map(x=>({"DisasterID":x.DisasterID, "Latitude":x.Latitude, "Longitude":x.Longitude}))
         
         this.renderedDashboardData = this.dashboardData
-        this.renderedCoordinates = this.shelterDisasterCoordinates
+        this.renderedCoordinates = this.shelterDisasterCoordinates.map(x=>({"ID":x.DisasterID, "Latitude":x.Latitude, "Longitude":x.Longitude}))
         this.countVictimInCurrentScope = this.dashboardData.length
 
         // this.createChart('victim-by-gender'); //gaada data gender. Anyway gender gapenting juga kayaknya. ntar liat lagi
