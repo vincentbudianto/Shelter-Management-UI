@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import ChartjsPlugin from './plugins/chartjs_plugin.js';
 import vuetify from '@/plugins/vuetify' // path to vuetify export
+import Vuelayers from '@/plugins/vuelayers' //path to vuelayers export
 
 Vue.config.productionTip = false
 Vue.use(ChartjsPlugin)

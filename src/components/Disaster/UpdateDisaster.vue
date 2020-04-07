@@ -12,27 +12,21 @@
 
         <section class="modal-body" id="modalDescription">
           <slot name="body">
-            <p class="h4 text-center">Update victim condition</p>
+            <p class="h4 text-center py-4">Update disaster {{disaster.Name}}</p>
             <v-form ref="form">
               <v-text-field
-                v-model="condition"
-                label="Victim Condition"
+                v-model="inputDescription"
+                label="Disaster Description"
               ></v-text-field>
             </v-form>
             <v-form ref="form">
               <v-text-field
-                v-model="desc"
-                label="Victim Condition Description"
+                v-model="inputStatus"
+                label="Disaster Status"
               ></v-text-field>
             </v-form>
-            <v-form ref="form">
-              <v-text-field
-                v-model="status"
-                label="Victim Condition Status"
-              ></v-text-field>
-            </v-form>
-            <div class="text-center py-4">
-              <v-btn v-on:click="sendVictimCondition">Save Changes</v-btn>
+            <div class="text-center py-4 mt-3">
+              <v-btn v-on:click="submitUpdateDisasterClick">Update</v-btn>
             </div>
           </slot>
         </section>
@@ -48,7 +42,6 @@
     bottom: 0;
     left: 0;
     right: 0;
-    width: 100%;
     background-color: rgba(0, 0, 0, 0.3);
     display: flex;
     justify-content: center;
@@ -58,10 +51,10 @@
   .modal {
     background: #FFFFFF;
     box-shadow: 2px 2px 20px 1px;
-    width: 50%;
     overflow-x: auto;
     display: flex;
     flex-direction: column;
+    margin: 5% 5% 5% 5%;
   }
 
   .modal-header {
@@ -90,35 +83,48 @@
 
 <script>
   import axios from 'axios';
+
   export default {
-    name: 'modalCondition',
-    data(){
-      return{
-        condition:"",
-        desc:"",
-        status:null
+    name: 'modal',
+    props: ['disaster'],
+    data () {
+      var data = {
+        inputId: "",
+        inputTitle: "",
+        inputDescription: "",
+        inputStatus: ""
+      }
+
+      return data;
+    },
+    watch: {
+      disaster: {
+        handler() {
+          this.inputId = this.disaster.DisasterID;
+          this.inputTitle = this.disaster.Name;
+        }
       }
     },
     methods: {
       close() {
         this.$emit('close');
       },
-      sendVictimCondition: function(){
-        axios.post('http://localhost:3000/victim/history/condition',
-        {
-          id:this.$route.params.id,
-          conditionName:this.condition,
-          conditionDesc:this.desc,
-          conditionStatus:this.status
-        })
-        .then(response =>{
+      submitUpdateDisasterClick: function (event) {
+        var inputDisasterPostData = {
+          "id": this.inputId,
+          "disasterTitle": this.inputTitle,
+          "disasterDesc": this.inputDescription,
+          "disasterStatus": this.inputStatus
+        }
+
+        axios.post('http://localhost:3000/disaster/history/condition', inputDisasterPostData)
+        .then(response => {
           console.log(response)
         })
-        .catch(e=>{
+        .catch(e => {
           this.errors.push(e)
-        });
-        this.$emit('close');
-      },
-    },
+        })
+      }
+    }
   };
 </script>
