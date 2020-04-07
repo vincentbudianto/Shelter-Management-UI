@@ -4,29 +4,29 @@
             <h4>
                 Input Victim
             </h4>
-            <div>
+            <form @submit="formSubmit" enctype="multipart/form-data">
                 <span>NIK</span><br>
-                <input type="text" id="nik_placeholder" name="nik" value="">
+                <input type="text" id="nik_placeholder" name="nik" value="" v-model="nik">
                 <br>
                 <span>No. KK</span><br>
-                <input type="text" id="nokk_placeholder" name="nokk" value="">
+                <input type="text" id="nokk_placeholder" name="nokk" value="" v-model="nokk">
                 <br>
-                <span>Nama</span><br>
-                <input type="text" id="nama_placeholder" name="nama" value="">
+                <span>name</span><br>
+                <input type="text" id="name_placeholder" name="name" value="" v-model="name">
                 <br>
-                <span>Umur</span><br>
-                <input type="text" id="umur_placeholder" name="umur" value="">
+                <span>age</span><br>
+                <input type="text" id="age_placeholder" name="age" value="" v-model="age">
                 <br>
                 <span>ID Shelter</span><br>
-                <input type="text" id="idshelter_placeholder" name="idshelter" value="">
+                <input type="text" id="shelterid_placeholder" name="shelterid" value="" v-model="shelterid">
                 <br>
-                <span>Foto</span><br>
+                <span>photo</span><br>
                 <div class="upload-btn-wrapper">
-                    <input type="file" id="real-upload-button" name="foto"/>
+                    <input type="file" id="real-upload-button" name="photo" ref="file" v-on:change="handleFileUpload()"/>
                 </div>
                 <br><br>
                 <input class="button" id="submit_button" type="submit" value="Submit">
-            </div> 
+            </form> 
         </div>
     </div>
 </template>
@@ -111,4 +111,78 @@ body {
 </style>
 
 <script>
+import axios from 'axios';
+    export default {
+
+        mounted() {
+
+            console.log('Component mounted.')
+
+        },
+
+        data() {
+
+            return {
+
+              nik: '',
+
+              nokk: '',
+
+              name: '',
+
+              age: '',
+
+              shelterid: '',
+
+              file: '',
+
+              output: ''
+
+            };
+
+        },
+
+        methods: {
+
+            formSubmit(e) {
+
+                e.preventDefault();
+
+                let formData = new FormData();
+
+                formData.append('nik', this.nik);
+                formData.append('nokk', this.nokk);
+                formData.append('name', this.name);
+                formData.append('age', this.age);
+                formData.append('shelterid', this.shelterid);
+                formData.append('photo', this.file);
+
+                let currentObj = this;
+
+                axios.post('http://localhost:3000/victim', formData, 
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+
+                .then(function (response) {
+
+                    currentObj.output = response.data;
+
+                })
+
+                .catch(function (error) {
+
+                    currentObj.output = error;
+
+                });
+
+            }, handleFileUpload(){
+                this.file = this.$refs.file.files[0];
+            }
+
+        }
+
+    }
 </script>
