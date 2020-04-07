@@ -10,6 +10,7 @@ import Disaster from '@/components/Disaster/Disaster'
 import Shelter from '@/components/Shelter/Shelter'
 import Login from '@/components/Login/Login'
 import Details from '@/components/Details/Details'
+import Placement from '@/components/Placement/Placement'
 
 // Fallback page
 // import PageNotFound from '@/components/PageNotFound'
@@ -50,6 +51,11 @@ export default new Router({
       path: '/details/:id',
       name: 'Details',
       component: Details
+    },
+    {
+      path: '/placement',
+      name: 'Placement',
+      component: Placement
     }
   ]
 })
