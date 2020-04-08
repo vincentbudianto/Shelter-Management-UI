@@ -1,84 +1,88 @@
 <template>
   <div class="bg">
     <div class="content">
-      <h1>Home</h1>
+      <h1 id="dashboard-title">Disaster Dashboard</h1>
 
-      <!-- Selection Section  -->
-       <v-col align="center">
-        <v-row>
-          <h2>Pilih Bencana</h2>  
-        </v-row>
-        <v-row>
-          <v-select
-            :items="shelterDisasterNames"
-            v-model="selectedShelterDisasterName"
-          ></v-select>
-        </v-row>
-        <v-btn v-on:click="btnClickLihatBencana">Lihat Bencana</v-btn>
-      </v-col>
-      <v-col align="center" v-if="selectedShelterDisasterName">
-        <v-row>
-          <h2>Pilih Posko</h2>  
-        </v-row>
-        <v-row>
-          <v-select
-            :items="shelterNames"
-            v-model="selectedShelterName"
-          ></v-select>
-        </v-row>  
-        <v-btn v-on:click="btnClickLihatPosko">Lihat Posko</v-btn>
-      </v-col>
+      <v-row>
+        <v-col id="selection-and-overview">
+          <!-- Selection Section  -->
+          <v-col align="left">
+            <v-row>
+              <v-select
+                :items="shelterDisasterNames"
+                v-model="selectedShelterDisasterName"
+                placeholder="Pilih bencana"
+              ></v-select>
+            </v-row>
+            <v-btn v-on:click="btnClickLihatBencana">Lihat Bencana</v-btn>
+          </v-col>
+          <v-col align="left" v-if="selectedShelterDisasterName">
+            <v-row>
+              <v-select
+                :items="shelterNames"
+                v-model="selectedShelterName"
+                placeholder="Pilih posko"
+              ></v-select>
+            </v-row>  
+            <v-btn v-on:click="btnClickLihatPosko">Lihat Posko</v-btn>
+          </v-col>
 
-      <!-- Map Section-->
-      <div>
-        <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true" data-projection="EPSG:4326" style="height: 400px">
-          <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
+          <!-- Overview Section -->
+          <div>
+            <div v-if="currentDashboardScope == 'Pada bencana'">
+              <a>{{selectedShelterDisasterName}}</a>
+              <a>Skala:{{selectedShelterDisasterScale}}</a>
+            </div>
+            <div v-if="currentDashboardScope == 'Pada posko'">
+              <a>{{selectedShelterName}}</a>
+            </div>
+            <div>
+              <a>Jumlah Korban</a>
+              <a>{{countVictimInCurrentScope}}</a>
+              <a>orang</a>
+              <a>{{currentDashboardScope}}</a>
+            </div>
+          </div>
+        </v-col>
+        
+        <v-col>
+          <!-- Map Section-->
+          <div>
+            <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true" data-projection="EPSG:4326" style="height: 400px">
+              <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
 
-          <vl-layer-tile>
-            <vl-source-osm></vl-source-osm>
-          </vl-layer-tile>
+              <vl-layer-tile>
+                <vl-source-osm></vl-source-osm>
+              </vl-layer-tile>
 
-            <!-- Render points and information per disaster -->
-              <vl-feature v-for="coordinate in renderedCoordinates" v-bind:key="coordinate.ID">
-                <vl-geom-point
-                  :coordinates="[parseFloat(coordinate.Longitude), parseFloat(coordinate.Latitude)]"
-                ></vl-geom-point>
-                <vl-style-box>
-                  <vl-style-circle :radius="20">
-                    <vl-style-fill color="red"></vl-style-fill>
-                    <vl-style-stroke color="white"></vl-style-stroke>
-                  </vl-style-circle>
-                </vl-style-box>
+              <!-- Render points and information per disaster -->
+                <vl-feature v-for="coordinate in renderedCoordinates" v-bind:key="coordinate.ID">
+                  <vl-geom-point
+                    :coordinates="[parseFloat(coordinate.Longitude), parseFloat(coordinate.Latitude)]"
+                  ></vl-geom-point>
+                  <vl-style-box>
+                    <vl-style-circle :radius="20">
+                      <vl-style-fill color="red"></vl-style-fill>
+                      <vl-style-stroke color="white"></vl-style-stroke>
+                    </vl-style-circle>
+                  </vl-style-box>
 
-                <vl-overlay :position="[parseFloat(coordinate.Longitude), parseFloat(coordinate.Latitude)]">
-                  <div class="overlay-content" v-if="currentDashboardScope == 'Pada seluruh bencana' || currentDashboardScope == 'Pada bencana'">
-                    {{disasterData[coordinate.ID - 1].Name}}
-                  </div>
-                  <div class="overlay-content" v-if="currentDashboardScope == 'Pada posko'">
-                    {{shelterData[coordinate.ID - 1].Name}}
-                  </div>
-                </vl-overlay>
-              </vl-feature>
+                  <vl-overlay :position="[parseFloat(coordinate.Longitude), parseFloat(coordinate.Latitude)]">
+                    <div class="overlay-content" v-if="currentDashboardScope == 'Pada seluruh bencana' || currentDashboardScope == 'Pada bencana'">
+                      {{disasterData[coordinate.ID - 1].Name}}
+                    </div>
+                    <div class="overlay-content" v-if="currentDashboardScope == 'Pada posko'">
+                      {{shelterData[coordinate.ID - 1].Name}}
+                    </div>
+                  </vl-overlay>
+                </vl-feature>
 
-        </vl-map>
-      </div>
+            </vl-map>
+          </div>
+        </v-col>
+      </v-row>
 
       <!-- chart section -->
-      <div>
-        <div v-if="currentDashboardScope == 'Pada bencana'">
-          <a>{{selectedShelterDisasterName}}</a>
-          <a>Skala:{{selectedShelterDisasterScale}}</a>
-        </div>
-        <div v-if="currentDashboardScope == 'Pada posko'">
-          <a>{{selectedShelterName}}</a>
-        </div>
-        <div>
-          <a>Jumlah Korban</a>
-          <a>{{countVictimInCurrentScope}}</a>
-          <a>orang</a>
-          <a>{{currentDashboardScope}}</a>
-        </div>
-      </div>
       <!-- <canvas id="victim-by-gender"></canvas> -->
       <canvas id="victim-by-age"></canvas>
       <!-- <canvas id="victim-by-condition"></canvas> -->
@@ -88,14 +92,18 @@
 
 <style scoped>
   @import "~leaflet/dist/leaflet.css";
-  h1 {
-    color: blue
+  #dashboard-title {
+    margin-left: 1%;
+  }
+  #selection-and-overview {
+    max-width: 25%;
+    margin-left: 1%;
   }
   .bg {
     background-color: #d9d9d9;
   }
   .content {
-    max-width: 960px;
+    max-width: 90%;
     margin: auto;
     background-color: white;
   }
@@ -168,7 +176,6 @@ export default {
       // center: [106, -6], //for Indonesia
       center: [0, 0],
       rotation: 0,
-      shelterDisasterCoordinates: [],
 
       //chart section
       countVictimInCurrentScope: "0",
@@ -360,10 +367,10 @@ export default {
         this.dashboardData = response[2].data.data
 
         this.shelterDisasterNames = this.disasterData.map(x=>x.Name)
-        this.shelterDisasterCoordinates = this.disasterData.map(x=>({"DisasterID":x.DisasterID, "Latitude":x.Latitude, "Longitude":x.Longitude}))
+        this.renderedCoordinates = this.disasterData.map(x=>({"ID":x.DisasterID, "Latitude":parseFloat(x.Latitude), "Longitude":parseFloat(x.Longitude)}))
         
         this.renderedDashboardData = this.dashboardData
-        this.renderedCoordinates = this.shelterDisasterCoordinates.map(x=>({"ID":x.DisasterID, "Latitude":x.Latitude, "Longitude":x.Longitude}))
+        console.log("Rendered coordinates:", this.renderedCoordinates)
         this.countVictimInCurrentScope = this.dashboardData.length
 
         // this.createChart('victim-by-gender'); //gaada data gender. Anyway gender gapenting juga kayaknya. ntar liat lagi
@@ -371,7 +378,6 @@ export default {
         // this.createChart('victim-by-condition');
       })
       .catch(error => {
-        this.errors.push(error)
         console.log(error)
       })
   }
