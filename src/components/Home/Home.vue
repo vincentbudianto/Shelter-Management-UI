@@ -1,50 +1,82 @@
 <template>
   <div class="bg">
-    <div class="content">
-      <h1 id="dashboard-title">Disaster Dashboard</h1>
+    <div class="content mx-1">
 
-      <v-row>
-        <v-col id="selection-and-overview">
-          <!-- Selection Section  -->
-          <v-col align="left">
-            <v-row>
-              <v-select
-                :items="shelterDisasterNames"
-                v-model="selectedShelterDisasterName"
-                placeholder="Pilih bencana"
-              ></v-select>
-            </v-row>
-            <v-btn v-on:click="btnClickLihatBencana">Lihat Bencana</v-btn>
-          </v-col>
-          <v-col align="left" v-if="selectedShelterDisasterName">
-            <v-row>
-              <v-select
-                :items="shelterNames"
-                v-model="selectedShelterName"
-                placeholder="Pilih posko"
-              ></v-select>
-            </v-row>  
-            <v-btn v-on:click="btnClickLihatPosko">Lihat Posko</v-btn>
-          </v-col>
+      <v-row >
 
-          <!-- Overview Section -->
+        <!-- Overview Section -->
+        <v-col>
           <div>
-            <div v-if="currentDashboardScope == 'Pada bencana'">
-              <a>{{selectedShelterDisasterName}}</a>
-              <a>Skala:{{selectedShelterDisasterScale}}</a>
+            <h5 v-if="currentDashboardScope == 'Seluruh Bencana'">
+              Menampilkan {{currentDashboardScope}} 
+            </h5>
+            <div v-if="currentDashboardScope == 'Bencana'">
+              <h6>Menampilkan {{currentDashboardScope}} </h6>
+              <h5 class="display-1">{{selectedShelterDisasterName}} </h5>
+              <h6>Skala</h6>
+              <h5 class="display-1">{{selectedShelterDisasterScale}}</h5>
             </div>
-            <div v-if="currentDashboardScope == 'Pada posko'">
-              <a>{{selectedShelterName}}</a>
+            <div v-if="currentDashboardScope == 'Posko'">
+              <h6>Menampilkan {{currentDashboardScope}}</h6>
+              <h5 class="display-1">{{selectedShelterName}}</h5>
             </div>
             <div>
-              <a>Jumlah Korban</a>
-              <a>{{countVictimInCurrentScope}}</a>
-              <a>orang</a>
-              <a>{{currentDashboardScope}}</a>
+              <h6>Jumlah Korban</h6>
+              <h3 class="display-3 font-weight-bold">
+                {{countVictimInCurrentScope}}
+              </h3>
             </div>
           </div>
         </v-col>
-        
+        <!-- Selection Section  -->
+          <v-col id="selection-container" class="mr-1">
+              <v-row >
+                <v-col id="selection-dropdown" class="w-75">
+                    <v-select 
+                      id="selection-dropdown"
+                      :items="shelterDisasterNames"
+                      v-model="selectedShelterDisasterName"
+                      placeholder="Pilih bencana"
+                      ></v-select>
+                </v-col>
+                <v-col >
+                  <v-btn id="selection-button" class="mt-1" v-on:click="btnClickLihatBencana">
+                    <span style="white-space: normal;">
+                      Lihat Bencana
+                    </span>
+                  </v-btn>
+                </v-col>
+              </v-row>
+              <v-row v-if="selectedShelterDisasterName">
+                <v-col id="selection-dropdown" class="w-75">
+                  <v-select
+                    :items="shelterNames"
+                    v-model="selectedShelterName"
+                    placeholder="Pilih posko"
+                  ></v-select>
+                </v-col>
+                <v-col id="selection-button" class="mt-1">
+                  <v-btn v-on:click="btnClickLihatPosko">
+                    <span style="white-space: normal;">
+                      Lihat Posko
+                    </span>
+                  </v-btn>
+                </v-col>
+              </v-row>  
+              <v-row>
+                <v-col>
+                  <v-btn v-on:click="btnClickLihatPosko">
+                    <span style="white-space: normal;">
+                      Seluruh Bencana
+                    </span>
+                  </v-btn>
+                </v-col>
+              </v-row>
+          </v-col>
+
+      </v-row>
+
+      <v-row>
         <v-col>
           <!-- Map Section-->
           <div>
@@ -67,11 +99,11 @@
                     </vl-style-circle>
                   </vl-style-box>
 
-                  <vl-overlay :position="[parseFloat(coordinate.Longitude), parseFloat(coordinate.Latitude)]">
-                    <div class="overlay-content" v-if="currentDashboardScope == 'Pada seluruh bencana' || currentDashboardScope == 'Pada bencana'">
+                  <vl-overlay :position="[parseFloat(coordinate.Longitude)+0.25, parseFloat(coordinate.Latitude)+0.25]">
+                    <div class="overlay-content" v-if="currentDashboardScope == 'Seluruh Bencana' || currentDashboardScope == 'Bencana'">
                       {{disasterData[coordinate.ID - 1].Name}}
                     </div>
-                    <div class="overlay-content" v-if="currentDashboardScope == 'Pada posko'">
+                    <div class="overlay-content" v-if="currentDashboardScope == 'Posko'">
                       {{shelterData[coordinate.ID - 1].Name}}
                     </div>
                   </vl-overlay>
@@ -84,7 +116,9 @@
 
       <!-- chart section -->
       <!-- <canvas id="victim-by-gender"></canvas> -->
-      <canvas id="victim-by-age"></canvas>
+      <div class="mw-50">
+        <canvas id="victim-by-age"></canvas>
+      </div>
       <!-- <canvas id="victim-by-condition"></canvas> -->
     </div>
   </div>
@@ -95,16 +129,26 @@
   #dashboard-title {
     margin-left: 1%;
   }
+  /* #first-row-container {
+  }
+  #selection-container {
+    margin-right: 1%;
+  }
+  #selection-dropdown{
+    width: 100px;
+  }
+  #selection-button {
+    margin-top: 10px;
+    font-size: auto;
+  }
   #selection-and-overview {
     max-width: 25%;
     margin-left: 1%;
-  }
+  } */
   .bg {
     background-color: #d9d9d9;
   }
   .content {
-    max-width: 90%;
-    margin: auto;
     background-color: white;
   }
   .overlay-content{
@@ -179,7 +223,7 @@ export default {
 
       //chart section
       countVictimInCurrentScope: "0",
-      currentDashboardScope: "Pada seluruh bencana",
+      currentDashboardScope: "Seluruh Bencana",
       victimTemplateChart,
       victimData: {
         Gender: {
@@ -228,7 +272,7 @@ export default {
       this.center = [parseFloat(selectedData.Longitude), parseFloat(selectedData.Latitude)]
       this.countVictimInCurrentScope = this.countVictimInScope(selectedData.DisasterID, 'disaster')
       this.renderedDashboardData = this.searchSelectedDashboardData(selectedData.DisasterID)
-      this.currentDashboardScope = "Pada bencana"
+      this.currentDashboardScope = "Bencana"
     },
 
     btnClickLihatPosko (event) {
@@ -239,7 +283,7 @@ export default {
       this.countVictimInCurrentScope = this.countVictimInScope(selectedData.ShelterID, 'shelter')
       this.renderedDashboardData = this.searchSelectedDashboardData(selectedData.ShelterID)
       console.log(this.renderedCoordinates)
-      this.currentDashboardScope = "Pada posko"
+      this.currentDashboardScope = "Posko"
     }, 
     
     searchSelectedDisasterData (selectedShelterDisasterName) {
@@ -384,4 +428,3 @@ export default {
 }
 
 </script>
-
