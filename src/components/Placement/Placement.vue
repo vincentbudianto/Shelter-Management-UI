@@ -112,7 +112,6 @@ export default {
   },
   methods: {
     get_placement: function() {
-      console.log('YAYYYY')
       axios.get('http://localhost:3000/recommendation')
       .then(response => {
         // JSON responses are automatically parsed.
