@@ -6,6 +6,7 @@ import Home from '@/components/Home/Home'
 import Search from '@/components/Search/Search'
 import Disaster from '@/components/Disaster/Disaster'
 import Shelter from '@/components/Shelter/Shelter'
+import ShelterDetails from '@/components/Shelter/ShelterOverview'
 import Login from '@/components/Login/Login'
 import Details from '@/components/Details/Details'
 
@@ -35,6 +36,11 @@ export default new Router({
       path: '/shelter',
       name: 'Shelter',
       component: Shelter
+    },
+    {
+      path: '/shelter/:id',
+      name: 'ShelterDetails',
+      component: ShelterDetails,
     },
     {
       path: '/login',
