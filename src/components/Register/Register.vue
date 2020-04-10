@@ -9,13 +9,22 @@
                 <input type="text" id="username_placeholder" name="username" value="" v-model="username">
                 <br>
                 <span class="error-message" id="username_error"></span><br>
-                <span>Email Address</span><br>
-                <input type="text" id="email_placeholder" name="email" value="" v-model="email">
+                <span>NIK</span><br>
+                <input type="text" id="nik_placeholder" name="nik" value="" v-model="nik">
                 <br>
-                <span class="error-message" id="email_error"></span><br>
-                <span>Phone Number</span><br>
-                <input type="text" id="phone_number_placeholder" name="phone_number" value="" v-model="phone_number">
-                <span class="error-message" id="phone_error"></span><br>
+                <span class="error-message" id="nik_error"></span><br>
+                <span>No KK</span><br>
+                <input type="text" id="nokk_placeholder" name="nokk" value="" v-model="nokk">
+                <span class="error-message" id="nokk_error"></span><br>
+                <span>Name</span><br>
+                <input type="text" id="name_placeholder" name="name" value="" v-model="name">
+                <span class="error-message" id="name_error"></span><br>
+                <span>Age</span><br>
+                <input type="text" id="age_placeholder" name="age" value="" v-model="age">
+                <span class="error-message" id="name_error"></span><br>
+                <span>Shelter ID</span><br>
+                <input type="text" id="shelterid_placeholder" name="shelterid" value="" v-model="shelterid">
+                <span class="error-message" id="shelterid_error"></span><br>
                 <span>Password</span><br>
                 <input type="password" id="password_placeholder" name="password" value="" v-model="password">
                 <br>
@@ -141,11 +150,17 @@ import axios from 'axios';
 
               email: '',
 
-              phone_number: '',
+              nik: '',
 
-              password: '',
+              nokk: '',
+
+              name: '',
+
+              age: '',
 
               file: '',
+
+              shelterid: '',
 
               output: ''
 
@@ -162,8 +177,11 @@ import axios from 'axios';
                 let formData = new FormData();
 
                 formData.append('username', this.username);
-                formData.append('email', this.email);
-                formData.append('phone_number', this.phone_number);
+                formData.append('nik', this.nik);
+                formData.append('nokk', this.nokk);
+                formData.append('name', this.name);
+                formData.append('age', this.age);
+                formData.append('shelterid', this.shelterid);
                 formData.append('password', this.password);
                 formData.append('photo', this.file);
 
