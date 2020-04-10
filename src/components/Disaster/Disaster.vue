@@ -17,7 +17,7 @@
       </v-row>
     </v-col >
     <v-btn v-if="!inputMode" v-on:click="addDisasterClick">Tambah Bencana</v-btn>
-    <v-col v-if="inputMode">
+    <!-- <v-col v-if="inputMode">
       <h4>Masukan Data Bencana</h4>
       <v-form ref="form">
         <v-text-field
@@ -47,8 +47,9 @@
         <v-btn v-on:click="submitAddDisasterClick">Tambahkan</v-btn>
         <v-btn v-on:click="cancelAddDisasterClick">Kembali</v-btn>
       </v-row>
-    </v-col>
+    </v-col> -->
     <modal v-show="isModalVisible" @close="closeModal" v-bind:disaster="selectedDisaster"/>
+    <modals v-show="inputMode" @close="cancelAddDisasterClick"/>
   </div>
 </template>
 
@@ -65,6 +66,7 @@ h1 {
 </style>
 
 <script>
+  import modals from './AddDisaster.vue';
   import modal from './UpdateDisaster.vue';
   import axios from 'axios';
 
@@ -72,6 +74,7 @@ h1 {
     name: 'app',
     components: {
       modal,
+      modals
     },
     data : {
       currentDisaster: '',
@@ -81,10 +84,10 @@ h1 {
         selectedDisaster: undefined,
         isModalVisible: false,
         inputMode: false,
-        inputNamaBencana: "",
-        inputSkalaBencana: "",
-        inputLatitude: "",
-        inputLongitude: "",
+        // inputNamaBencana: "",
+        // inputSkalaBencana: "",
+        // inputLatitude: "",
+        // inputLongitude: "",
         disasterList: []
       }
     },
@@ -112,25 +115,25 @@ h1 {
       addDisasterClick: function (event) {
         this.inputMode = true
       },
-      submitAddDisasterClick: function (event) {
-        var inputDisasterPostData = {
-          "name": this.inputNamaBencana,
-          "scale": this.inputSkalaBencana,
-          "latitude": this.inputLatitude,
-          "longitude": this.inputLongitude
-        }
-
-        axios.post('http://localhost:3000/disaster', inputDisasterPostData)
-        .then(response => {
-          console.log(response)
-        })
-        .catch(e => {
-          this.errors.push(e)
-        })
-      },
       cancelAddDisasterClick: function (event) {
         this.inputMode = false
-      }
+      },
+      // submitAddDisasterClick: function (event) {
+      //   var inputDisasterPostData = {
+      //     "name": this.inputNamaBencana,
+      //     "scale": this.inputSkalaBencana,
+      //     "latitude": this.inputLatitude,
+      //     "longitude": this.inputLongitude
+      //   }
+
+      //   axios.post('http://localhost:3000/disaster', inputDisasterPostData)
+      //   .then(response => {
+      //     console.log(response)
+      //   })
+      //   .catch(e => {
+      //     this.errors.push(e)
+      //   })
+      // }
     }
   }
 </script>
