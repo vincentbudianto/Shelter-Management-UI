@@ -63,7 +63,7 @@
                 </v-row>  
                 <v-row>
                   <v-col>
-                    <v-btn v-on:click="btnClickLihatPosko">
+                    <v-btn v-on:click="btnClickLihatSeluruhBencana">
                       <span style="white-space: normal;">
                         <a style="font-size: .75em">Lihat Seluruh Bencana</a>
                       </span>
@@ -92,8 +92,9 @@
                     :coordinates="[parseFloat(coordinate.Longitude), parseFloat(coordinate.Latitude)]"
                   ></vl-geom-point>
                   <vl-style-box>
-                    <vl-style-circle :radius="20">
-                      <vl-style-fill color="red"></vl-style-fill>
+                    <vl-style-circle :radius="15">
+                      <vl-style-fill v-if="coordinate.Type == 'Disaster'" color="red"></vl-style-fill>
+                      <vl-style-fill v-if="coordinate.Type == 'Shelter'" color="rgb(246, 152, 30)"></vl-style-fill>
                     </vl-style-circle>
                   </vl-style-box>
 
@@ -211,7 +212,7 @@ export default {
       shelterNames: [],
 
       //map section
-      zoom: 5,
+      zoom: 6,
       // center: [106, -6], //for Indonesia
       center: [0, 0],
       rotation: 0,
@@ -291,6 +292,22 @@ export default {
       this.currentDashboardScope = "Posko"
       this.displaySelectedShelterName = this.selectedShelterName
     }, 
+
+    btnClickLihatSeluruhBencana (event) {
+      this.renderedCoordinates = this.disasterData.map((x, idx)=>({
+          "idx": idx,
+          "ID":x.DisasterID, 
+          "Latitude":parseFloat(x.Latitude), 
+          "Longitude":parseFloat(x.Longitude), 
+          "Type":"Disaster"}))
+        
+        this.center = [this.disasterData[0].Longitude, this.disasterData[0].Latitude]
+        this.renderedDashboardData = this.dashboardData
+        this.countVictimInCurrentScope = this.dashboardData.length
+        this.currentDashboardScope = "Seluruh Bencana"
+        this.selectedShelterDisasterName = ""
+        this.selectedShelterName = ""
+    },
     
     searchSelectedDisasterData (selectedShelterDisasterName) {
       return (
