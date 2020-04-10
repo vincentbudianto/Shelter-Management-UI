@@ -1,50 +1,81 @@
 <template>
   <div class="bg">
-    <div class="content">
-      <h1 id="dashboard-title">Disaster Dashboard</h1>
+    <div class="content mx-1">
 
-      <v-row>
-        <v-col id="selection-and-overview">
-          <!-- Selection Section  -->
-          <v-col align="left">
-            <v-row>
-              <v-select
-                :items="shelterDisasterNames"
-                v-model="selectedShelterDisasterName"
-                placeholder="Pilih bencana"
-              ></v-select>
-            </v-row>
-            <v-btn v-on:click="btnClickLihatBencana">Lihat Bencana</v-btn>
-          </v-col>
-          <v-col align="left" v-if="selectedShelterDisasterName">
-            <v-row>
-              <v-select
-                :items="shelterNames"
-                v-model="selectedShelterName"
-                placeholder="Pilih posko"
-              ></v-select>
-            </v-row>  
-            <v-btn v-on:click="btnClickLihatPosko">Lihat Posko</v-btn>
-          </v-col>
+      <v-row >
 
-          <!-- Overview Section -->
-          <div>
-            <div v-if="currentDashboardScope == 'Pada bencana'">
-              <a>{{selectedShelterDisasterName}}</a>
-              <a>Skala:{{selectedShelterDisasterScale}}</a>
+        <!-- Overview Section -->
+        <v-col>
+          <div class="m-3 p-5 tile-box">
+            <h3 v-if="currentDashboardScope == 'Seluruh Bencana'" style="color: red">
+              Menampilkan {{currentDashboardScope}} 
+            </h3>
+            <div v-if="currentDashboardScope == 'Bencana'">
+              <h6>Menampilkan {{currentDashboardScope}} </h6>
+              <h5 class="display-1" style="color: red; font-weight: bold">{{displaySelectedShelterDisasterName}} </h5>
+              <h6>Skala</h6>
+              <h5 class="display-1" style="font-weight: bold">{{selectedShelterDisasterScale}}</h5>
             </div>
-            <div v-if="currentDashboardScope == 'Pada posko'">
-              <a>{{selectedShelterName}}</a>
+            <div v-if="currentDashboardScope == 'Posko'">
+              <h6>Menampilkan {{currentDashboardScope}}</h6>
+              <h5 class="display-1"  style="color: red; font-weight: bold">{{displaySelectedShelterName}}</h5>
             </div>
             <div>
-              <a>Jumlah Korban</a>
-              <a>{{countVictimInCurrentScope}}</a>
-              <a>orang</a>
-              <a>{{currentDashboardScope}}</a>
+              <h6>Jumlah Korban</h6>
+              <h3 class="display-3 font-weight-bold" style="font-size: 5em; color: red">
+                {{countVictimInCurrentScope}}
+              </h3>
             </div>
           </div>
         </v-col>
-        
+        <!-- Selection Section  -->
+          <v-col>
+            <div class="m-3 p-5 tile-box">
+                <h5 class="mb-3">Pilih Cakupan</h5>
+                <v-row>
+                  <v-col id="selection-dropdown" class="w-75 px-2 py-0">
+                      <v-select 
+                        id="selection-dropdown"
+                        :items="shelterDisasterNames"
+                        v-model="selectedShelterDisasterName"
+                        placeholder="Pilih bencana"
+                        ></v-select>
+                  </v-col>
+                  <v-col class="px-2 py-2">
+                    <v-btn id="selection-button" v-on:click="btnClickLihatBencana">
+                      <a style="font-size: .75em">Lihat Bencana</a>
+                    </v-btn>
+                  </v-col>
+                </v-row>
+                <v-row v-if="selectedShelterDisasterName">
+                  <v-col id="selection-dropdown" class="w-75">
+                    <v-select
+                      :items="shelterNames"
+                      v-model="selectedShelterName"
+                      placeholder="Pilih posko"
+                    ></v-select>
+                  </v-col>
+                  <v-col id="selection-button" class="mt-1">
+                    <v-btn v-on:click="btnClickLihatPosko">
+                      <a style="font-size: .75em">Lihat Posko</a>
+                    </v-btn>
+                  </v-col>
+                </v-row>  
+                <v-row>
+                  <v-col>
+                    <v-btn v-on:click="btnClickLihatSeluruhBencana">
+                      <span style="white-space: normal;">
+                        <a style="font-size: .75em">Lihat Seluruh Bencana</a>
+                      </span>
+                    </v-btn>
+                  </v-col>
+                </v-row>
+            </div>
+          </v-col>
+
+      </v-row>
+
+      <v-row>
         <v-col>
           <!-- Map Section-->
           <div>
@@ -56,22 +87,28 @@
               </vl-layer-tile>
 
               <!-- Render points and information per disaster -->
-                <vl-feature v-for="coordinate in renderedCoordinates" v-bind:key="coordinate.ID">
+                <vl-feature v-for="(coordinate, index) in renderedCoordinates" :key="index">
                   <vl-geom-point
                     :coordinates="[parseFloat(coordinate.Longitude), parseFloat(coordinate.Latitude)]"
                   ></vl-geom-point>
                   <vl-style-box>
-                    <vl-style-circle :radius="20">
-                      <vl-style-fill color="red"></vl-style-fill>
-                      <vl-style-stroke color="white"></vl-style-stroke>
+                    <vl-style-circle :radius="15">
+                      <vl-style-fill v-if="coordinate.Type == 'Disaster'" color="red"></vl-style-fill>
+                      <vl-style-fill v-if="coordinate.Type == 'Shelter'" color="rgb(246, 152, 30)"></vl-style-fill>
                     </vl-style-circle>
                   </vl-style-box>
 
-                  <vl-overlay :position="[parseFloat(coordinate.Longitude), parseFloat(coordinate.Latitude)]">
-                    <div class="overlay-content" v-if="currentDashboardScope == 'Pada seluruh bencana' || currentDashboardScope == 'Pada bencana'">
-                      {{disasterData[coordinate.ID - 1].Name}}
+                  <vl-overlay :position="[parseFloat(coordinate.Longitude)+0.25, parseFloat(coordinate.Latitude)+0.25]">
+                    <div class="overlay-content" v-if="currentDashboardScope == 'Seluruh Bencana' || currentDashboardScope == 'Bencana'">
+                      <div v-if="coordinate.Type == 'Disaster'">  
+                        Bencana: {{disasterData[coordinate.ID - 1].Name}}
+                      </div>
+                      <div v-if="coordinate.Type == 'Shelter'">  
+                        Posko: {{shelterData[coordinate.ID - 1].Name}} <br/>
+                        Bencana: {{disasterData[renderedCoordinates[0].ID - 1].Name}}
+                      </div>
                     </div>
-                    <div class="overlay-content" v-if="currentDashboardScope == 'Pada posko'">
+                    <div class="overlay-content" v-if="currentDashboardScope == 'Posko'">
                       {{shelterData[coordinate.ID - 1].Name}}
                     </div>
                   </vl-overlay>
@@ -84,7 +121,9 @@
 
       <!-- chart section -->
       <!-- <canvas id="victim-by-gender"></canvas> -->
-      <canvas id="victim-by-age"></canvas>
+      <div class="m-3 tile-box" style="position: relative; height:50vh; width:50vw">
+        <canvas id="victim-by-age"></canvas>
+      </div>
       <!-- <canvas id="victim-by-condition"></canvas> -->
     </div>
   </div>
@@ -95,16 +134,13 @@
   #dashboard-title {
     margin-left: 1%;
   }
-  #selection-and-overview {
-    max-width: 25%;
-    margin-left: 1%;
+  .tile-box {
+     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   }
   .bg {
     background-color: #d9d9d9;
   }
   .content {
-    max-width: 90%;
-    margin: auto;
     background-color: white;
   }
   .overlay-content{
@@ -163,6 +199,10 @@ export default {
       shelterData: [],
       renderScope: "",
 
+      //overview section
+      displaySelectedShelterDisasterName: "",
+      displaySelectedShelterName: "",
+
       //selection section
       shelterDisasterNames: [],
       selectedShelterDisasterName: "",
@@ -172,14 +212,14 @@ export default {
       shelterNames: [],
 
       //map section
-      zoom: 5,
+      zoom: 6,
       // center: [106, -6], //for Indonesia
       center: [0, 0],
       rotation: 0,
 
       //chart section
       countVictimInCurrentScope: "0",
-      currentDashboardScope: "Pada seluruh bencana",
+      currentDashboardScope: "Seluruh Bencana",
       victimTemplateChart,
       victimData: {
         Gender: {
@@ -188,12 +228,12 @@ export default {
           count: []
         },
         Age: {
-          title: "Age",
+          title: "Umur",
           label: ["<10", "10-19", "20-39", "40-59", "60-79", ">79"],
           count: []
         },
         Condition: {
-          title: "Condition",
+          title: "Kondisi",
           label: ["Hidup", "Meninggal"],
           count: []
         }
@@ -224,23 +264,50 @@ export default {
       //filter data to current disaster only
       var selectedData = this.searchSelectedDisasterData(this.selectedShelterDisasterName)[0]
       this.selectedShelterDisasterScale = selectedData.Scale
-      this.renderedCoordinates = [{"ID":selectedData.DisasterID, "Latitude":selectedData.Latitude, "Longitude":selectedData.Longitude}]
+      this.renderedCoordinates = [{
+        "ID":selectedData.DisasterID, 
+        "Latitude":selectedData.Latitude, 
+        "Longitude":selectedData.Longitude, 
+        "Type":"Disaster"}]
+      this.renderedCoordinates = this.renderedCoordinates.concat(this.getDisasterShelterCoordinates(selectedData.Name))
       this.center = [parseFloat(selectedData.Longitude), parseFloat(selectedData.Latitude)]
       this.countVictimInCurrentScope = this.countVictimInScope(selectedData.DisasterID, 'disaster')
       this.renderedDashboardData = this.searchSelectedDashboardData(selectedData.DisasterID)
-      this.currentDashboardScope = "Pada bencana"
+      this.currentDashboardScope = "Bencana"
+      this.displaySelectedShelterDisasterName = this.selectedShelterDisasterName
     },
 
     btnClickLihatPosko (event) {
       var selectedData = this.searchSelectedShelterData(this.selectedShelterName)[0]
       this.selectedShelterDisasterScale = ""
-      this.renderedCoordinates = [{"ID":selectedData.ShelterID, "Latitude":selectedData.Latitude, "Longitude":selectedData.Longitude}]
+      this.renderedCoordinates = [{
+        "idx":0,
+        "ID":selectedData.ShelterID, 
+        "Latitude":selectedData.Latitude, 
+        "Longitude":selectedData.Longitude, 
+        "Type":"Shelter"}]
       this.center = [parseFloat(selectedData.Longitude), parseFloat(selectedData.Latitude)]
       this.countVictimInCurrentScope = this.countVictimInScope(selectedData.ShelterID, 'shelter')
       this.renderedDashboardData = this.searchSelectedDashboardData(selectedData.ShelterID)
-      console.log(this.renderedCoordinates)
-      this.currentDashboardScope = "Pada posko"
+      this.currentDashboardScope = "Posko"
+      this.displaySelectedShelterName = this.selectedShelterName
     }, 
+
+    btnClickLihatSeluruhBencana (event) {
+      this.renderedCoordinates = this.disasterData.map((x, idx)=>({
+          "idx": idx,
+          "ID":x.DisasterID, 
+          "Latitude":parseFloat(x.Latitude), 
+          "Longitude":parseFloat(x.Longitude), 
+          "Type":"Disaster"}))
+        
+        this.center = [this.disasterData[0].Longitude, this.disasterData[0].Latitude]
+        this.renderedDashboardData = this.dashboardData
+        this.countVictimInCurrentScope = this.dashboardData.length
+        this.currentDashboardScope = "Seluruh Bencana"
+        this.selectedShelterDisasterName = ""
+        this.selectedShelterName = ""
+    },
     
     searchSelectedDisasterData (selectedShelterDisasterName) {
       return (
@@ -275,6 +342,18 @@ export default {
       }
     },
 
+    getDisasterShelterCoordinates (val) {
+      return this.shelterData.filter(function(obj){
+          return obj.DisasterName == val
+          })
+          .map(x=>({
+              "ID":x.ShelterID,
+              "Latitude":x.Latitude,
+              "Longitude":x.Longitude,
+              "Type":"Shelter"
+                }))
+    },
+
     countVictimInScope (ID, scope) {
       if (scope == 'disaster') {
         return (
@@ -300,6 +379,14 @@ export default {
       }
       else if (chartId == 'victim-by-age') {
         var chartData = this.fillData("Age")
+        
+        var bgColor = []
+        for(let i = 0; i < chartData.data.datasets[0].data.length; i++){
+        bgColor.push('red')
+        }
+        chartData.data.datasets[0].backgroundColor = bgColor
+
+        chartData.options.maintainAspectRatio = false
       }
       else if (chartId == 'victim-by-condition') {
         var chartData = this.fillData("Condition")
@@ -344,7 +431,7 @@ export default {
       
       result.data.labels = this.victimData[idx].label
       result.data.datasets[0].label = this.victimData[idx].title
-      result.options.title.text = `Victim by ${idx}`
+      result.options.title.text = `Distribusi ${this.victimData[idx].title} Korban`
       result.data.datasets.backgroundColor = 'rgba(100,73,93,1)'
 
       if (idx == "Age") {
@@ -367,10 +454,14 @@ export default {
         this.dashboardData = response[2].data.data
 
         this.shelterDisasterNames = this.disasterData.map(x=>x.Name)
-        this.renderedCoordinates = this.disasterData.map(x=>({"ID":x.DisasterID, "Latitude":parseFloat(x.Latitude), "Longitude":parseFloat(x.Longitude)}))
+        this.renderedCoordinates = this.disasterData.map((x, idx)=>({
+          "idx": idx,
+          "ID":x.DisasterID, 
+          "Latitude":parseFloat(x.Latitude), 
+          "Longitude":parseFloat(x.Longitude), 
+          "Type":"Disaster"}))
         
         this.renderedDashboardData = this.dashboardData
-        console.log("Rendered coordinates:", this.renderedCoordinates)
         this.countVictimInCurrentScope = this.dashboardData.length
 
         // this.createChart('victim-by-gender'); //gaada data gender. Anyway gender gapenting juga kayaknya. ntar liat lagi
@@ -384,4 +475,3 @@ export default {
 }
 
 </script>
-
