@@ -15,26 +15,26 @@
           </thead>
           <tbody>
             <tr v-for="(placement, index) in sortedPlacement" :key="placement.NIK">
-              <th v-if="placement.urgency == 0" class="table-not-urgent" scope="row">{{index+1}}</th>
-              <td v-if="placement.urgency == 0" class="table-not-urgent"><a :href="'?#/details/'+placement.victim_id">{{placement.nik}}</a></td>
-              <td v-if="placement.urgency == 0" class="table-not-urgent"><a :href="'?#/details/'+placement.victim_id">{{placement.name}}</a></td>
-              <td v-if="placement.urgency == 0" class="table-not-urgent">{{placement.status}}</td>
-              <td v-if="placement.urgency == 0" class="table-not-urgent"><a :href="'?#/shelter/'+placement.current_shelter_id">{{placement.current_shelter}}</a></td>
-              <td v-if="placement.urgency == 0" class="table-not-urgent"><a :href="'?#/shelter/'+placement.recommended_shelter_id">{{placement.recommended_shelter}}</a></td>
+              <th v-if="placement.Urgency == 0" class="table-not-urgent" scope="row">{{index+1}}</th>
+              <td v-if="placement.Urgency == 0" class="table-not-urgent"><a :href="'?#/details/'+placement.VictimID">{{placement.NIK}}</a></td>
+              <td v-if="placement.Urgency == 0" class="table-not-urgent"><a :href="'?#/details/'+placement.VictimID">{{placement.Name}}</a></td>
+              <td v-if="placement.Urgency == 0" class="table-not-urgent">{{placement.NeedDesc}}</td>
+              <td v-if="placement.Urgency == 0" class="table-not-urgent"><a :href="'?#/shelter/'+placement.CurrentShelterID">{{placement.CurrentShelterName}}</a></td>
+              <td v-if="placement.Urgency == 0" class="table-not-urgent"><a :href="'?#/shelter/'+placement.RecommendedShelterID">{{placement.RecommendedShelterName}}</a></td>
 
-              <th v-if="placement.urgency == 1" class="table-warning" scope="row">{{index+1}}</th>
-              <td v-if="placement.urgency == 1" class="table-warning"><a :href="'?#/details/'+placement.victim_id">{{placement.nik}}</a></td>
-              <td v-if="placement.urgency == 1" class="table-warning"><a :href="'?#/details/'+placement.victim_id">{{placement.name}}</a></td>
-              <td v-if="placement.urgency == 1" class="table-warning">{{placement.status}}</td>
-              <td v-if="placement.urgency == 1" class="table-warning"><a :href="'?#/shelter/'+placement.current_shelter_id">{{placement.current_shelter}}</a></td>
-              <td v-if="placement.urgency == 1" class="table-warning"><a :href="'?#/shelter/'+placement.recommended_shelter_id">{{placement.recommended_shelter}}</a></td>
+              <th v-if="placement.Urgency == 1" class="table-warning" scope="row">{{index+1}}</th>
+              <td v-if="placement.Urgency == 1" class="table-warning"><a :href="'?#/details/'+placement.VictimID">{{placement.NIK}}</a></td>
+              <td v-if="placement.Urgency == 1" class="table-warning"><a :href="'?#/details/'+placement.VictimID">{{placement.Name}}</a></td>
+              <td v-if="placement.Urgency == 1" class="table-warning">{{placement.NeedDesc}}</td>
+              <td v-if="placement.Urgency == 1" class="table-warning"><a :href="'?#/shelter/'+placement.CurrentShelterID">{{placement.CurrentShelterName}}</a></td>
+              <td v-if="placement.Urgency == 1" class="table-warning"><a :href="'?#/shelter/'+placement.RecommendedShelterID">{{placement.RecommendedShelterName}}</a></td>
 
-              <th v-if="placement.urgency == 2" class="table-danger" scope="row">{{index+1}}</th>
-              <td v-if="placement.urgency == 2" class="table-danger"><a :href="'?#/details/'+placement.victim_id">{{placement.nik}}</a></td>
-              <td v-if="placement.urgency == 2" class="table-danger"><a :href="'?#/details/'+placement.victim_id">{{placement.name}}</a></td>
-              <td v-if="placement.urgency == 2" class="table-danger">{{placement.status}}</td>
-              <td v-if="placement.urgency == 2" class="table-danger"><a :href="'?#/shelter/'+placement.current_shelter_id">{{placement.current_shelter}}</a></td>
-              <td v-if="placement.urgency == 2" class="table-danger"><a :href="'?#/shelter/'+placement.recommended_shelter_id">{{placement.recommended_shelter}}</a></td>
+              <th v-if="placement.Urgency == 2" class="table-danger" scope="row">{{index+1}}</th>
+              <td v-if="placement.Urgency == 2" class="table-danger"><a :href="'?#/details/'+placement.VictimID">{{placement.NIK}}</a></td>
+              <td v-if="placement.Urgency == 2" class="table-danger"><a :href="'?#/details/'+placement.VictimID">{{placement.Name}}</a></td>
+              <td v-if="placement.Urgency == 2" class="table-danger">{{placement.NeedDesc}}</td>
+              <td v-if="placement.Urgency == 2" class="table-danger"><a :href="'?#/shelter/'+placement.CurrentShelterID">{{placement.CurrentShelterName}}</a></td>
+              <td v-if="placement.Urgency == 2" class="table-danger"><a :href="'?#/shelter/'+placement.RecommendedShelterID">{{placement.RecommendedShelterName}}</a></td>
             </tr>
           </tbody>
         </table>
@@ -89,214 +89,41 @@
 </style>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
-      placements:[
-        {
-          victim_id: '0',
-          nik: '1234567812345678',
-          name: 'Budi',
-          status: 'Patah Tulang',
-          current_shelter: 'Cisitu Indah',
-          current_shelter_id: 1,
-          recommended_shelter: 'Borromeus',
-          recommended_shelter_id: 2,
-          urgency: 2
-        },
-        {
-          victim_id: '1',
-          nik: '5647382956473829',
-          name: 'Andi',
-          status: 'Butuh darah',
-          current_shelter: 'Cisitu Lama',
-          current_shelter_id: 3,
-          recommended_shelter: 'Borromeus',
-          recommended_shelter_id: 2,
-          urgency: 2
-        },
-        {
-          victim_id: '2',
-          nik: '3425163734251637',
-          name: 'Mimi',
-          status: 'Kekurangan vitamin Z',
-          current_shelter: 'Tamansari',
-          current_shelter_id: 5,
-          recommended_shelter: 'Juanda',
-          recommended_shelter_id: 4,
-          urgency: 1
-        },
-        {
-          victim_id: '3',
-          nik: '9876543598765435',
-          name: 'Sunny',
-          status: 'Keluarga banyak di Cisitu Lama',
-          current_shelter: 'Cisitu Indah',
-          current_shelter_id: 1,
-          recommended_shelter: 'Cisitu Lama',
-          recommended_shelter_id: 6,
-          urgency: 0
-        },
-
-        {
-          victim_id: '0',
-          nik: '1234567812345678',
-          name: 'Budi',
-          status: 'Patah Tulang',
-          current_shelter: 'Cisitu Indah',
-          current_shelter_id: 1,
-          recommended_shelter: 'Borromeus',
-          recommended_shelter_id: 2,
-          urgency: 2
-        },
-        {
-          victim_id: '1',
-          nik: '5647382956473829',
-          name: 'Andi',
-          status: 'Butuh darah',
-          current_shelter: 'Cisitu Lama',
-          current_shelter_id: 3,
-          recommended_shelter: 'Borromeus',
-          recommended_shelter_id: 2,
-          urgency: 2
-        },
-        {
-          victim_id: '2',
-          nik: '3425163734251637',
-          name: 'Mimi',
-          status: 'Kekurangan vitamin Z',
-          current_shelter: 'Tamansari',
-          current_shelter_id: 5,
-          recommended_shelter: 'Juanda',
-          recommended_shelter_id: 4,
-          urgency: 1
-        },
-        {
-          victim_id: '3',
-          nik: '9876543598765435',
-          name: 'Sunny',
-          status: 'Keluarga banyak di Cisitu Lama',
-          current_shelter: 'Cisitu Indah',
-          current_shelter_id: 1,
-          recommended_shelter: 'Cisitu Lama',
-          recommended_shelter_id: 6,
-          urgency: 0
-        },
-        {
-          victim_id: '0',
-          nik: '1234567812345678',
-          name: 'Budi',
-          status: 'Patah Tulang',
-          current_shelter: 'Cisitu Indah',
-          current_shelter_id: 1,
-          recommended_shelter: 'Borromeus',
-          recommended_shelter_id: 2,
-          urgency: 2
-        },
-        {
-          victim_id: '1',
-          nik: '5647382956473829',
-          name: 'Andi',
-          status: 'Butuh darah',
-          current_shelter: 'Cisitu Lama',
-          current_shelter_id: 3,
-          recommended_shelter: 'Borromeus',
-          recommended_shelter_id: 2,
-          urgency: 2
-        },
-        {
-          victim_id: '2',
-          nik: '3425163734251637',
-          name: 'Mimi',
-          status: 'Kekurangan vitamin Z',
-          current_shelter: 'Tamansari',
-          current_shelter_id: 5,
-          recommended_shelter: 'Juanda',
-          recommended_shelter_id: 4,
-          urgency: 1
-        },
-        {
-          victim_id: '3',
-          nik: '9876543598765435',
-          name: 'Sunny',
-          status: 'Keluarga banyak di Cisitu Lama',
-          current_shelter: 'Cisitu Indah',
-          current_shelter_id: 1,
-          recommended_shelter: 'Cisitu Lama',
-          recommended_shelter_id: 6,
-          urgency: 0
-        },
-        {
-          victim_id: '0',
-          nik: '1234567812345678',
-          name: 'Budi',
-          status: 'Patah Tulang',
-          current_shelter: 'Cisitu Indah',
-          current_shelter_id: 1,
-          recommended_shelter: 'Borromeus',
-          recommended_shelter_id: 2,
-          urgency: 2
-        },
-        {
-          victim_id: '1',
-          nik: '5647382956473829',
-          name: 'Andi',
-          status: 'Butuh darah',
-          current_shelter: 'Cisitu Lama',
-          current_shelter_id: 3,
-          recommended_shelter: 'Borromeus',
-          recommended_shelter_id: 2,
-          urgency: 2
-        },
-        {
-          victim_id: '2',
-          nik: '3425163734251637',
-          name: 'Mimi',
-          status: 'Kekurangan vitamin Z',
-          current_shelter: 'Tamansari',
-          current_shelter_id: 5,
-          recommended_shelter: 'Juanda',
-          recommended_shelter_id: 4,
-          urgency: 1
-        },
-        {
-          victim_id: '3',
-          nik: '9876543598765435',
-          name: 'Sunny',
-          status: 'Keluarga banyak di Cisitu Lama',
-          current_shelter: 'Cisitu Indah',
-          current_shelter_id: 1,
-          recommended_shelter: 'Cisitu Lama',
-          recommended_shelter_id: 6,
-          urgency: 0
-        }
-      ]
+      placements: []
     }
   },
   computed: {
     sortedPlacement: function() {
       function compare(a, b) {
-        if (a.urgency > b.urgency)
+        if (a.Urgency > b.Urgency)
           return -1;
-        if (a.urgency < b.urgency)
+        if (a.Urgency < b.Urgency)
           return 1;
         return 0;
       }
 
       return this.placements.sort(compare);
     }
-  }
-  // methods: {
-  //   get_placement: function() {
-  //     axios.get('http://localhost:3000/victim/search/keyword?keyword=' + this.query)
-  //     .then(response => {
-  //       // JSON responses are automatically parsed.
-  //       this.victims = response.data.data
-  //     })
-  //     .catch(e => {
-  //       this.errors.push(e)
-  //     })
-  //   }
-  // }
+  },
+  methods: {
+    get_placement: function() {
+      axios.get('http://localhost:3000/recommendation')
+      .then(response => {
+        // JSON responses are automatically parsed.
+        this.placements = response.data.data
+      })
+      .catch(e => {
+        this.errors.push(e)
+      })
+    }
+  },
+  beforeMount(){
+    this.get_placement()
+  },
 }
 </script>
