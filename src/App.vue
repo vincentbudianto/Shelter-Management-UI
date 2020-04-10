@@ -22,6 +22,9 @@
             <li class="nav-item">
               <router-link class="nav-link text-light" :to="links[4].to">{{ links[4].name }}</router-link>
             </li>
+            <li class="nav-item">
+              <router-link class="nav-link text-light" :to="links[5].to">{{ links[5].name }}</router-link>
+            </li>
           </ul>
           <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="search" placeholder="Type a victim's name" aria-label="Search">
@@ -77,6 +80,10 @@ export default {
       {
         name: 'Shelter',
         to: '/shelter'
+      },
+      {
+        name: 'Placement',
+        to: '/placement'
       },
       {
         name: 'Login',
