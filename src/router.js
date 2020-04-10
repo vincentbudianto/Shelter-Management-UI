@@ -11,6 +11,7 @@ import Shelter from '@/components/Shelter/Shelter'
 import Login from '@/components/Login/Login'
 import Details from '@/components/Details/Details'
 import Placement from '@/components/Placement/Placement'
+import Settings from '@/components/Settings/Settings'
 
 // Fallback page
 // import PageNotFound from '@/components/PageNotFound'
@@ -56,6 +57,11 @@ export default new Router({
       path: '/placement',
       name: 'Placement',
       component: Placement
+    },
+    {
+      path: '/settings',
+      name: 'Settings',
+      component: Settings
     }
   ]
 })
