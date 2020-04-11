@@ -89,7 +89,7 @@ import axios from 'axios';
 
             return {
 
-              AccountId: '',
+              AccountID: '',
 
               Username: '',
 
@@ -105,7 +105,9 @@ import axios from 'axios';
 
               Photo: '',
 
-              CurrentShelterId: ''
+              CurrentShelterId: '',
+
+              errormsg: ''
 
             };
 
@@ -128,7 +130,7 @@ import axios from 'axios';
 
                     currentObj.data = response.data.data;
                     if (currentObj.data.length > 0) {
-                        currentObj.$cookies.set("AccountId", currentObj.data[0].AccountId, "43200")
+                        currentObj.$cookies.set("AccountID", currentObj.data[0].AccountID, "43200")
                         currentObj.$cookies.set("Type", currentObj.data[0].Type, "43200s")
                         currentObj.$router.push('/');
                     } else {
@@ -139,7 +141,7 @@ import axios from 'axios';
 
                 .catch(function (error) {
 
-                    currentObj.output = error;
+                    currentObj.data.errormsg = error;
 
                 });
 
