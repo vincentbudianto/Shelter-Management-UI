@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Vuelayers from 'vuelayers'
+import 'vuelayers/lib/style.css'
 
 // Page content
 import Home from '@/components/Home/Home'
@@ -8,11 +10,15 @@ import Disaster from '@/components/Disaster/Disaster'
 import Shelter from '@/components/Shelter/Shelter'
 import Login from '@/components/Login/Login'
 import Details from '@/components/Details/Details'
+import Placement from '@/components/Placement/Placement'
 
 // Fallback page
 // import PageNotFound from '@/components/PageNotFound'
 
 Vue.use(Router)
+Vue.use(Vuelayers, {
+  dataProjection: 'EPSG:4326',
+})
 
 export default new Router({
   routes: [
@@ -45,6 +51,11 @@ export default new Router({
       path: '/details/:id',
       name: 'Details',
       component: Details
+    },
+    {
+      path: '/placement',
+      name: 'Placement',
+      component: Placement
     }
   ]
 })
