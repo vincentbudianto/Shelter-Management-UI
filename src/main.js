@@ -9,6 +9,7 @@ import ChartjsPlugin from './chartjs_plugin.js'
 Vue.config.productionTip = false
 Vue.use(ChartjsPlugin)
 Vue.use(VueCookies)
+Vue.$cookies.set('Type', 'guest')
 
 /* eslint-disable no-new */
 new Vue({

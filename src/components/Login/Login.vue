@@ -130,7 +130,7 @@ import axios from 'axios';
 
                     currentObj.data = response.data.data;
                     if (currentObj.data.length > 0) {
-                        currentObj.$cookies.set("AccountID", currentObj.data[0].AccountID, "43200")
+                        currentObj.$cookies.set("AccountID", currentObj.data[0].AccountID, "43200s")
                         currentObj.$cookies.set("Type", currentObj.data[0].Type, "43200s")
                         currentObj.$router.push('/');
                     } else {
