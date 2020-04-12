@@ -48,7 +48,7 @@
         <v-btn v-on:click="cancelAddDisasterClick">Kembali</v-btn>
       </v-row>
     </v-col>
-    <modal v-show="isModalVisible" @close="closeModal" v-bind:disaster="selectedDisaster"/>
+    <modal v-if="isModalVisible" @close="closeModal" v-bind:disaster="selectedDisaster"/>
   </div>
 </template>
 
