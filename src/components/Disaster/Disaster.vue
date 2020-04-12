@@ -49,7 +49,6 @@
       </v-row>
     </v-col>
     <modal v-show="isModalVisible" @close="closeModal" v-bind:disaster="selectedDisaster"/>
-    <modals v-show="inputMode" @close="cancelAddDisasterClick"/>
   </div>
 </template>
 
@@ -66,7 +65,6 @@ h1 {
 </style>
 
 <script>
-  import modals from './AddDisaster.vue';
   import modal from './UpdateDisaster.vue';
   import axios from 'axios';
 
@@ -74,7 +72,6 @@ h1 {
     name: 'app',
     components: {
       modal,
-      modals
     },
     data : {
       currentDisaster: '',
