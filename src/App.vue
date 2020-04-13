@@ -1,11 +1,12 @@
 <template>
-  <div>
-    <nav class="navbar navbar-expand-lg navbar-light bg-dark">
-      <img src='/static/assets/RedCrossIcon.png' width=50px height=50px>
-      <router-link class="navbar-brand text-light" :to="links[0].to">{{ links[0].name }}</router-link>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+  <v-app>
+    <div>
+      <nav class="navbar navbar-expand-lg navbar-light bg-dark">
+        <img src='/static/assets/RedCrossIcon.png' width=50px height=50px>
+        <router-link class="navbar-brand text-light" :to="links[0].to">{{ links[0].name }}</router-link>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
@@ -54,7 +55,6 @@
     font-weight: bold;
     text-decoration: none;
     color: gray;
-    font-family: Quattrocento;
   }
   .navbar li a:hover {
     color: #404040;

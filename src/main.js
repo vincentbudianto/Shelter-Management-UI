@@ -14,6 +14,7 @@ Vue.use(VueCookies)
 
 /* eslint-disable no-new */
 new Vue({
+  vuetify,
   el: '#app',
   router,
   template: '<App/>',
