@@ -1,52 +1,69 @@
 <template>
-  <div>
-    <h1>Disaster</h1>
+  <div class="p-4">
     <v-col v-if="!inputMode">
-      <h4>Disaster List</h4>
-      <v-row class="row" v-for="disaster in disasterList" v-bind:key="disaster.DisasterID">
-        <v-col>
-          <a>
-            Nama Bencana: {{disaster.Name}}<br/>
-            Skala Bencana: {{disaster.Scale}}<br/>
-            Koordinat Bencana: {{disaster.Latitude + "," + disaster.Longitude}}
-          </a>
-        </v-col>
-        <v-col>
-          <v-btn v-on:click="showModal(disaster)">Update Disaster</v-btn>
-        </v-col>
-      </v-row>
+      <v-row><h4>Daftar Bencana</h4></v-row>
+      <div class="px-5" style="max-width: 75%;">
+        <v-row class="row disaster-list-item my-4 p-3" v-for="disaster in disasterList" v-bind:key="disaster.DisasterID">
+          <v-col>
+            <a>
+              Nama Bencana: {{disaster.Name}}<br/>
+              Skala Bencana: {{disaster.Scale}}<br/>
+              Koordinat Bencana: {{disaster.Latitude.toFixed(2) + ", " + disaster.Longitude.toFixed(2)}}
+            </a>
+          </v-col>
+          <v-col class="d-flex justify-content-end align-items-end p-1">
+            <v-btn v-on:click="showModal(disaster)">Ubah</v-btn>
+          </v-col>
+        </v-row>
+      </div>
+      <v-row class="my-4"><v-btn v-if="!inputMode" v-on:click="addDisasterClick">Tambah Bencana</v-btn></v-row>
     </v-col >
-    <v-btn v-if="!inputMode" v-on:click="addDisasterClick">Tambah Bencana</v-btn>
     <v-col v-if="inputMode">
-      <h4>Masukan Data Bencana</h4>
-      <v-form ref="form">
-        <v-text-field
-          v-model="inputNamaBencana"
-          label="Nama Bencana"
-        ></v-text-field>
-      </v-form>
-      <v-form ref="form">
-        <v-text-field
-          v-model="inputSkalaBencana"
-          label="Skala Bencana"
-        ></v-text-field>
-      </v-form>
-      <v-form ref="form">
-        <v-text-field
-          v-model="inputLatitude"
-          label="Koordinat tempat bencana (Garis Lintang/Latitude)"
-        ></v-text-field>
-      </v-form>
-      <v-form ref="form">
-        <v-text-field
-          v-model="inputLongitude"
-          label="Koordinat tempat bencana (Garis Bujur/Longitude)"
-        ></v-text-field>
-      </v-form>
-      <v-row>
-        <v-btn v-on:click="submitAddDisasterClick">Tambahkan</v-btn>
-        <v-btn v-on:click="cancelAddDisasterClick">Kembali</v-btn>
-      </v-row>
+      <div>
+        <h4>Masukan Data Bencana</h4>
+      </div>
+      <div>
+        <v-form ref="form">
+          <v-text-field
+            v-model="inputNamaBencana"
+            label="Nama Bencana"
+          ></v-text-field>
+        </v-form>
+      </div>
+      <div>
+        <v-form ref="form">
+          <v-text-field
+            v-model="inputSkalaBencana"
+            label="Skala Bencana"
+          ></v-text-field>
+        </v-form>
+      </div>
+      <div>
+        <div class="h5 mb-0">Masukkan Koordinat Bencana</div>
+        <div><small>Geser peta untuk menggerakkan titik ke lokasi bencana</small></div>
+        <div class="h6 mb-0 mt-2">Koordinat Terpiih</div>
+        <div><small>Lat: {{center[1].toFixed(2)}}, Long: {{center[0].toFixed(2)}}</small></div>
+        <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true" data-projection="EPSG:4326" style="height: 400px">
+          <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
+          <vl-layer-tile>
+            <vl-source-osm></vl-source-osm>
+          </vl-layer-tile>
+            <vl-feature>
+              <vl-geom-point
+                :coordinates="center"
+              ></vl-geom-point>
+              <vl-style-box>
+                <vl-style-circle :radius="15">
+                  <vl-style-fill color="red"></vl-style-fill>
+                </vl-style-circle>
+              </vl-style-box>
+            </vl-feature>
+        </vl-map>
+      </div>
+      <div class="d-flex flex-row">
+        <div class="m-4 ml-0"><v-btn v-on:click="cancelAddDisasterClick">Kembali</v-btn></div>
+        <div class="m-4 ml-0"><v-btn v-on:click="submitAddDisasterClick">Tambahkan</v-btn></div>
+      </div>
     </v-col>
     <modal v-if="isModalVisible" @close="closeModal" v-bind:disaster="selectedDisaster"/>
   </div>
@@ -61,6 +78,9 @@ h1 {
   padding-right: 5%;
   padding-top: 10px;
   padding-bottom: 20px;
+}
+.disaster-list-item {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 </style>
 
@@ -83,8 +103,10 @@ h1 {
         inputMode: false,
         inputNamaBencana: "",
         inputSkalaBencana: "",
-        inputLatitude: "",
-        inputLongitude: "",
+        zoom: 6,
+        center: [106.0, -6.0], //for Indonesia
+        rotation: 0,
+        geolocPosition: undefined,
         disasterList: []
       }
     },
@@ -116,8 +138,8 @@ h1 {
         var inputDisasterPostData = {
           "name": this.inputNamaBencana,
           "scale": this.inputSkalaBencana,
-          "latitude": this.inputLatitude,
-          "longitude": this.inputLongitude
+          "latitude": this.center[1],
+          "longitude": this.center[0]
         }
 
         axios.post('http://localhost:3000/disaster', inputDisasterPostData)
