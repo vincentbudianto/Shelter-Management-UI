@@ -2,7 +2,7 @@
   <div class="register-container">
         <div class="register-box">
             <h4>
-                Register an Account
+                Daftar Akun
             </h4>
             <form @submit="formSubmit" enctype="multipart/form-data">
                 <span>Username</span><br>
@@ -16,24 +16,26 @@
                 <span>No KK</span><br>
                 <input type="text" id="nokk_placeholder" name="nokk" value="" v-model="nokk">
                 <span class="error-message" id="nokk_error"></span><br>
-                <span>Name</span><br>
+                <span>Nama</span><br>
                 <input type="text" id="name_placeholder" name="name" value="" v-model="name">
                 <span class="error-message" id="name_error"></span><br>
-                <span>Age</span><br>
+                <span>Umur</span><br>
                 <input type="text" id="age_placeholder" name="age" value="" v-model="age">
                 <span class="error-message" id="name_error"></span><br>
+                <div>
                 <span>Shelter ID</span><br>
                 <input type="text" id="shelterid_placeholder" name="shelterid" value="" v-model="shelterid">
                 <span class="error-message" id="shelterid_error"></span><br>
+                </div>
                 <span>Password</span><br>
                 <input type="password" id="password_placeholder" name="password" value="" v-model="password">
                 <br>
                 <span class="error-message" id="password_error"></span><br>
-                <span>Confirm Password</span><br>
+                <span>Konfirmasi Password</span><br>
                 <input type="password" id="cpassword_placeholder" name="confirm_password" value="" v-model="confirm_password">
                 <br>
                 <span class="error-message" id="cpassword_error"></span><br>
-                <span>Profile Picture</span><br>
+                <span>Foto</span><br>
                 <div class="upload-btn-wrapper">
                     <input type="file" id="real-upload-button" name="profile-picture" ref="file" v-on:change="handleFileUpload()"/>
                 </div>
@@ -41,7 +43,7 @@
                 <input class="button" id="submit_button" type="submit" value="Register">
             </form> 
 
-            <p>Already have account? <a :href="'/#/login'">Login here</a> </p>
+            <p>Sudah punya akun? <a :href="'/#/login'">Login disini</a> </p>
 
         </div>
     </div>
@@ -146,21 +148,7 @@ import axios from 'axios';
 
             return {
 
-              username: '',
-
-              email: '',
-
-              nik: '',
-
-              nokk: '',
-
-              name: '',
-
-              age: '',
-
-              file: '',
-
-              shelterid: '',
+              shelters: [],
 
               output: ''
 
@@ -179,17 +167,23 @@ import axios from 'axios';
                 formData.append('username', this.username);
                 formData.append('nik', this.nik);
                 formData.append('nokk', this.nokk);
+                /*if (this.$cookies.get('Type') != 'admin') {
+                    formData.append('shelterid', '0');
+                } else {
+                    formData.append('shelterid', this.shelterid);
+                }*/
+                formData.append('shelterid', this.shelterid);
                 formData.append('name', this.name);
                 formData.append('age', this.age);
-                formData.append('shelterid', this.shelterid);
                 formData.append('password', this.password);
                 formData.append('photo', this.file);
 
                 let currentObj = this;
 
-                if (this.password == this.confirm_password) {
+                if (this.password == this.confirm_password && this.username.length > 0 && this.password != null) {
                     document.getElementById("password_error").innerHTML = "";
                     document.getElementById("cpassword_error").innerHTML = "";
+                    document.getElementById("username_error").innerHTML = "";
                     axios.post('http://localhost:3000/register', formData, 
                     {
                         headers: {
@@ -200,6 +194,7 @@ import axios from 'axios';
                     .then(function (response) {
 
                         currentObj.output = response.data;
+                        currentObj.$router.push('/login');
 
                     })
 
@@ -209,12 +204,29 @@ import axios from 'axios';
 
                     });
                 } else {
-                    document.getElementById("password_error").innerHTML = "Password does not match";
-                    document.getElementById("cpassword_error").innerHTML = "Password does not match";
+                    if (this.password != this.confirm_password) {
+                        document.getElementById("password_error").innerHTML = "Password tidak cocok";
+                        document.getElementById("cpassword_error").innerHTML = "Password tidak cocok";
+                    }
+                    if (this.username.length < 1) {
+                        document.getElementById("username_error").innerHTML = "Username tidak boleh kosong";
+                    }
+                    if (this.password == null) {
+                        document.getElementById("password_error").innerHTML = "Password tidak boleh kosong";
+                    }
                 }
 
             }, handleFileUpload(){
                 this.file = this.$refs.file.files[0];
+            }, getShelters(){
+                axios.get('http://localhost:3000/shelter')
+                .then(response => {
+                    // JSON responses are automatically parsed.
+                    this.shelters = response.data.data
+                })
+                .catch(e => {
+                    this.errors.push(e)
+                })
             }
 
         }
