@@ -11,7 +11,7 @@
           <th><p>Nama</p></th>
           <th><p>Status</p></th>
         </tr>
-        <tr v-for="victim of victims">
+        <tr v-for="victim in victims" v-bind:key="victim.VictimID">
           <td><a :href="'?#/details/'+victim.VictimID"><p>{{ victim.NIK || 'unknown' }}</p></a></td>
           <td><a :href="'?#/details/'+victim.VictimID"><p>{{ victim.Name }}</p></a></td>
           <td><a :href="'?#/details/'+victim.VictimID"><p>{{ victim.ConditionStatus || 'unknown'}}</p></a></td>
