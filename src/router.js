@@ -12,6 +12,7 @@ import Login from '@/components/Login/Login'
 import Logout from '@/components/Logout/Logout'
 import Details from '@/components/Details/Details'
 import Placement from '@/components/Placement/Placement'
+import InputVictim from '@/components/InputVictim/InputVictim'
 import Register from '@/components/Register/Register'
 
 // Fallback page
@@ -63,6 +64,11 @@ export default new Router({
       path: '/placement',
       name: 'Placement',
       component: Placement
+    },
+    {
+      path: '/input-victim',
+      name: 'Input Victim',
+      component: InputVictim
     },
     {
       path: '/register',
