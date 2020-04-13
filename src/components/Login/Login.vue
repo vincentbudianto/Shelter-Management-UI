@@ -15,9 +15,6 @@
         </form>
         <span class="error-message" id="login_failed"></span><br>
         <div class="form-group">
-            <a href="#" class="btnForgetPwd">Lupa Password?</a>
-        </div>
-        <div class="form-group">
             <a href="#/register" class="btnForgetPwd">Daftar Akun</a>
         </div>
     </div>
