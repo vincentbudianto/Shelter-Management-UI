@@ -14,14 +14,32 @@
             <h4>Masukan Data Shelter</h4>
             <v-form ref="form">
                 <v-text-field
-                v-model="inputNamaBencana"
+                v-model="inputNamaShelter"
                 label="Nama Shelter"
                 ></v-text-field>
             </v-form>
             <v-form ref="form">
                 <v-text-field
-                v-model="inputSkalaBencana"
-                label="Skala Bencana"
+                v-model="inputNamaWilayah"
+                label="Wilayah"
+                ></v-text-field>
+            </v-form>
+            <v-form ref="form">
+                <v-text-field
+                v-model="inputNamaKota"
+                label="Kota"
+                ></v-text-field>
+            </v-form>
+            <v-form ref="form">
+                <v-text-field
+                v-model="inputNamaProvinsi"
+                label="Provinsi"
+                ></v-text-field>
+            </v-form>
+            <v-form ref="form">
+                <v-text-field
+                v-model="inputNamaCountry"
+                label="Negara"
                 ></v-text-field>
             </v-form>
             <v-form ref="form">
@@ -37,7 +55,7 @@
                 ></v-text-field>
             </v-form>
             <v-row>
-                <v-btn v-on:click="submitAddDisasterClick">Tambahkan</v-btn>
+                <v-btn v-on:click="submitAddShelterClick">Tambahkan</v-btn>
                 <v-btn v-on:click="close">Kembali</v-btn>
             </v-row>
           </slot>
@@ -93,12 +111,29 @@
   }
 </style>
 <script>
+import axios from 'axios';
 export default {
     name: 'addShelterModal',
     methods:{
         close(){
             this.$emit('close');
+        },
+        submitAddShelterClick(){
+          this.$emit('close');
         }
+    },
+    data () {
+      var data = {
+        inputNamaShelter: "",
+        inputNamaWilayah: "",
+        inputNamaKota: "",
+        inputNamaProvinsi: "",
+        inputNamaCountry: "",
+        inputLongitude: "",
+        inputLatitude: "",
+      }
+
+      return data;
     }
 }
 </script>

@@ -93,12 +93,27 @@
   }
 </style>
 <script>
+import axios from 'axios';
 export default {
     name: 'addDisasterModal',
     methods:{
         close(){
-            this.$emit('close');
+          this.$emit('close');
+        },
+        submitAddDisasterClick(){
+          this.$emit('close');
         }
+    },
+    data () {
+      var data = {
+        inputNamaBencana: "",
+        inputSkalaBencana: "",
+        inputStatus: "",
+        inputLongitude: "",
+        inputLatitude: "",
+      }
+
+      return data;
     }
 }
 </script>
