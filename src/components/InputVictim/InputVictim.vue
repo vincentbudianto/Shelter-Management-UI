@@ -163,8 +163,8 @@ import axios from 'axios';
 
                 if(this.shelterid != undefined && this.name != undefined){
 
-                    document.getElementById("shelterid_error").innerHTML = "Tidak boleh kosong";
-                    document.getElementById("name_error").innerHTML = "Tidak boleh kosong"
+                    document.getElementById("shelterid_error").innerHTML = "";
+                    document.getElementById("name_error").innerHTML = ""
 
                     axios.post('http://localhost:3000/victim', formData, 
                     {
