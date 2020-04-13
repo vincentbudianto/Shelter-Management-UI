@@ -5,8 +5,8 @@
                 Daftar Akun
             </h4>
             <form @submit="formSubmit" enctype="multipart/form-data">
-                <span>Username*</span><br>
-                <input type="text" id="username_placeholder" name="username" value="" v-model="username" @keyup="checkUsername()">
+                <span>Username</span><br>
+                <input type="text" id="username_placeholder" name="username" value="" v-model="username">
                 <br>
                 <span class="error-message" id="username_error"></span><br>
                 <span>NIK</span><br>
@@ -24,17 +24,14 @@
                 <span class="error-message" id="name_error"></span><br>
                 <div>
                 <span>Shelter ID</span><br>
-                <input list="browsers" id="shelterid" name="shelterid" v-model="shelterid">
-                <datalist id="browsers">
-                    <option v-for="shelter in shelters" :value="shelter.ShelterID">{{ shelter.Name }}</option>
-                </datalist>
+                <input type="text" id="shelterid_placeholder" name="shelterid" value="" v-model="shelterid">
                 <span class="error-message" id="shelterid_error"></span><br>
                 </div>
-                <span>Password*</span><br>
+                <span>Password</span><br>
                 <input type="password" id="password_placeholder" name="password" value="" v-model="password">
                 <br>
                 <span class="error-message" id="password_error"></span><br>
-                <span>Konfirmasi Password*</span><br>
+                <span>Konfirmasi Password</span><br>
                 <input type="password" id="cpassword_placeholder" name="confirm_password" value="" v-model="confirm_password">
                 <br>
                 <span class="error-message" id="cpassword_error"></span><br>
@@ -180,12 +177,10 @@ import axios from 'axios';
                 formData.append('age', this.age);
                 formData.append('password', this.password);
                 formData.append('photo', this.file);
-                
-                let usernameErrorMessage = document.getElementById("username_error").innerHTML
 
                 let currentObj = this;
 
-                if (this.password == this.confirm_password && this.username.length > 0 && this.password != null && usernameErrorMessage == "") {
+                if (this.password == this.confirm_password && this.username.length > 0 && this.password != null) {
                     document.getElementById("password_error").innerHTML = "";
                     document.getElementById("cpassword_error").innerHTML = "";
                     document.getElementById("username_error").innerHTML = "";
@@ -197,7 +192,7 @@ import axios from 'axios';
                     })
 
                     .then(function (response) {
-                        
+
                         currentObj.output = response.data;
                         currentObj.$router.push('/login');
 
@@ -224,7 +219,7 @@ import axios from 'axios';
             }, handleFileUpload(){
                 this.file = this.$refs.file.files[0];
             }, getShelters(){
-                axios.get('http://localhost:3000/sheltername')
+                axios.get('http://localhost:3000/shelter')
                 .then(response => {
                     // JSON responses are automatically parsed.
                     this.shelters = response.data.data
@@ -232,31 +227,8 @@ import axios from 'axios';
                 .catch(e => {
                     this.errors.push(e)
                 })
-            }, checkUsername(){
-                axios.post('http://localhost:3000/username',
-                {
-                    username: this.username
-                })
-                .then(function (response) {
-
-                    if (response.data.data.length > 0) {
-                        document.getElementById("username_error").innerHTML = "Username tidak tersedia";
-                    } else {
-                        document.getElementById("username_error").innerHTML = "";
-                    }
-
-                })
-
-                .catch(function (error) {
-
-                    currentObj.output = error;
-
-                });
             }
 
-        },
-        beforeMount(){
-            this.getShelters()
         }
 
     }
