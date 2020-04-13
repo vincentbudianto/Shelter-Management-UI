@@ -449,6 +449,7 @@ export default {
       axios.get("http://localhost:3000/dashboard"),
     ])
       .then(response => {
+        console.log(this.$cookies.get("Type"), this.$cookies.get("AccountID"))
         this.shelterData = response[0].data.data
         this.disasterData = response[1].data.data
         this.dashboardData = response[2].data.data

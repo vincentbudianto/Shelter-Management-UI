@@ -11,8 +11,6 @@ import Vuelayers from '@/plugins/vuelayers' //path to vuelayers export
 Vue.config.productionTip = false
 Vue.use(ChartjsPlugin)
 Vue.use(VueCookies)
-Vue.$cookies.set('Type', 'guest')
-Vue.$cookies.set('AccountID', 'null')
 
 /* eslint-disable no-new */
 new Vue({
