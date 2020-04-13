@@ -13,6 +13,7 @@ import Login from '@/components/Login/Login'
 import Logout from '@/components/Logout/Logout'
 import Details from '@/components/Details/Details'
 import Placement from '@/components/Placement/Placement'
+import Register from '@/components/Register/Register'
 
 // Fallback page
 // import PageNotFound from '@/components/PageNotFound'
@@ -68,6 +69,11 @@ export default new Router({
       path: '/placement',
       name: 'Placement',
       component: Placement
+    },
+    {
+      path: '/register',
+      name: 'Register',
+      component: Register
     }
   ]
 })
