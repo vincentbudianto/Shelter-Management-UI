@@ -440,38 +440,59 @@ export default {
 
       return result
     },
+
+    getAllDashboardData () {
+      axios.all([
+        axios.get("http://localhost:3000/shelter"),
+        axios.get("http://localhost:3000/disaster"),
+        axios.get("http://localhost:3000/dashboard"),
+      ])
+        .then(response => {
+          console.log(this.$cookies.get("Type"), this.$cookies.get("AccountID"))
+          this.shelterData = response[0].data.data
+          this.disasterData = response[1].data.data
+          this.dashboardData = response[2].data.data
+
+          this.shelterDisasterNames = this.disasterData.map(x=>x.Name)
+          this.renderedCoordinates = this.disasterData.map((x, idx)=>({
+            "idx": idx,
+            "ID":x.DisasterID, 
+            "Latitude":parseFloat(x.Latitude), 
+            "Longitude":parseFloat(x.Longitude), 
+            "Type":"Disaster"}))
+          
+          this.renderedDashboardData = this.dashboardData
+          this.countVictimInCurrentScope = this.dashboardData.length
+
+          // this.createChart('victim-by-gender'); //gaada data gender. Anyway gender gapenting juga kayaknya. ntar liat lagi
+          this.createChart('victim-by-age');
+          // this.createChart('victim-by-condition');
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+
+    validateUserAccess () {
+      var userID = this.$cookies.get("AccountID")
+
+      axios.get(`http://localhost:3000/check/admin?id=${userID}`)
+      .then(response => {
+        if(response.data.isAdmin){
+          this.getAllDashboardData()
+        }
+        else{
+          window.location.replace('http://localhost:8000/#/login')
+        }
+      })
+      .catch(error => {
+        console.log("Validation Error:", error)
+      })
+    },
   },
 
   mounted () {
-    axios.all([
-      axios.get("http://localhost:3000/shelter"),
-      axios.get("http://localhost:3000/disaster"),
-      axios.get("http://localhost:3000/dashboard"),
-    ])
-      .then(response => {
-        console.log(this.$cookies.get("Type"), this.$cookies.get("AccountID"))
-        this.shelterData = response[0].data.data
-        this.disasterData = response[1].data.data
-        this.dashboardData = response[2].data.data
-
-        this.shelterDisasterNames = this.disasterData.map(x=>x.Name)
-        this.renderedCoordinates = this.disasterData.map((x, idx)=>({
-          "idx": idx,
-          "ID":x.DisasterID, 
-          "Latitude":parseFloat(x.Latitude), 
-          "Longitude":parseFloat(x.Longitude), 
-          "Type":"Disaster"}))
-        
-        this.renderedDashboardData = this.dashboardData
-        this.countVictimInCurrentScope = this.dashboardData.length
-
-        // this.createChart('victim-by-gender'); //gaada data gender. Anyway gender gapenting juga kayaknya. ntar liat lagi
-        this.createChart('victim-by-age');
-        // this.createChart('victim-by-condition');
-      })
-      .catch(error => {
-        console.log(error)
-      })
+    this.validateUserAccess()
   }
 }
 
