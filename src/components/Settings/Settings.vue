@@ -6,7 +6,7 @@
                     Add Disaster
                 </v-col>
                 <v-col>
-                    <v-btn>Open</v-btn>
+                    <v-btn @click="openAddDisaster">Open</v-btn>
                 </v-col>
         </v-row>
         <v-row class="m-3 p-5 tile-box">
@@ -26,6 +26,7 @@
                 </v-col>
         </v-row>
     </div>
+    <add-disaster-modal v-show="addDisasterVisible" @close="closeAddDisaster"/>
   </div>
 </template>
 
@@ -38,5 +39,25 @@
 </style>
 
 <script>
+    import addDisasterModal from './AddShelter.vue';
+    export default {
+        name: 'settings',
+        components: {
+            addDisasterModal,
+        },
 
+        data (){
+            return {
+                addDisasterVisible : true,
+            }
+        },
+        methods:{
+            openAddDisaster(){
+                this.addDisasterVisible = true;
+            },
+            closeAddDisaster(){
+                this.addDisasterVisible = false;
+            }
+        }
+    }
 </script>
