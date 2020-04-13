@@ -68,28 +68,6 @@ h1 {
 </style>
 
 <script>
-<<<<<<< HEAD
-||||||| merged common ancestors
-export default {
-    data () {
-      return {
-        items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
-        bencana: "",
-        shelter: "",
-        showDetail: false,
-        shelterName: "",
-        shelterLocation: "",
-        countShelterVictims: "",
-      }
-    },
-
-    methods: {
-      btnClick: function(event){
-        this.showDetail= true;
-      }
-    }
-  }
-=======
 import axios from 'axios';
 export default {
     data () {
@@ -139,5 +117,4 @@ export default {
       }
     }
   }
->>>>>>> staging
 </script>
