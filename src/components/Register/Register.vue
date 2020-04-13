@@ -185,7 +185,7 @@ import axios from 'axios';
 
                 let currentObj = this;
 
-                if (this.password == this.confirm_password && this.username.length > 0 && this.password != null && usernameErrorMessage == "") {
+                if (this.password == this.confirm_password && this.username != undefined && this.password != null && usernameErrorMessage == "") {
                     document.getElementById("password_error").innerHTML = "";
                     document.getElementById("cpassword_error").innerHTML = "";
                     document.getElementById("username_error").innerHTML = "";
@@ -213,7 +213,7 @@ import axios from 'axios';
                         document.getElementById("password_error").innerHTML = "Password tidak cocok";
                         document.getElementById("cpassword_error").innerHTML = "Password tidak cocok";
                     }
-                    if (this.username.length < 1) {
+                    if (this.username == undefined) {
                         document.getElementById("username_error").innerHTML = "Username tidak boleh kosong";
                     }
                     if (this.password == null) {
