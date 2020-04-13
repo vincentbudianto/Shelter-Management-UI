@@ -103,6 +103,19 @@ export default {
         link: '/static/assets/Red Cross Icon.png'
       }
     ]
-  })
+  }),
+
+  methods: {
+    fillInGuestCookie () {
+      if (this.$cookies.get("AccountID") == null && this.$cookies.get("Type") == null){
+        this.$cookies.set('AccountID', "null", 1);
+        this.$cookies.set('Type', 'Guest', 1);
+      }
+    }
+  },
+
+  mounted () {
+    this.fillInGuestCookie ()
+  },
 }
 </script>
