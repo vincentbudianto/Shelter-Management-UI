@@ -163,8 +163,8 @@ import axios from 'axios';
 
                 if(this.shelterid != undefined && this.name != undefined){
 
-                    document.getElementById("shelterid_error").innerHTML = "Tidak boleh kosong";
-                    document.getElementById("name_error").innerHTML = "Tidak boleh kosong"
+                    document.getElementById("shelterid_error").innerHTML = "";
+                    document.getElementById("name_error").innerHTML = "";
 
                     axios.post('http://localhost:3000/victim', formData, 
                     {
@@ -205,10 +205,33 @@ import axios from 'axios';
                 .catch(e => {
                     this.errors.push(e)
                 })
+            }, validateUser(){
+                var aid = this.$cookies.get('AccountID');
+                let currentObj = this;
+                axios.get('http://localhost:3000/check/admin?id=' + aid)
+                .then(response => {
+                    // JSON responses are automatically parsed.
+                    if(response.data.data.isAdmin == false){
+                         axios.get('http://localhost:3000/check/staff?id=' + aid)
+                        .then(response => {
+                            // JSON responses are automatically parsed.
+                            if(response.data.data.isStaff == false){
+                                currentObj.$router.push('/login');
+                            }
+                        })
+                        .catch(e => {
+                            this.errors.push(e)
+                        })
+                    }
+                })
+                .catch(e => {
+                    this.errors.push(e)
+                })
             }
 
         },
         beforeMount(){
+            this.validateUser();
             this.getShelters()
         }
 
