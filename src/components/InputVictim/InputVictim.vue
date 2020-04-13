@@ -11,16 +11,23 @@
                 <span>No. KK</span><br>
                 <input type="text" id="nokk_placeholder" name="nokk" value="" v-model="nokk">
                 <br>
-                <span>name</span><br>
+                <span>Nama*</span><br>
                 <input type="text" id="name_placeholder" name="name" value="" v-model="name">
                 <br>
-                <span>age</span><br>
+                <span class="error-message" id="name_error"></span><br>
+                <span>Umur</span><br>
                 <input type="text" id="age_placeholder" name="age" value="" v-model="age">
                 <br>
-                <span>ID Shelter</span><br>
-                <input type="text" id="shelterid_placeholder" name="shelterid" value="" v-model="shelterid">
+                <div>
+                <span>Shelter ID*</span><br>
+                <input list="browsers" id="shelterid" name="shelterid" v-model="shelterid">
+                <datalist id="browsers">
+                    <option v-for="shelter in shelters" :value="shelter.ShelterID">{{ shelter.Name }}</option>
+                </datalist>
                 <br>
-                <span>photo</span><br>
+                <span class="error-message" id="shelterid_error"></span><br>
+                </div>
+                <span>Foto</span><br>
                 <div class="upload-btn-wrapper">
                     <input type="file" id="real-upload-button" name="photo" ref="file" v-on:change="handleFileUpload()"/>
                 </div>
@@ -108,6 +115,11 @@ body {
     font-family: Quattrocento;
 }
 
+.error-message{
+    color: red!important;
+    font-size: 0.6em!important;
+}
+
 </style>
 
 <script>
@@ -124,17 +136,7 @@ import axios from 'axios';
 
             return {
 
-              nik: '',
-
-              nokk: '',
-
-              name: '',
-
-              age: '',
-
-              shelterid: '',
-
-              file: '',
+              shelters: [],
 
               output: ''
 
@@ -159,29 +161,55 @@ import axios from 'axios';
 
                 let currentObj = this;
 
-                axios.post('http://localhost:3000/victim', formData, 
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
+                if(this.shelterid != undefined && this.name != undefined){
+
+                    document.getElementById("shelterid_error").innerHTML = "Tidak boleh kosong";
+                    document.getElementById("name_error").innerHTML = "Tidak boleh kosong"
+
+                    axios.post('http://localhost:3000/victim', formData, 
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+
+                    .then(function (response) {
+
+                        currentObj.output = response.data;
+                        currentObj.$router.push('/');
+
+                    })
+
+                    .catch(function (error) {
+
+                        currentObj.output = error;
+
+                    });
+                } else {
+                    if (this.shelterid == undefined) {
+                        document.getElementById("shelterid_error").innerHTML = "Tidak boleh kosong";
                     }
-                })
-
-                .then(function (response) {
-
-                    currentObj.output = response.data;
-
-                })
-
-                .catch(function (error) {
-
-                    currentObj.output = error;
-
-                });
+                    if (this.name == undefined) {
+                        document.getElementById("name_error").innerHTML = "Tidak boleh kosong";
+                    }
+                }
 
             }, handleFileUpload(){
                 this.file = this.$refs.file.files[0];
+            }, getShelters(){
+                axios.get('http://localhost:3000/sheltername')
+                .then(response => {
+                    // JSON responses are automatically parsed.
+                    this.shelters = response.data.data
+                })
+                .catch(e => {
+                    this.errors.push(e)
+                })
             }
 
+        },
+        beforeMount(){
+            this.getShelters()
         }
 
     }
