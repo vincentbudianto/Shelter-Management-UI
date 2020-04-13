@@ -5,28 +5,23 @@
                 <v-col>
                     Add Disaster
                 </v-col>
-                <v-col>
                     <v-btn @click="openAddDisaster">Open</v-btn>
-                </v-col>
         </v-row>
         <v-row class="m-3 p-5 tile-box">
                 <v-col>
                     Add Shelter
                 </v-col>
-                <v-col>
-                    <v-btn>Open</v-btn>
-                </v-col>
+                    <v-btn @click="openAddShelter">Open</v-btn>
         </v-row>
         <v-row class="m-3 p-5 tile-box">
                 <v-col>
                     Search Filter by NoKK
                 </v-col>
-                <v-col>
-                    <v-btn>Open</v-btn>
-                </v-col>
+                <v-switch></v-switch>
         </v-row>
     </div>
     <add-disaster-modal v-show="addDisasterVisible" @close="closeAddDisaster"/>
+    <add-shelter-modal v-show="addShelterVisible" @close="closeAddShelter"/>
   </div>
 </template>
 
@@ -39,16 +34,19 @@
 </style>
 
 <script>
-    import addDisasterModal from './AddShelter.vue';
+    import addDisasterModal from './AddDisaster.vue';
+    import addShelterModal from './AddShelter.vue'
     export default {
         name: 'settings',
         components: {
             addDisasterModal,
+            addShelterModal,
         },
 
         data (){
             return {
-                addDisasterVisible : true,
+                addDisasterVisible : false,
+                addShelterVisible : false,
             }
         },
         methods:{
@@ -57,6 +55,12 @@
             },
             closeAddDisaster(){
                 this.addDisasterVisible = false;
+            },
+            openAddShelter(){
+                this.addShelterVisible = true;
+            },
+            closeAddShelter(){
+                this.addShelterVisible = false;
             }
         }
     }

@@ -11,11 +11,11 @@
         </header>
         <section class="modal-body" id="modalDescription">
           <slot name="body">
-            <h4>Masukan Data Shelter</h4>
+            <h4>Masukan Data Bencana</h4>
             <v-form ref="form">
                 <v-text-field
                 v-model="inputNamaBencana"
-                label="Nama Shelter"
+                label="Nama Bencana"
                 ></v-text-field>
             </v-form>
             <v-form ref="form">
@@ -94,7 +94,7 @@
 </style>
 <script>
 export default {
-    name: 'addShelterModal',
+    name: 'addDisasterModal',
     methods:{
         close(){
             this.$emit('close');
