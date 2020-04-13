@@ -22,8 +22,11 @@
             <li class="nav-item">
               <router-link class="nav-link text-light" :to="links[4].to">{{ links[4].name }}</router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="$cookies.get('Type') == 'guest'">
               <router-link class="nav-link text-light" :to="links[5].to">{{ links[5].name }}</router-link>
+            </li>
+            <li class="nav-item" v-if="$cookies.get('Type') == 'admin' || $cookies.get('Type') == 'staff'">
+              <router-link class="nav-link text-light" :to="links[6].to">{{ links[6].name }}</router-link>
             </li>
           </ul>
           <form class="form-inline my-2 my-lg-0">
@@ -88,6 +91,10 @@ export default {
       {
         name: 'Login',
         to: '/login'
+      },
+      {
+        name: 'Logout',
+        to: '/logout'
       }
     ],
     icons: [

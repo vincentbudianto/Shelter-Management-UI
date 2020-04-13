@@ -9,6 +9,7 @@ import Search from '@/components/Search/Search'
 import Disaster from '@/components/Disaster/Disaster'
 import Shelter from '@/components/Shelter/Shelter'
 import Login from '@/components/Login/Login'
+import Logout from '@/components/Logout/Logout'
 import Details from '@/components/Details/Details'
 import Placement from '@/components/Placement/Placement'
 
@@ -17,7 +18,7 @@ import Placement from '@/components/Placement/Placement'
 
 Vue.use(Router)
 Vue.use(Vuelayers, {
-  dataProjection: 'EPSG:4326',
+  dataProjection: 'EPSG:4326'
 })
 
 export default new Router({
@@ -46,6 +47,11 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/logout',
+      name: 'Logout',
+      component: Logout
     },
     {
       path: '/details/:id',
