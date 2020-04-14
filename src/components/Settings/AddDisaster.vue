@@ -101,6 +101,20 @@ export default {
           this.$emit('close');
         },
         submitAddDisasterClick(){
+          var addDisasterPostData = {
+            'name' : this.inputNamaBencana,
+            'scale' : this.inputSkalaBencana,
+            'latitude' : this.inputLatitude,
+            'longitude' : this.inputLongitude
+          }
+          console.log(addDisasterPostData);
+          axios.post('http://localhost:3000/disaster', addDisasterPostData)
+          .then(response => {
+            console.log(response)
+          })
+          .catch(e => {
+            this.errors.push(e)
+          })
           this.$emit('close');
         }
     },
@@ -108,7 +122,6 @@ export default {
       var data = {
         inputNamaBencana: "",
         inputSkalaBencana: "",
-        inputStatus: "",
         inputLongitude: "",
         inputLatitude: "",
       }

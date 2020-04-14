@@ -119,6 +119,20 @@ export default {
             this.$emit('close');
         },
         submitAddShelterClick(){
+          var addShelterPostData = {
+            'name' : this.inputNamaBencana,
+            'scale' : this.inputSkalaBencana,
+            'latitude' : this.inputLatitude,
+            'longitude' : this.inputLongitude
+          }
+          console.log(addDisasterPostData);
+          axios.post('http://localhost:3000/disaster', addShelterPostData)
+          .then(response => {
+            console.log(response)
+          })
+          .catch(e => {
+            this.errors.push(e)
+          })
           this.$emit('close');
         }
     },
