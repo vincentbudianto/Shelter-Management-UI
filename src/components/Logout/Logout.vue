@@ -77,7 +77,7 @@
             logout() {
 
                 this.$cookies.set("AccountID", "null")
-                this.$cookies.set("Type", "guest")
+                this.$cookies.set("Type", "Guest")
                 this.$router.push('/')
 
             },
