@@ -115,9 +115,9 @@
         {
           id:this.$route.params.id,
           conditionName:this.needs,
-          NeedStock:this.stock,
-          NeedStatus:this.status,
-          NeedImportance:this.importance,
+          needStock:this.stock,
+          needStatus:this.status,
+          needImportance:this.importance,
           updated:this.$cookies.get("AccountID")
         })
         .then(response =>{
