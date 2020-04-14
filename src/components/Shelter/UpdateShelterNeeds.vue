@@ -91,8 +91,7 @@
       var data = {
         inputId: "",
         inputDescription: "",
-        inputStockId: "",
-        inputUpdate: ""
+        inputStockId: ""
       }
 
       return data;

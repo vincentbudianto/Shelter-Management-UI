@@ -111,7 +111,7 @@
           conditionName:this.condition,
           conditionDesc:this.desc,
           conditionStatus:this.status,
-          updated:$cookie.get("AccountID")
+          updated:this.$cookies.get("AccountID")
         })
         .then(response =>{
           console.log(response)

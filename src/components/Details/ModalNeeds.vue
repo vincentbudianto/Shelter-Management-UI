@@ -118,7 +118,7 @@
           NeedStock:this.stock,
           NeedStatus:this.status,
           NeedImportance:this.importance,
-          updated:$cookie.get("AccountID")
+          updated:this.$cookies.get("AccountID")
         })
         .then(response =>{
           console.log(response)
