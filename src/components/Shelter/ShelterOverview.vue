@@ -62,11 +62,6 @@
                   <v-expansion-panel>
                     <v-expansion-panel-header>
                       Stock
-                      <div class="button-container">
-                        <v-btn class="float-right" tile outlined color="success">
-                          Add New Data<v-icon right>mdi-plus-box</v-icon>
-                        </v-btn>
-                      </div>
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
                       <div class="table-responsive">
@@ -93,13 +88,13 @@
                   <v-expansion-panel>
                     <v-expansion-panel-header>
                       Needs History
+                    </v-expansion-panel-header>
+                    <v-expansion-panel-content>
                       <div class="button-container">
-                        <v-btn class="float-right" tile outlined color="success">
+                        <v-btn class="ma-2 float-right" tile outlined color="success" @click="showNeedsModal">
                           Add New Data<v-icon right>mdi-plus-box</v-icon>
                         </v-btn>
                       </div>
-                    </v-expansion-panel-header>
-                    <v-expansion-panel-content>
                       <div class="table-responsive">
                         <table class="table table-fixed">
                           <thead>
@@ -140,7 +135,7 @@
                             </tr>
                           </thead>
                           <tbody style="max-height:300px">
-                            <tr v-for="(victim, index) in victimList">
+                            <tr class="cursor-pointer" v-for="(victim, index) in victimList" v-on:click="goToVictimDetails(victim)">
                               <th scope="row" class="col-1">{{index + 1}}</th>
                               <td class="col-5">{{victim.NIK}}</td>
                               <td class="col-4">{{victim.Name}}</td>
@@ -155,13 +150,13 @@
                   <v-expansion-panel>
                     <v-expansion-panel-header>
                       Conditions History
+                    </v-expansion-panel-header>
+                    <v-expansion-panel-content>
                       <div class="button-container">
-                        <v-btn class="float-right" tile outlined color="success">
+                        <v-btn class="ma-2 float-right" tile outlined color="success" @click="showConditionModal">
                           Add New Data<v-icon right>mdi-plus-box</v-icon>
                         </v-btn>
                       </div>
-                    </v-expansion-panel-header>
-                    <v-expansion-panel-content>
                       <div class="table-responsive">
                         <table class="table table-fixed">
                           <thead>
@@ -191,6 +186,8 @@
           </template>
         </v-row>
     </div>
+    <updateShelterConditionModal :shelter="details" v-show="conditionModalVisible" @close="closeConditionModal"/>
+    <updateShelterNeedsModal :shelter="details" v-show="needsModalVisible" @close="closeNeedsModal"/>
 </div>
 </template>
 
@@ -267,7 +264,9 @@
 }
 .button-container {
   position: relative;
-  margin-right: 2rem;
+}
+.cursor-pointer {
+  cursor: pointer;
 }
 
 .table-fixed tbody {
@@ -301,6 +300,8 @@
 <script>
 import axios from 'axios';
 import moment from 'moment';
+import updateShelterConditionModal from './UpdateShelterCondition.vue';
+import updateShelterNeedsModal from './UpdateShelterNeeds.vue';
 
 export default {
     data () {
@@ -314,8 +315,14 @@ export default {
         currCenter: [0,0],
         center: [0,0],
         rotation: 0,
-        errors: []
+        errors: [],
+        conditionModalVisible: false,
+        needsModalVisible: false
       }
+    },
+    components: {
+      updateShelterConditionModal,
+      updateShelterNeedsModal
     },
     mounted(){
       this.getShelterDetail();
@@ -376,9 +383,22 @@ export default {
           this.errors.push(e);
         })
       },
-      focusOnShelter: function() {
-        this.$refs.centerController.animate({zoom: 17});
-        this.$refs.centerController.animate({center: this.currCenter});
+      goToVictimDetails: function(victim) {
+        window.location.href = '?#/details/' + victim.VictimID;
+      },
+      showConditionModal(){
+        this.conditionModalVisible = true
+      },
+      closeConditionModal(){
+        this.conditionModalVisible = false
+        this.getShelterConditionHistory()
+      },
+      showNeedsModal(){
+        this.needsModalVisible = true
+      },
+      closeNeedsModal(){
+        this.needsModalVisible = false
+        this.getShelterNeedHistory()
       }
     },
     filters:{
