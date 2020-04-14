@@ -35,7 +35,7 @@
               <div><small>Geser peta untuk menggerakkan titik ke lokasi bencana</small></div>
               <div class="h6 mb-0 mt-2">Koordinat Terpilih</div>
               <div><small>Lat: {{center[1].toFixed(2)}}, Long: {{center[0].toFixed(2)}}</small></div>
-              <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true" data-projection="EPSG:4326" style="height: 300px; max-width: 400px">
+              <vl-map ref="map" :load-tiles-while-animating="true" :load-tiles-while-interacting="true" data-projection="EPSG:4326" style="height: 300px; max-width: 400px">
                 <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
                 <vl-layer-tile>
                   <vl-source-osm></vl-source-osm>
@@ -112,6 +112,9 @@
 import axios from 'axios';
 export default {
     name: 'addDisasterModal',
+    created() {
+      this.interval = setInterval(this.checkRefreshMap, 2000)
+    },
     methods:{
         close(){
           this.$emit('close');
@@ -132,6 +135,9 @@ export default {
             this.errors.push(e)
           })
           this.$emit('close');
+        },
+        checkRefreshMap() {
+          this.$refs.map.refresh();
         }
     },
     data () {
