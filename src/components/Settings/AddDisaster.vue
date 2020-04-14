@@ -11,35 +11,51 @@
         </header>
         <section class="modal-body" id="modalDescription">
           <slot name="body">
-            <h4>Masukan Data Bencana</h4>
-            <v-form ref="form">
+            <div>
+              <h4>Masukan Data Bencana</h4>
+            </div>
+            <div>
+              <v-form ref="form">
                 <v-text-field
-                v-model="inputNamaBencana"
-                label="Nama Bencana"
+                  v-model="inputNamaBencana"
+                  label="Nama Bencana"
                 ></v-text-field>
-            </v-form>
-            <v-form ref="form">
+              </v-form>
+            </div>
+            <div>
+              <v-form ref="form">
                 <v-text-field
-                v-model="inputSkalaBencana"
-                label="Skala Bencana"
+                  v-model="inputSkalaBencana"
+                  label="Skala Bencana"
                 ></v-text-field>
-            </v-form>
-            <v-form ref="form">
-                <v-text-field
-                v-model="inputLatitude"
-                label="Koordinat tempat bencana (Garis Lintang/Latitude)"
-                ></v-text-field>
-            </v-form>
-            <v-form ref="form">
-                <v-text-field
-                v-model="inputLongitude"
-                label="Koordinat tempat bencana (Garis Bujur/Longitude)"
-                ></v-text-field>
-            </v-form>
-            <v-row>
+              </v-form>
+            </div>
+            <div>
+              <div class="h5 mb-0">Masukkan Koordinat Bencana</div>
+              <div><small>Geser peta untuk menggerakkan titik ke lokasi bencana</small></div>
+              <div class="h6 mb-0 mt-2">Koordinat Terpilih</div>
+              <div><small>Lat: {{center[1].toFixed(2)}}, Long: {{center[0].toFixed(2)}}</small></div>
+              <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true" data-projection="EPSG:4326" style="height: 300px; max-width: 400px">
+                <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
+                <vl-layer-tile>
+                  <vl-source-osm></vl-source-osm>
+                </vl-layer-tile>
+                  <vl-feature>
+                    <vl-geom-point
+                      :coordinates="center"
+                    ></vl-geom-point>
+                    <vl-style-box>
+                      <vl-style-circle :radius="15">
+                        <vl-style-fill color="red"></vl-style-fill>
+                      </vl-style-circle>
+                    </vl-style-box>
+                  </vl-feature>
+              </vl-map>
+            </div>
+            <div>
                 <v-btn v-on:click="submitAddDisasterClick">Tambahkan</v-btn>
                 <v-btn v-on:click="close">Kembali</v-btn>
-            </v-row>
+            </div>
           </slot>
         </section>
       </div>
@@ -104,8 +120,8 @@ export default {
           var addDisasterPostData = {
             'name' : this.inputNamaBencana,
             'scale' : this.inputSkalaBencana,
-            'latitude' : this.inputLatitude,
-            'longitude' : this.inputLongitude
+            'latitude' : this.center[1],
+            'longitude' : this.center[0]
           }
           console.log(addDisasterPostData);
           axios.post('http://localhost:3000/disaster', addDisasterPostData)
@@ -122,8 +138,10 @@ export default {
       var data = {
         inputNamaBencana: "",
         inputSkalaBencana: "",
-        inputLongitude: "",
-        inputLatitude: "",
+        center: [106.0, -6.0],
+        zoom: 6,
+        rotation: 0,
+        geolocPosition: undefined,
       }
 
       return data;
