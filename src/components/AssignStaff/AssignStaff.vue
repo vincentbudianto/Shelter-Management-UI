@@ -202,10 +202,23 @@ import axios from 'axios';
                 .catch(e => {
                     this.errors.push(e)
                 })
+            }, validateUser(){
+                var aid = this.$cookies.get('AccountID');
+                let currentObj = this;
+                axios.get('http://localhost:3000/check/admin?id=' + aid)
+                .then(response => {
+                    // JSON responses are automatically parsed.
+                    if(response.data.data.isAdmin == false){
+                         currentObj.$router.push('/login');
+                    }
+                })
+                .catch(e => {
+                    this.errors.push(e)
+                })
             }
-
         },
         beforeMount(){
+            this.validateUser();
             this.getShelters();
             this.getAccounts();
         }
