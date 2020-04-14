@@ -1,7 +1,8 @@
 <template>
   <div class="container placement-container d-flex justify-content-center">
     <div class="col-md-12 search-table-container">
-      <v-text-field class="search" v-model="query" name="query" label="Search" clearable dark @keyup="search"/>
+      <v-text-field v-if="!filterState" class="search" v-model="query" name="query" label="Search" clearable dark @keyup="search"/>
+      <v-text-field v-if="filterState" class="search" v-model="query" name="query" label="Masukkan NoKK" clearable dark @keyup="filteredSearch"/>
       <table class="table table-striped">
         <thead class="thead-light">
           <th scope="col">NIK</th>
@@ -61,14 +62,35 @@ export default {
     return {
       victims: [],
       errors: [],
-      query: null
+      query: null,
+      filterState: 0,
     }
   },
 
+  mounted:function(){
+    axios.get('http://localhost:3000/configs/filter')
+      .then(response => {
+        this.filterState = response.data.data[0].SearchFilter;
+        // console.log(this.filterState);
+      })
+      .catch(e => {
+        this.errors.push(e)
+      });
+  },
   // Fetches posts when the component is created.
   methods: {
     search: function() {
       axios.get('http://localhost:3000/victim/search/keyword?keyword=' + this.query)
+      .then(response => {
+        // JSON responses are automatically parsed.
+        this.victims = response.data.data
+      })
+      .catch(e => {
+        this.errors.push(e)
+      })
+    },
+    filteredSearch: function() {
+      axios.get('http://localhost:3000/victim/search/nokk?nokk=' + this.query)
       .then(response => {
         // JSON responses are automatically parsed.
         this.victims = response.data.data
