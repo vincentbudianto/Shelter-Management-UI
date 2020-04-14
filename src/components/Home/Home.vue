@@ -1,4 +1,4 @@
-<template>
+<template v-if="userValidated">
   <div class="bg">
     <div class="content mx-1">
 
@@ -193,6 +193,7 @@ export default {
     return {
 
       //general data
+      userValidated: false,
       dashboardData: [],
       disasterData: [],
       renderedDashboardData: [],
@@ -479,6 +480,7 @@ export default {
       axios.get(`http://localhost:3000/check/admin?id=${userID}`)
       .then(response => {
         if(response.data.isAdmin){
+          this.userValidated = true
           this.getAllDashboardData()
         }
         else{
