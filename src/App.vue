@@ -2,37 +2,42 @@
   <v-app>
     <div>
       <nav class="navbar navbar-expand-lg navbar-light bg-dark">
-        <img src='/static/assets/RedCrossIcon.png' width=50px height=50px>
-        <router-link class="navbar-brand text-light" :to="links[0].to">{{ links[0].name }}</router-link>
+        <div class="w-75">
+          <img src='/static/assets/RedCrossIcon.png' width=50px height=50px>
+          <router-link class="navbar-brand text-light" :to="links[0].to">{{ links[0].name }}</router-link>
+        </div>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+            <li class="nav-item active" v-if="$cookies.get('Type') == 'Admin'">
               <router-link class="nav-link text-light" :to="links[1].to">{{ links[1].name }}</router-link>
             </li>
-            <li class="nav-item active">
+            <li class="nav-item active" v-if="$cookies.get('Type') == 'Admin'">
               <router-link class="nav-link text-light" :to="links[2].to">{{ links[2].name }}</router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="$cookies.get('Type') == 'Staff'">
               <router-link class="nav-link text-light" :to="links[3].to">{{ links[3].name }}</router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="$cookies.get('Type') == 'Admin' || $cookies.get('Type') == 'Staff'">
               <router-link class="nav-link text-light" :to="links[4].to">{{ links[4].name }}</router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="$cookies.get('Type') == 'Admin' || $cookies.get('Type') == 'Staff'">
               <router-link class="nav-link text-light" :to="links[5].to">{{ links[5].name }}</router-link>
             </li>
-            <li>
+            <li class="nav-item" v-if="$cookies.get('Type') == 'Guest'">
               <router-link class="nav-link text-light" :to="links[6].to">{{ links[6].name }}</router-link>
             </li>
+            <li class="nav-item" v-if="$cookies.get('Type') == 'Admin' || $cookies.get('Type') == 'Staff'">
+              <router-link class="nav-link text-light" :to="links[7].to">{{ links[7].name }}</router-link>
+            </li>
           </ul>
-          <form class="form-inline my-2 my-lg-0">
+          <!-- <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="search" placeholder="Type a victim's name" aria-label="Search">
             <button class="btn my-2 my-sm-0" type="submit">Search</button>
-          </form>
+          </form> -->
         </div>
       </nav>
       <main>
@@ -73,8 +78,8 @@ export default {
         to: '/'
       },
       {
-        name: 'Search',
-        to: '/search'
+        name: 'Dashboard',
+        to: '/dashboard'
       },
       {
         name: 'Disaster',
@@ -85,12 +90,20 @@ export default {
         to: '/shelter'
       },
       {
+        name: 'Search',
+        to: '/search'
+      },
+      {
         name: 'Placement',
         to: '/placement'
       },
       {
         name: 'Login',
         to: '/login'
+      },
+      {
+        name: 'Logout',
+        to: '/logout'
       },
       {
         name: 'Settings',
@@ -103,6 +116,19 @@ export default {
         link: '/static/assets/Red Cross Icon.png'
       }
     ]
-  })
+  }),
+
+  methods: {
+    fillInGuestCookie () {
+      if (this.$cookies.get("AccountID") == null && this.$cookies.get("Type") == null){
+        this.$cookies.set('AccountID', "null", 1);
+        this.$cookies.set('Type', 'Guest', 1);
+      }
+    }
+  },
+
+  mounted () {
+    this.fillInGuestCookie ()
+  },
 }
 </script>

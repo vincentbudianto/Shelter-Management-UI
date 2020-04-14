@@ -1,7 +1,7 @@
 <template>
   <div class="bg">
     <div class="content">
-      <div class="box" id="map">
+      <!-- <div class="box" id="map">
         <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true"
                 data-projection="EPSG:4326" style="height: 400px">
           <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
@@ -24,73 +24,127 @@
             <vl-source-osm></vl-source-osm>
           </vl-layer-tile>
         </vl-map>
-      </div>
-      <div class="box" id="identity">
-        <img v-bind:src="'data:image/png;base64,' +detail.Photo">
-        <table class="details" id="details">
-          <col width="10%">
-          <col width="5%">
-          <tr><td>NIK</td><td>:</td><td>{{detail.NIK}}</td></tr>
-          <tr><td>NOKK</td><td>:</td><td>{{detail.NoKK}}</td></tr>
-          <tr><td>Name</td><td>:</td><td>{{detail.Name}}</td></tr>
-          <tr><td>Age</td><td>:</td><td>{{detail.Age}}</td></tr>
-        </table>
-      </div>
-      <div class="box" id="location">
-        <table class="details">
-          <col width="35%">
-          <tr>
-            <td>Name</td>
-            <td>Latitude</td>
-            <td>Longitude</td>
-            <td>Time</td>
-          </tr>
-          <tr v-for="location in locations">
-            <td>{{location.Name}}</td>
-            <td>{{location.Latitude}}</td>
-            <td>{{location.Longitude}}</td>
-            <td>{{location.Timestamp | moment}}</td>
-          </tr>
-        </table>
-        <button type="button" class="btn" @click="showLocationModal">
-                Change
-        </button>
-      </div>
-      <div class="box" id="condAndNeeds">
-        <table class="details" id="conditions">
-          <col width="20%">
-          <col width="45%">
-          <tr>
-            <td>Condition</td>
-            <td>Description</td>
-            <td>Status</td>
-            <td>Time</td>
-          </tr>
-          <tr v-for="condition in conditions">
-            <td>{{condition.Name}}</td>
-            <td>{{condition.Desc}}</td>
-            <td>{{condition.Status}}</td>
-            <td>{{condition.Timestamp | moment}}</td>
-          </tr>
-        </table>
-        <table class="details" id="conditions">
-          <col width="70%">
-          <tr>
-            <td>Needs</td>
-            <td>Time</td>
-          </tr>
-          <tr v-for="need in needs">
-            <td>{{need.Needs}}</td>
-            <td>{{need.Timestamp | moment}}</td>
-          </tr>
-        </table>
-        <button type="button" class="btn" @click="showConditionModal">
-                Change
-        </button>
-        <button type="button" class="btn" @click="showNeedsModal">
-                Change
-        </button>
-      </div>
+      </div> -->
+
+      <v-row class="d-flex justify-content-center w-100">
+        <div class=" d-flex flex-column justify-content-center m-5 p-3 box" style="width: 300px; height: 500px">
+          <!-- Identity Block -->
+          <div class="m-2 d-flex justify-content-center">
+            <h3>Profil Korban</h3>
+          </div>
+          <div class="d-flex justify-content-center m-2 h-75">
+            <img style="max-width: 100%; max-height:100%; display:block" v-bind:src="'data:image/png;base64,' +detail.Photo">
+          </div>
+          <div class="mb-2 d-flex justify-content-center">
+            <h5>{{detail.Name}}</h5>
+          </div>
+          <div class="mh-50"> 
+            <div>
+              <div class="font-weight-bold">NIK</div> <div class="mb-3">{{detail.NIK}}</div>
+            </div>
+            <div>
+              <div class="font-weight-bold">NOKK</div> <div class="mb-3">{{detail.NOKK}}</div>
+            </div>
+            <div>
+              <div class="font-weight-bold">Umur</div> <div class="mb-3">{{detail.Age}}</div>
+            </div>
+          </div>
+        </div>
+      </v-row>
+
+      <v-row>
+        <v-col class=" m-3 p-3 d-flex flex-column justify-content-center box">
+          <!-- Location Block -->
+          <div class="m-2 mb-0 d-flex justify-content-center">
+            <h3 class="mb-1">Riwayat Posko</h3>
+          </div>
+          <div class="text-center mb-2">
+            <small>Klik pada nama posko untuk melihat detil posko</small>
+          </div>
+          <v-row>
+              <table class="table">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">Posko</th>
+                    <th scope="col">Waktu</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(location, index) in locations" :key="index">
+                    <td>{{location.Name}}</td>
+                    <td>{{location.Timestamp | moment}}</td>
+                  </tr>
+                </tbody>
+              </table>
+          </v-row>
+          <v-row class="d-flex justify-content-center align-items-end">
+            <v-btn class="w-25" @click="showLocationModal">
+                    Tambah
+            </v-btn>
+          </v-row>
+        </v-col>
+
+        <v-col class=" m-3 p-3 d-flex flex-column justify-content-center box">
+          <!-- Condition Block -->
+          <div class="m-2 d-flex justify-content-center">
+            <h3>Riwayat Kondisi</h3>
+          </div>
+          <v-row>
+              <table class="table">
+                <thead class="thead-dark">  
+                  <tr>
+                    <th scope="col">Kondisi</th>
+                    <th scope="col">Deskripsi</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Waktu</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="table-light" v-for="(condition, index) in conditions" :key="index">
+                    <td>{{condition.Name}}</td>
+                    <td>{{condition.Desc}}</td>
+                    <td>{{condition.Status}}</td>
+                    <td>{{condition.Timestamp | moment}}</td>
+                  </tr>
+                </tbody>
+              </table>
+          </v-row>
+          <v-row class="d-flex justify-content-center align-items-end">
+            <v-btn class="w-25" @click="showConditionModal">
+                    Tambah
+            </v-btn>
+          </v-row>
+        </v-col>
+
+        <v-col class=" m-3 p-3 d-flex flex-column justify-content-center box">
+          <!-- Need Block -->
+          <div class="m-2 d-flex justify-content-center">
+            <h3>Riwayat Kebutuhan</h3>
+          </div>
+          <v-row>
+              <table class="table">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">Kebutuhan</th>
+                    <th scope="col">Waktu</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(need, index) in needs" :key="index">
+                    <td>{{need.Needs}}</td>
+                    <td>{{need.Timestamp | moment}}</td>
+                  </tr>
+                </tbody>
+              </table>
+          </v-row>
+          <v-row class="d-flex justify-content-center align-items-end">
+            <v-btn class="w-25" @click="showNeedsModal">
+                    Tambah
+            </v-btn>
+          </v-row>
+        </v-col>
+      </v-row>
+
     </div>
     <modalLocation v-show="locationModalVisible" @close="closeLocationModal"/>
     <modalCondition v-show="conditionModalVisible" @close="closeConditionModal"/>
@@ -107,12 +161,10 @@ table{
   padding: 20%;
   margin-left: 1%;
   margin-right: 1%;
-  border-radius: 25px;
   width: 100%
 }
 td{
   padding: 2%;
-  font-family: Quattrocento;
 }
 img{
   align-self: center;
@@ -121,30 +173,29 @@ img{
 }
 
 .bg{
-  background-color: #E5E5E5;
+  /* background-color: #E5E5E5; */
 }
 .content{
   max-width: 90%;
   margin: auto;
-  background-color: #6C6C6C;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
 .box{
-  width: 45%;
-  height: 40%;
-  background-color: #C4C4C4;
-  border-radius: 25px;
-  padding: 2%;
-  margin: 2%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  /* width: 45%;
+  height: 40%; */
+  /* background-color: #C4C4C4; */
+  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
+  /* padding: 2%;
+  margin: 2%; */
+  
 }
 .btn{
   margin: 1%;
   width: 48%;
+  border-radius: 5px;
+  border: 1px solid black;
 }
 
 #map{
@@ -194,23 +245,40 @@ export default {
     modalNeeds
   },
 
-  mounted(){
+  mounted(){  
+    this.getIdentityAndValidateUserAccess();
     this.getLocationHistory();
-    this.getIdentity();
     this.getConditionHistory();
     this.getNeedHistory();
   },
   // Fetches posts when the component is created.
   methods: {
-    getIdentity: function() {
+    getIdentityAndValidateUserAccess: function() {
       axios.get('http://localhost:3000/victim/detail?id=' + this.$route.params.id)
       .then(response => {
-        // JSON responses are automatically parsed.
-        this.detail = response.data.data;
-        console.log(response.data.data)
+        var userID = this.$cookies.get("AccountID")
+        var detail = response.data.data
+        var victimShelterID = detail.ShelterID
+
+        return axios.all([
+          axios.get(`http://localhost:3000/check/admin?id=${userID}`),
+          axios.get(`http://localhost:3000/check/staff?id=${userID}`)
+        ])
+        .then(response => {
+          if(!response[0].data.data.isAdmin && !response[1].data.data.isStaff){
+            window.location.replace('http://localhost:8000/#/search')
+          }
+          else{
+            this.detail = detail
+          }
+        })
+        .catch(error => {
+          console.log("Validation Error:", error)
+        })
       })
       .catch(e => {
         this.errors.push(e)
+        console.log(e)
       })
     },
     getConditionHistory: function(){
@@ -264,13 +332,13 @@ export default {
     },
     closeNeedsModal(){
       this.needsModalVisible = false
-    }
-
+    },
   },
+
   filters:{
     moment: function(date){
       return moment(date).format('HH:mm:ss DD-MM-YYYY');
     }
-  }
+  },
 }
 </script>
