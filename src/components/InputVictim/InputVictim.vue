@@ -1,53 +1,39 @@
 <template>
-  <div class="register-container">
-        <div class="register-box">
+  <div class="input-victim-container">
+        <div class="input-victim-box">
             <h4>
-                Daftar Akun
+                Input Victim
             </h4>
             <form @submit="formSubmit" enctype="multipart/form-data">
-                <span>Username*</span><br>
-                <input type="text" id="username_placeholder" name="username" value="" v-model="username" @keyup="checkUsername()">
-                <br>
-                <span class="error-message" id="username_error"></span><br>
                 <span>NIK</span><br>
                 <input type="text" id="nik_placeholder" name="nik" value="" v-model="nik">
                 <br>
-                <span class="error-message" id="nik_error"></span><br>
-                <span>No KK</span><br>
+                <span>No. KK</span><br>
                 <input type="text" id="nokk_placeholder" name="nokk" value="" v-model="nokk">
-                <span class="error-message" id="nokk_error"></span><br>
-                <span>Nama</span><br>
+                <br>
+                <span>Nama*</span><br>
                 <input type="text" id="name_placeholder" name="name" value="" v-model="name">
+                <br>
                 <span class="error-message" id="name_error"></span><br>
                 <span>Umur</span><br>
                 <input type="text" id="age_placeholder" name="age" value="" v-model="age">
-                <span class="error-message" id="name_error"></span><br>
+                <br>
                 <div>
-                <span>Shelter ID</span><br>
+                <span>Shelter ID*</span><br>
                 <input list="browsers" id="shelterid" name="shelterid" v-model="shelterid">
                 <datalist id="browsers">
                     <option v-for="shelter in shelters" :value="shelter.ShelterID">{{ shelter.Name }}</option>
                 </datalist>
+                <br>
                 <span class="error-message" id="shelterid_error"></span><br>
                 </div>
-                <span>Password*</span><br>
-                <input type="password" id="password_placeholder" name="password" value="" v-model="password">
-                <br>
-                <span class="error-message" id="password_error"></span><br>
-                <span>Konfirmasi Password*</span><br>
-                <input type="password" id="cpassword_placeholder" name="confirm_password" value="" v-model="confirm_password">
-                <br>
-                <span class="error-message" id="cpassword_error"></span><br>
                 <span>Foto</span><br>
                 <div class="upload-btn-wrapper">
-                    <input type="file" id="real-upload-button" name="profile-picture" ref="file" v-on:change="handleFileUpload()"/>
+                    <input type="file" id="real-upload-button" name="photo" ref="file" v-on:change="handleFileUpload()"/>
                 </div>
                 <br><br>
-                <input class="button" id="submit_button" type="submit" value="Register">
+                <input class="button" id="submit_button" type="submit" value="Submit">
             </form> 
-
-            <p>Sudah punya akun? <a :href="'/#/login'">Login disini</a> </p>
-
         </div>
     </div>
 </template>
@@ -61,23 +47,22 @@ body {
 
 /* Login Page */
 
-.register-container{
+.input-victim-container{
     max-width: 960px;
     margin: auto;
     background-color: white;
     padding-top: 8px;
 }
 
-.register-box{
-    box-shadow: 0px 0px 5px 5px rgba(146, 69, 69, 0.2);
+.input-victim-box{
     padding: 24px;
 }
 
-.register-box h4{
+.input-victim-box h4{
     text-align: center; 
     font-weight: 600;
 }
-.register-box input{
+.input-victim-box input{
     padding: 8px 12px;
     margin: 4px 0px;
     width: 90%;
@@ -85,17 +70,17 @@ body {
     border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.register-box input:focus{
+.input-victim-box input:focus{
     outline: 0;
 }
 
-.register-box span{
+.input-victim-box span{
     font-size: 0.8em;
     font-weight: bold;
     color: grey;
 }
 
-.register-box .button{
+.input-victim-box .button{
     font-size: 0.8em;
     font-weight: bold;
     color: white;
@@ -104,7 +89,7 @@ body {
     width: 100%;
 }
 
-.register-box .button:active{
+.input-victim-box .button:active{
     font-size: 0.8em;
     font-weight: bold;
     color: white;
@@ -113,14 +98,14 @@ body {
     width: 100%;
 }
 
-.register-box p{
+.input-victim-box p{
     font-size: 0.7em;
     font-weight: 700;
     text-align: center;
     padding: 8px 32px;
 }
 
-.register-box a{
+.input-victim-box a{
     text-decoration: none;
     color : gray;
 }
@@ -167,29 +152,21 @@ import axios from 'axios';
 
                 let formData = new FormData();
 
-                formData.append('username', this.username);
                 formData.append('nik', this.nik);
                 formData.append('nokk', this.nokk);
-                /*if (this.$cookies.get('Type') != 'admin') {
-                    formData.append('shelterid', '0');
-                } else {
-                    formData.append('shelterid', this.shelterid);
-                }*/
-                formData.append('shelterid', this.shelterid);
                 formData.append('name', this.name);
                 formData.append('age', this.age);
-                formData.append('password', this.password);
+                formData.append('shelterid', this.shelterid);
                 formData.append('photo', this.file);
-                
-                let usernameErrorMessage = document.getElementById("username_error").innerHTML
 
                 let currentObj = this;
 
-                if (this.password == this.confirm_password && this.username != undefined && this.password != null && usernameErrorMessage == "") {
-                    document.getElementById("password_error").innerHTML = "";
-                    document.getElementById("cpassword_error").innerHTML = "";
-                    document.getElementById("username_error").innerHTML = "";
-                    axios.post('http://localhost:3000/register', formData, 
+                if(this.shelterid != undefined && this.name != undefined){
+
+                    document.getElementById("shelterid_error").innerHTML = "";
+                    document.getElementById("name_error").innerHTML = "";
+
+                    axios.post('http://localhost:3000/victim', formData, 
                     {
                         headers: {
                             'Content-Type': 'multipart/form-data'
@@ -197,9 +174,9 @@ import axios from 'axios';
                     })
 
                     .then(function (response) {
-                        
+
                         currentObj.output = response.data;
-                        currentObj.$router.push('/login');
+                        currentObj.$router.push('/');
 
                     })
 
@@ -209,15 +186,11 @@ import axios from 'axios';
 
                     });
                 } else {
-                    if (this.password != this.confirm_password) {
-                        document.getElementById("password_error").innerHTML = "Password tidak cocok";
-                        document.getElementById("cpassword_error").innerHTML = "Password tidak cocok";
+                    if (this.shelterid == undefined) {
+                        document.getElementById("shelterid_error").innerHTML = "Tidak boleh kosong";
                     }
-                    if (this.username == undefined) {
-                        document.getElementById("username_error").innerHTML = "Username tidak boleh kosong";
-                    }
-                    if (this.password == null) {
-                        document.getElementById("password_error").innerHTML = "Password tidak boleh kosong";
+                    if (this.name == undefined) {
+                        document.getElementById("name_error").innerHTML = "Tidak boleh kosong";
                     }
                 }
 
@@ -232,33 +205,35 @@ import axios from 'axios';
                 .catch(e => {
                     this.errors.push(e)
                 })
-            }, checkUsername(){
-                axios.post('http://localhost:3000/username',
-                {
-                    username: this.username
-                })
-                .then(function (response) {
-
-                    if (response.data.data.length > 0) {
-                        document.getElementById("username_error").innerHTML = "Username tidak tersedia";
-                    } else {
-                        document.getElementById("username_error").innerHTML = "";
+            }, validateUser(){
+                var aid = this.$cookies.get('AccountID');
+                let currentObj = this;
+                axios.get('http://localhost:3000/check/admin?id=' + aid)
+                .then(response => {
+                    // JSON responses are automatically parsed.
+                    if(response.data.data.isAdmin == false){
+                         axios.get('http://localhost:3000/check/staff?id=' + aid)
+                        .then(response => {
+                            // JSON responses are automatically parsed.
+                            if(response.data.data.isStaff == false){
+                                currentObj.$router.push('/login');
+                            }
+                        })
+                        .catch(e => {
+                            this.errors.push(e)
+                        })
                     }
-
                 })
-
-                .catch(function (error) {
-
-                    currentObj.output = error;
-
-                });
+                .catch(e => {
+                    this.errors.push(e)
+                })
             }
 
         },
         beforeMount(){
+            this.validateUser();
             this.getShelters()
         }
 
     }
-
 </script>
