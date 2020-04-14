@@ -14,6 +14,7 @@ import Login from '@/components/Login/Login'
 import Logout from '@/components/Logout/Logout'
 import Details from '@/components/Details/Details'
 import Placement from '@/components/Placement/Placement'
+import Settings from '@/components/Settings/Settings'
 import InputVictim from '@/components/InputVictim/InputVictim'
 import Register from '@/components/Register/Register'
 import AssignStaff from '@/components/AssignStaff/AssignStaff'
@@ -77,6 +78,11 @@ export default new Router({
       path: '/placement',
       name: 'Placement',
       component: Placement
+    },
+    {
+      path: '/settings',
+      name: 'Settings',
+      component: Settings
     },
     {
       path: '/input-victim',
