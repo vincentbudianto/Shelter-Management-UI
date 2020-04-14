@@ -17,7 +17,7 @@
                 <v-col>
                     Search Filter by NoKK
                 </v-col>
-                <v-switch></v-switch>
+                <v-switch v-model="filterState"/>
         </v-row>
     </div>
     <add-disaster-modal v-show="addDisasterVisible" @close="closeAddDisaster"/>
@@ -36,17 +36,42 @@
 <script>
     import addDisasterModal from './AddDisaster.vue';
     import addShelterModal from './AddShelter.vue'
+    import axios from 'axios';
     export default {
         name: 'settings',
         components: {
             addDisasterModal,
             addShelterModal,
         },
-
+        mounted : function(){
+        axios.get('http://localhost:3000/configs/filter')
+            .then(response => {
+                this.filterState = response.data.data[0].SearchFilter;
+                // console.log(this.filterState);
+            })
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
         data (){
             return {
                 addDisasterVisible : false,
                 addShelterVisible : false,
+                filterState: undefined,
+            }
+        },
+        watch: {
+            filterState(newValue){
+                var filterStatePost = {
+                    'SearchFilter' : this.filterState,
+                };
+                axios.post('http://localhost:3000/configs/filter', filterStatePost)
+                .then(response => {
+                    // console.log(response)
+                })
+                .catch(e => {
+                    this.errors.push(e)
+                });
             }
         },
         methods:{
@@ -61,7 +86,7 @@
             },
             closeAddShelter(){
                 this.addShelterVisible = false;
-            }
+            },
         }
     }
 </script>

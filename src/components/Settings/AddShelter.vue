@@ -124,7 +124,6 @@ export default {
       axios.get('http://localhost:3000/disaster')
         .then(response => {
           this.disasters = response.data.data
-          console.log(this.disasterList)
         })
         .catch(e => {
           this.errors.push(e)
