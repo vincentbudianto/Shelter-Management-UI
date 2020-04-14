@@ -245,23 +245,40 @@ export default {
     modalNeeds
   },
 
-  mounted(){
+  mounted(){  
+    this.getIdentityAndValidateUserAccess();
     this.getLocationHistory();
-    this.getIdentity();
     this.getConditionHistory();
     this.getNeedHistory();
   },
   // Fetches posts when the component is created.
   methods: {
-    getIdentity: function() {
+    getIdentityAndValidateUserAccess: function() {
       axios.get('http://localhost:3000/victim/detail?id=' + this.$route.params.id)
       .then(response => {
-        // JSON responses are automatically parsed.
-        this.detail = response.data.data;
-        console.log(response.data.data)
+        var userID = this.$cookies.get("AccountID")
+        var detail = response.data.data
+        var victimShelterID = detail.ShelterID
+
+        return axios.all([
+          axios.get(`http://localhost:3000/check/admin?id=${userID}`),
+          axios.get(`http://localhost:3000/check/shelter/staff?staffId=${userID}&shelterId=${victimShelterID}`)
+        ])
+        .then(response => {
+          if(!response[0].data.data.isAdmin && !response[1].data.data.isStaffShelter){
+            window.location.replace('http://localhost:8000/#/login')
+          }
+          else{
+            this.detail = detail
+          }
+        })
+        .catch(error => {
+          console.log("Validation Error:", error)
+        })
       })
       .catch(e => {
         this.errors.push(e)
+        console.log(e)
       })
     },
     getConditionHistory: function(){
@@ -315,13 +332,13 @@ export default {
     },
     closeNeedsModal(){
       this.needsModalVisible = false
-    }
-
+    },
   },
+
   filters:{
     moment: function(date){
       return moment(date).format('HH:mm:ss DD-MM-YYYY');
     }
-  }
+  },
 }
 </script>
