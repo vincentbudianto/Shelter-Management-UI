@@ -262,11 +262,11 @@ export default {
 
         return axios.all([
           axios.get(`http://localhost:3000/check/admin?id=${userID}`),
-          axios.get(`http://localhost:3000/check/shelter/staff?staffId=${userID}&shelterId=${victimShelterID}`)
+          axios.get(`http://localhost:3000/check/staff?id=${userID}`)
         ])
         .then(response => {
-          if(!response[0].data.data.isAdmin && !response[1].data.data.isStaffShelter){
-            window.location.replace('http://localhost:8000/#/login')
+          if(!response[0].data.data.isAdmin && !response[1].data.data.isStaff){
+            window.location.replace('http://localhost:8000/#/search')
           }
           else{
             this.detail = detail
