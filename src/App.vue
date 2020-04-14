@@ -10,23 +10,26 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+            <li class="nav-item active" v-if="$cookies.get('Type') == 'Admin'">
               <router-link class="nav-link text-light" :to="links[1].to">{{ links[1].name }}</router-link>
             </li>
-            <li class="nav-item active">
+            <li class="nav-item active" v-if="$cookies.get('Type') == 'Admin'">
               <router-link class="nav-link text-light" :to="links[2].to">{{ links[2].name }}</router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="$cookies.get('Type') == 'Staff'">
               <router-link class="nav-link text-light" :to="links[3].to">{{ links[3].name }}</router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="$cookies.get('Type') == 'Admin' || $cookies.get('Type') == 'Staff'">
               <router-link class="nav-link text-light" :to="links[4].to">{{ links[4].name }}</router-link>
             </li>
-            <li class="nav-item" v-if="$cookies.get('Type') == 'guest'">
+            <li class="nav-item" v-if="$cookies.get('Type') == 'Admin' || $cookies.get('Type') == 'Staff'">
               <router-link class="nav-link text-light" :to="links[5].to">{{ links[5].name }}</router-link>
             </li>
-            <li class="nav-item" v-if="$cookies.get('Type') == 'admin' || $cookies.get('Type') == 'staff'">
+            <li class="nav-item" v-if="$cookies.get('Type') == 'Guest'">
               <router-link class="nav-link text-light" :to="links[6].to">{{ links[6].name }}</router-link>
+            </li>
+            <li class="nav-item" v-if="$cookies.get('Type') == 'Admin' || $cookies.get('Type') == 'Staff'">
+              <router-link class="nav-link text-light" :to="links[7].to">{{ links[7].name }}</router-link>
             </li>
           </ul>
           <form class="form-inline my-2 my-lg-0">
@@ -73,8 +76,8 @@ export default {
         to: '/'
       },
       {
-        name: 'Search',
-        to: '/search'
+        name: 'Dashboard',
+        to: '/dashboard'
       },
       {
         name: 'Disaster',
@@ -83,6 +86,10 @@ export default {
       {
         name: 'Shelter',
         to: '/shelter'
+      },
+      {
+        name: 'Search',
+        to: '/search'
       },
       {
         name: 'Placement',
