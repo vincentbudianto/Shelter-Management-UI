@@ -5,6 +5,7 @@ import 'vuelayers/lib/style.css'
 
 // Page content
 import Home from '@/components/Home/Home'
+import Dashboard from '@/components/Dashboard/Dashboard'
 import Search from '@/components/Search/Search'
 import Disaster from '@/components/Disaster/Disaster'
 import Shelter from '@/components/Shelter/Shelter'
@@ -36,6 +37,11 @@ export default new Router({
       path: '/search',
       name: 'Search',
       component: Search
+    },
+    {
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: Dashboard
     },
     {
       path: '/disaster',
