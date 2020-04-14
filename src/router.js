@@ -5,13 +5,16 @@ import 'vuelayers/lib/style.css'
 
 // Page content
 import Home from '@/components/Home/Home'
+import Dashboard from '@/components/Dashboard/Dashboard'
 import Search from '@/components/Search/Search'
 import Disaster from '@/components/Disaster/Disaster'
 import Shelter from '@/components/Shelter/Shelter'
+import ShelterDetails from '@/components/Shelter/ShelterOverview'
 import Login from '@/components/Login/Login'
 import Logout from '@/components/Logout/Logout'
 import Details from '@/components/Details/Details'
 import Placement from '@/components/Placement/Placement'
+import Settings from '@/components/Settings/Settings'
 import InputVictim from '@/components/InputVictim/InputVictim'
 import Register from '@/components/Register/Register'
 import AssignStaff from '@/components/AssignStaff/AssignStaff'
@@ -37,6 +40,11 @@ export default new Router({
       component: Search
     },
     {
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: Dashboard
+    },
+    {
       path: '/disaster',
       name: 'Disaster',
       component: Disaster
@@ -45,6 +53,11 @@ export default new Router({
       path: '/shelter',
       name: 'Shelter',
       component: Shelter
+    },
+    {
+      path: '/shelter/:id',
+      name: 'ShelterDetails',
+      component: ShelterDetails,
     },
     {
       path: '/login',
@@ -65,6 +78,11 @@ export default new Router({
       path: '/placement',
       name: 'Placement',
       component: Placement
+    },
+    {
+      path: '/settings',
+      name: 'Settings',
+      component: Settings
     },
     {
       path: '/input-victim',

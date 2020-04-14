@@ -108,7 +108,7 @@
       shelter: {
         handler() {
           this.inputId = this.shelter.ShelterID;
-          this.inputUpdate = $cookie.get("AccountID");
+          // this.inputUpdate = $cookie.get("AccountID");
         }
       }
     },
@@ -118,11 +118,11 @@
       },
       submitUpdateShelterConditionClick: function (event) {
         var inputShelterPostData = {
-          "id": this.inputId,
+          "id": this.shelter.ShelterID,
           "shelterTitle": this.inputTitle,
           "shelterDesc": this.inputDescription,
           "shelterStatus": this.inputStatus,
-          "updated": this.inputUpdate
+          "updated": this.$cookies.get("AccountID")
         }
 
         axios.post('http://localhost:3000/shelter/history/condition', inputShelterPostData)
@@ -132,6 +132,8 @@
         .catch(e => {
           this.errors.push(e)
         })
+
+        this.close()
       }
     }
   };
