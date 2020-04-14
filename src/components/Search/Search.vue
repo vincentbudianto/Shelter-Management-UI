@@ -1,21 +1,22 @@
 <template>
-  <div class="bg">
-    <div class="content">
-      <form v-on:submit="search">
-        <input v-model="query" name="query" placeholder="Search">
-        <button type="submit">🔎</button>
-      </form>
-      <table class="table-of-victims">
-        <tr>
-          <th><p>NIK</p></th>
-          <th><p>Nama</p></th>
-          <th><p>Status</p></th>
-        </tr>
-        <tr v-for="victim in victims" v-bind:key="victim.VictimID">
-          <td><a :href="'?#/details/'+victim.VictimID"><p>{{ victim.NIK || 'unknown' }}</p></a></td>
-          <td><a :href="'?#/details/'+victim.VictimID"><p>{{ victim.Name }}</p></a></td>
-          <td><a :href="'?#/details/'+victim.VictimID"><p>{{ victim.ConditionStatus || 'unknown'}}</p></a></td>
-        </tr>
+  <div class="container placement-container d-flex justify-content-center">
+    <div class="col-md-12 search-table-container">
+      <v-text-field class="search" v-model="query" name="query" label="Search" clearable dark @keyup="search"/>
+      <table class="table table-striped">
+        <thead class="thead-light">
+          <th scope="col">NIK</th>
+          <th scope="col">Nama</th>
+          <th scope="col">Status</th>
+        </thead>
+        <tbody>
+          <tr v-for="victim in victims" v-bind:key="victim.VictimID">
+            <td class="result"><a :href="'?#/details/'+victim.VictimID">{{ victim.NIK || 'unknown' }}</a></td>
+            <td class="result"><a :href="'?#/details/'+victim.VictimID">{{ victim.Name }}</a></td>
+            <td v-if="victim.ConditionStatus == 1" class="result"><a :href="'?#/details/'+victim.VictimID">Alive</a></td>
+            <td v-else-if="victim.ConditionStatus == 0" class="result"><a :href="'?#/details/'+victim.VictimID">Deceased</a></td>
+            <td v-else class="result"><a :href="'?#/details/'+victim.VictimID">unknown</a></td>
+          </tr>
+        </tbody>
       </table>
       <br />
     </div>
@@ -23,42 +24,32 @@
 </template>
 
 <style scoped>
-.bg {
-  background-color: #d9d9d9;
+a{
+  color: inherit;
 }
-.content {
-  max-width: 960px;
-  margin: auto;
-  background-color: white;
+
+.placement-container{
+    margin-bottom: 5%;
+    margin-top: -3%;
+    padding-top: 3%;
 }
-p {
-  font-family: Quattrocento;
-  color: gray;
-  padding-left: 32px;
-  padding-right: 32px;
+.search-table-container{
+    padding: 3%;
+    background:#232322;
+    box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
+    color: #d9d9d9;
 }
-td a {
-  display: block;
-  text-decoration: none;
+.recommendation-table-container h3{
+    margin-bottom: 2%;
 }
-tr {
-  border: none;
+.thead-light * {
+  font-weight: bolder;
 }
-table {
-  margin: auto;
-  border-collapse: collapse;
-  width: 100%;
+.search{
+  max-width: 300px;
 }
-th {
-  border: solid 2px gray;
-  background-color: #eaeaea;
-}
-td {
-  border-right: solid 1px gray; 
-  border-left: solid 1px gray;
-}
-tr:last-child {
-  border-bottom: solid 1px gray;
+.result {
+  color: #d9d9d9;
 }
 </style>
 
