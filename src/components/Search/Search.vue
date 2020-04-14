@@ -5,8 +5,8 @@
       <v-text-field v-if="filterState" class="search" v-model="query" name="query" label="Masukkan NoKK" clearable dark @keyup="filteredSearch"/>
       <table class="table table-striped">
         <thead class="thead-light">
-          <th scope="col">NIK</th>
-          <th scope="col">Nama</th>
+          <th scope="col" style="width: 40%">NIK</th>
+          <th scope="col" style="width: 40%">Nama</th>
           <th scope="col">Status</th>
         </thead>
         <tbody>
@@ -80,12 +80,14 @@ export default {
   // Fetches posts when the component is created.
   methods: {
     search: function() {
+      this.victims = [];
       axios.get('http://localhost:3000/victim/search/keyword?keyword=' + this.query)
       .then(response => {
         // JSON responses are automatically parsed.
         this.victims = response.data.data
       })
       .catch(e => {
+        this.victims = [];
         this.errors.push(e)
       })
     },
@@ -96,8 +98,12 @@ export default {
         this.victims = response.data.data
       })
       .catch(e => {
+        this.victims = [];
         this.errors.push(e)
       })
+    },
+    displayResult(victim){
+      return (victim.NIK || victim.Name || victim.ConditionStatus)
     }
   }
 }
