@@ -12,6 +12,12 @@
         <section class="modal-body" id="modalDescription">
           <slot name="body">
             <h4>Masukan Data Shelter</h4>
+            <v-select 
+              label="Nama Bencana" 
+              :items="disasters" 
+              item-text="Name" 
+              item-value="DisasterID"
+              v-model="inputDisasterID"/>
             <v-form ref="form">
                 <v-text-field
                 v-model="inputNamaShelter"
@@ -114,19 +120,32 @@
 import axios from 'axios';
 export default {
     name: 'addShelterModal',
+    mounted : function(){
+      axios.get('http://localhost:3000/disaster')
+        .then(response => {
+          this.disasters = response.data.data
+          console.log(this.disasterList)
+        })
+        .catch(e => {
+          this.errors.push(e)
+        });
+    },
     methods:{
         close(){
             this.$emit('close');
         },
         submitAddShelterClick(){
           var addShelterPostData = {
-            'name' : this.inputNamaBencana,
-            'scale' : this.inputSkalaBencana,
+            'disasterID' : this.inputDisasterID,
+            'name' : this.inputNamaShelter,
+            'district': this.inputNamaWilayah,
+            'city' : this.inputNamaKota,
+            'province' : this.inputNamaProvinsi,
+            'country' : this.inputNamaCountry,
+            'longitude' : this.inputLongitude,
             'latitude' : this.inputLatitude,
-            'longitude' : this.inputLongitude
           }
-          console.log(addDisasterPostData);
-          axios.post('http://localhost:3000/disaster', addShelterPostData)
+          axios.post('http://localhost:3000/shelter', addShelterPostData)
           .then(response => {
             console.log(response)
           })
@@ -134,10 +153,11 @@ export default {
             this.errors.push(e)
           })
           this.$emit('close');
-        }
+        },
     },
     data () {
       var data = {
+        inputDisasterID: "",
         inputNamaShelter: "",
         inputNamaWilayah: "",
         inputNamaKota: "",
@@ -145,6 +165,7 @@ export default {
         inputNamaCountry: "",
         inputLongitude: "",
         inputLatitude: "",
+        disasters: [],
       }
 
       return data;
