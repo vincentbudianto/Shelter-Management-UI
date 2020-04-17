@@ -49,10 +49,10 @@
         </v-col>
       </v-row>
 
-      <v-row class="d-flex flex-wrap">
-        <v-col class="tile-box m-2 px-2 d-flex flex-row justify-content-between">
+      <v-row class="d-flex flex-wrap p-5">
+        <v-col class="tile-box m-2 py-3 px-5 d-flex flex-row justify-content-between">
           <!-- Overview Section -->
-            <v-col class="my-3 mx-2 p-5">
+            <v-col>
               <v-row class="d-flex flex-column" v-if="currentDashboardScope == 'Seluruh Bencana'" >
                   <h3  style="color: red">
                     Menampilkan {{currentDashboardScope}} 
@@ -82,7 +82,7 @@
         </v-col>
         <v-col class="tile-box m-2 px-3 py-5 d-flex flex-column">
           <!-- Selection Section  -->
-            <h5 class="my-5">Pilih Cakupan</h5>
+            <h4 class="my-5">Pilih Cakupan</h4>
             <div class="d-flex flex-wrap">
               <div id="selection-dropdown" class="flex-grow-1 w-100 px-2 py-0">
                   <v-select 
