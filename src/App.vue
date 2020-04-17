@@ -18,7 +18,7 @@
             <li class="nav-item active" v-if="$cookies.get('Type') == 'Admin'">
               <router-link class="nav-link text-light" :to="links[2].to">{{ links[2].name }}</router-link>
             </li>
-            <li class="nav-item" v-if="$cookies.get('Type') == 'Staff'">
+            <li class="nav-item" v-if="$cookies.get('Type') == 'Admin' || $cookies.get('Type') == 'Staff'">
               <router-link class="nav-link text-light" :to="links[3].to">{{ links[3].name }}</router-link>
             </li>
             <li class="nav-item" v-if="$cookies.get('Type') == 'Admin' || $cookies.get('Type') == 'Staff'">

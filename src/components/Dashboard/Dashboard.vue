@@ -1,79 +1,6 @@
 <template v-if="userValidated">
-  <div class="bg">
-    <div class="content mx-1">
-
-      <v-row >
-
-        <!-- Overview Section -->
-        <v-col>
-          <div class="m-3 p-5 tile-box">
-            <h3 v-if="currentDashboardScope == 'Seluruh Bencana'" style="color: red">
-              Menampilkan {{currentDashboardScope}} 
-            </h3>
-            <div v-if="currentDashboardScope == 'Bencana'">
-              <h6>Menampilkan {{currentDashboardScope}} </h6>
-              <h5 class="display-1" style="color: red; font-weight: bold">{{displaySelectedShelterDisasterName}} </h5>
-              <h6>Skala</h6>
-              <h5 class="display-1" style="font-weight: bold">{{selectedShelterDisasterScale}}</h5>
-            </div>
-            <div v-if="currentDashboardScope == 'Posko'">
-              <h6>Menampilkan {{currentDashboardScope}}</h6>
-              <h5 class="display-1"  style="color: red; font-weight: bold">{{displaySelectedShelterName}}</h5>
-            </div>
-            <div>
-              <h6>Jumlah Korban</h6>
-              <h3 class="display-3 font-weight-bold" style="font-size: 5em; color: red">
-                {{countVictimInCurrentScope}}
-              </h3>
-            </div>
-          </div>
-        </v-col>
-        <!-- Selection Section  -->
-          <v-col>
-            <div class="m-3 p-5 tile-box">
-                <h5 class="mb-3">Pilih Cakupan</h5>
-                <v-row>
-                  <v-col id="selection-dropdown" class="w-75 px-2 py-0">
-                      <v-select 
-                        id="selection-dropdown"
-                        :items="shelterDisasterNames"
-                        v-model="selectedShelterDisasterName"
-                        placeholder="Pilih bencana"
-                        ></v-select>
-                  </v-col>
-                  <v-col class="px-2 py-2">
-                    <v-btn id="selection-button" v-on:click="btnClickLihatBencana">
-                      <a style="font-size: .75em">Lihat Bencana</a>
-                    </v-btn>
-                  </v-col>
-                </v-row>
-                <v-row v-if="selectedShelterDisasterName">
-                  <v-col id="selection-dropdown" class="w-75">
-                    <v-select
-                      :items="shelterNames"
-                      v-model="selectedShelterName"
-                      placeholder="Pilih posko"
-                    ></v-select>
-                  </v-col>
-                  <v-col id="selection-button" class="mt-1">
-                    <v-btn v-on:click="btnClickLihatPosko">
-                      <a style="font-size: .75em">Lihat Posko</a>
-                    </v-btn>
-                  </v-col>
-                </v-row>  
-                <v-row>
-                  <v-col>
-                    <v-btn v-on:click="btnClickLihatSeluruhBencana">
-                      <span style="white-space: normal;">
-                        <a style="font-size: .75em">Lihat Seluruh Bencana</a>
-                      </span>
-                    </v-btn>
-                  </v-col>
-                </v-row>
-            </div>
-          </v-col>
-
-      </v-row>
+  <div class="bg mx-3">
+    <div class="content mx-3 pb-3">
 
       <v-row>
         <v-col>
@@ -119,6 +46,78 @@
         </v-col>
       </v-row>
 
+      <div>
+        <!-- Overview Section -->
+        <div>
+          
+        </div>
+        <!-- Selection Section  -->
+        <div class="tile-box m-3 px-5">
+          <div class="m-3 p-5">
+            <h3 v-if="currentDashboardScope == 'Seluruh Bencana'" style="color: red">
+              Menampilkan {{currentDashboardScope}} 
+            </h3>
+            <div v-if="currentDashboardScope == 'Bencana'">
+              <h6>Menampilkan {{currentDashboardScope}} </h6>
+              <h5 class="display-1" style="color: red; font-weight: bold">{{displaySelectedShelterDisasterName}} </h5>
+              <h6>Skala</h6>
+              <h5 class="display-1" style="font-weight: bold">{{selectedShelterDisasterScale}}</h5>
+            </div>
+            <div v-if="currentDashboardScope == 'Posko'">
+              <h6>Menampilkan {{currentDashboardScope}}</h6>
+              <h5 class="display-1"  style="color: red; font-weight: bold">{{displaySelectedShelterName}}</h5>
+            </div>
+            <div>
+              <h6>Jumlah Korban</h6>
+              <h3 class="display-3 font-weight-bold" style="font-size: 5em; color: red">
+                {{countVictimInCurrentScope}}
+              </h3>
+            </div>
+          </div>
+          <div class="m-3 p-5">
+              <h5 class="mb-3">Pilih Cakupan</h5>
+              <v-row>
+                <v-col id="selection-dropdown" class="w-75 px-2 py-0">
+                    <v-select 
+                      id="selection-dropdown"
+                      :items="shelterDisasterNames"
+                      v-model="selectedShelterDisasterName"
+                      placeholder="Pilih bencana"
+                      ></v-select>
+                </v-col>
+                <v-col class="px-2 py-2">
+                  <v-btn id="selection-button" v-on:click="btnClickLihatBencana">
+                    <a style="font-size: .75em">Lihat Bencana</a>
+                  </v-btn>
+                </v-col>
+              </v-row>
+              <v-row v-if="selectedShelterDisasterName">
+                <v-col id="selection-dropdown" class="w-75">
+                  <v-select
+                    :items="shelterNames"
+                    v-model="selectedShelterName"
+                    placeholder="Pilih posko"
+                  ></v-select>
+                </v-col>
+                <v-col id="selection-button" class="mt-1">
+                  <v-btn v-on:click="btnClickLihatPosko">
+                    <a style="font-size: .75em">Lihat Posko</a>
+                  </v-btn>
+                </v-col>
+              </v-row>  
+              <v-row>
+                <v-col>
+                  <v-btn v-on:click="btnClickLihatSeluruhBencana">
+                    <span style="white-space: normal;">
+                      <a style="font-size: .75em">Lihat Seluruh Bencana</a>
+                    </span>
+                  </v-btn>
+                </v-col>
+              </v-row>
+          </div>
+        </div>
+      </div>
+
       <!-- chart section -->
       <!-- <canvas id="victim-by-gender"></canvas> -->
       <div class="m-3 tile-box" style="position: relative; height:50vh; width:50vw">
@@ -135,19 +134,20 @@
     margin-left: 1%;
   }
   .tile-box {
-     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    background-color: rgb(250, 250, 250);
   }
   .bg {
-    background-color: #d9d9d9;
-  }
-  .content {
     background-color: white;
   }
+  .content {
+    background-color:#232322;
+  }
   .overlay-content{
-  background-color:#FFFFFF;
-  padding: 10px;
-  width:auto;
-  height: auto;
+    background-color:#FFFFFF;
+    padding: 10px;
+    width:auto;
+    height: auto;
 }
 </style>
 
