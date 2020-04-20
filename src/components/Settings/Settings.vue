@@ -87,6 +87,20 @@
             closeAddShelter(){
                 this.addShelterVisible = false;
             },
+            validateUser(){
+                var aid = this.$cookies.get('AccountID');
+                let currentObj = this;
+                axios.get('http://localhost:3000/check/admin?id=' + aid)
+                .then(response => {
+                    // JSON responses are automatically parsed.
+                   currentObj.$router.push('/login');
+                })
+                .catch(e => {
+                    this.errors.push(e)
+                })
+            }
+        }, beforeMount() {
+            this.validateUser();
         }
     }
 </script>
