@@ -93,7 +93,9 @@
                 axios.get('http://localhost:3000/check/admin?id=' + aid)
                 .then(response => {
                     // JSON responses are automatically parsed.
-                   currentObj.$router.push('/login');
+                    if(response.data.data.isAdmin == false){
+                        currentObj.$router.push('/login');
+                    }
                 })
                 .catch(e => {
                     this.errors.push(e)
