@@ -159,7 +159,31 @@ export default {
       },
       goToShelterDetail: function(shelter) {
         window.location.href = '?#/shelter/' + shelter.ShelterID;
+      }, validateUser(){
+          var aid = this.$cookies.get('AccountID');
+          let currentObj = this;
+          axios.get('http://localhost:3000/check/staff?id=' + aid)
+          .then(response => {
+              // JSON responses are automatically parsed.
+              if(response.data.data.isStaff == false){
+                  axios.get('http://localhost:3000/check/admin?id=' + aid)
+                  .then(response => {
+                      // JSON responses are automatically parsed.
+                      if(response.data.data.isAdmin == false){
+                          currentObj.$router.push('/login');
+                      }
+                  })
+                  .catch(e => {
+                      this.errors.push(e)
+                  })
+              }
+          })
+          .catch(e => {
+              this.errors.push(e)
+          })
       }
-    }
+    }, beforeMount() {
+      this.validateUser();
+    },
   }
 </script>
