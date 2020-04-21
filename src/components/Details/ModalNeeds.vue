@@ -13,28 +13,28 @@
           <slot name="body">
             <p class="h4 text-center">Update victim needs</p>
             <v-form ref="form">
-              <v-textarea
+              <v-text-field
                 v-model="needs"
-                outlined="true"
-              ></v-textarea>
+                label="Victim Needs"
+              ></v-text-field>
             </v-form>
             <v-form ref="form">
-              <v-textarea
+              <v-text-field
                 v-model="stock"
-                outlined="true"
-              ></v-textarea>
+                label="Stock ID"
+              ></v-text-field>
             </v-form>
             <v-form ref="form">
-              <v-textarea
+              <v-text-field
                 v-model="status"
-                outlined="true"
-              ></v-textarea>
+                label="Status"
+              ></v-text-field>
             </v-form>
             <v-form ref="form">
-              <v-textarea
+              <v-text-field
                 v-model="importance"
-                outlined="true"
-              ></v-textarea>
+                label="Importance"
+              ></v-text-field>
             </v-form>
             <div class="text-center py-4">
               <v-btn v-on:click="sendVictimNeed">Save Changes</v-btn>
