@@ -504,7 +504,7 @@ export default {
           this.getAllDashboardData()
         }
         else{
-          window.location.replace('http://localhost:8000/#/login')
+          window.location.replace(process.env.APP_BASE_URL+'/#/login')
         }
       })
       .catch(error => {
