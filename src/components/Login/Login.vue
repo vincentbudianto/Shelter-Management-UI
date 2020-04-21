@@ -15,7 +15,7 @@
         </form>
         <span class="error-message" id="login_failed"></span><br>
         <div class="form-group">
-            <a href="#/register" class="btnForgetPwd">Daftar Akun</a>
+            <a href="/register" class="btnForgetPwd">Daftar Akun</a>
         </div>
     </div>
 </div>

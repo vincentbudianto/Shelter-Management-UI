@@ -385,7 +385,7 @@ export default {
         })
       },
       goToVictimDetails: function(victim) {
-        window.location.href = '?#/details/' + victim.VictimID;
+        window.location.href = '/details/' + victim.VictimID;
       },
       showConditionModal(){
         this.conditionModalVisible = true

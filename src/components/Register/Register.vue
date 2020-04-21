@@ -46,7 +46,7 @@
                 <input class="button" id="submit_button" type="submit" value="Register">
             </form> 
 
-            <p>Sudah punya akun? <a :href="'/#/login'">Login disini</a> </p>
+            <p>Sudah punya akun? <a :href="'/login'">Login disini</a> </p>
 
         </div>
     </div>

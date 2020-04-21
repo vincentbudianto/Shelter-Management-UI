@@ -158,7 +158,7 @@ export default {
         this.$refs.centerController.animate({center: newCenter});
       },
       goToShelterDetail: function(shelter) {
-        window.location.href = '?#/shelter/' + shelter.ShelterID;
+        window.location.href = '/shelter/' + shelter.ShelterID;
       }, validateUser(){
           var aid = this.$cookies.get('AccountID');
           let currentObj = this;

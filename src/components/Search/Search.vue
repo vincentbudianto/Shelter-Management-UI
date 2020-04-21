@@ -13,9 +13,9 @@
           <tr v-for="victim in victims" v-bind:key="victim.VictimID">
             <td class="result"><a :href="'/details/'+victim.VictimID">{{ victim.NIK || 'unknown' }}</a></td>
             <td class="result"><a :href="'/details/'+victim.VictimID">{{ victim.Name }}</a></td>
-            <td v-if="victim.ConditionStatus == 1" class="result"><a :href="'?#/details/'+victim.VictimID">Alive</a></td>
-            <td v-else-if="victim.ConditionStatus == 0" class="result"><a :href="'?#/details/'+victim.VictimID">Deceased</a></td>
-            <td v-else class="result"><a :href="'?#/details/'+victim.VictimID">unknown</a></td>
+            <td v-if="victim.ConditionStatus == 1" class="result"><a :href="'/details/'+victim.VictimID">Alive</a></td>
+            <td v-else-if="victim.ConditionStatus == 0" class="result"><a :href="'/details/'+victim.VictimID">Deceased</a></td>
+            <td v-else class="result"><a :href="'/details/'+victim.VictimID">unknown</a></td>
           </tr>
         </tbody>
       </table>
