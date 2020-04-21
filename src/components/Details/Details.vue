@@ -266,7 +266,7 @@ export default {
         ])
         .then(response => {
           if(!response[0].data.data.isAdmin && !response[1].data.data.isStaff){
-            window.location.replace(process.env.APP_BASE_URL+'/search')
+            window.location.href = '/search'
           }
           else{
             this.detail = detail

@@ -504,7 +504,7 @@ export default {
           this.getAllDashboardData()
         }
         else{
-          window.location.replace(process.env.APP_BASE_URL+'/#/login')
+          window.location.href = '/login'
         }
       })
       .catch(error => {
