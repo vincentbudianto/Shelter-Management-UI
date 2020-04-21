@@ -139,7 +139,7 @@ export default {
     },
     methods: {
       getShelterList: function(){
-        axios.get('http://localhost:3000/shelter/all')
+        axios.get(process.env.API_ROUTE+'/shelter/all')
         .then(response => {
           const data = response.data.data;
           const newCenter = [parseFloat(data[0].Longitude), parseFloat(data[0].Latitude)];
@@ -162,11 +162,11 @@ export default {
       }, validateUser(){
           var aid = this.$cookies.get('AccountID');
           let currentObj = this;
-          axios.get('http://localhost:3000/check/staff?id=' + aid)
+          axios.get(process.env.API_ROUTE+'/check/staff?id=' + aid)
           .then(response => {
               // JSON responses are automatically parsed.
               if(response.data.data.isStaff == false){
-                  axios.get('http://localhost:3000/check/admin?id=' + aid)
+                  axios.get(process.env.API_ROUTE+'/check/admin?id=' + aid)
                   .then(response => {
                       // JSON responses are automatically parsed.
                       if(response.data.data.isAdmin == false){

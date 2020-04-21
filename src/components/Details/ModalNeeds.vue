@@ -111,7 +111,7 @@
         this.$emit('close');
       },
       sendVictimNeed: function(){
-        axios.post('http://localhost:3000/victim/history/need',
+        axios.post(process.env.API_ROUTE+'/victim/history/need',
         {
           id:this.$route.params.id,
           conditionName:this.needs,

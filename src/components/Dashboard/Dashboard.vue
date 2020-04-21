@@ -262,8 +262,15 @@ export default {
 
   watch: {
       selectedShelterDisasterName: function (val) {
+        var disasterData = this.disasterData
+
         this.shelterNames = this.shelterData.filter(function(obj){
-          return obj.DisasterName == val
+          let selectedShelterDisasterID = disasterData.filter(function(objDisaster){
+            return objDisaster.Name == val 
+          })[0].DisasterID
+
+          console.log("print selected", selectedShelterDisasterID)
+          return obj.DisasterID == selectedShelterDisasterID
           }).map(x=>x.Name)
       },
 
@@ -456,12 +463,12 @@ export default {
 
     getAllDashboardData () {
       axios.all([
-        axios.get("http://localhost:3000/shelter"),
-        axios.get("http://localhost:3000/disaster"),
-        axios.get("http://localhost:3000/dashboard"),
+        axios.get(process.env.API_ROUTE+"/shelter/all"),
+        axios.get(process.env.API_ROUTE+"/disaster"),
+        axios.get(process.env.API_ROUTE+"/dashboard"),
       ])
         .then(response => {
-          console.log(this.$cookies.get("Type"), this.$cookies.get("AccountID"))
+          
           this.shelterData = response[0].data.data
           this.disasterData = response[1].data.data
           this.dashboardData = response[2].data.data

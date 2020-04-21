@@ -121,7 +121,7 @@ import axios from 'axios';
 export default {
     name: 'addShelterModal',
     mounted : function(){
-      axios.get('http://localhost:3000/disaster')
+      axios.get(process.env.API_ROUTE+'/disaster')
         .then(response => {
           this.disasters = response.data.data
         })
@@ -144,7 +144,7 @@ export default {
             'longitude' : this.inputLongitude,
             'latitude' : this.inputLatitude,
           }
-          axios.post('http://localhost:3000/shelter', addShelterPostData)
+          axios.post(process.env.API_ROUTE+'/shelter', addShelterPostData)
           .then(response => {
             console.log(response)
           })

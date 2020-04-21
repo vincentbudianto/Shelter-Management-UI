@@ -68,7 +68,7 @@ export default {
   },
 
   mounted:function(){
-    axios.get('http://localhost:3000/configs/filter')
+    axios.get(process.env.API_ROUTE+'/configs/filter')
       .then(response => {
         this.filterState = response.data.data[0].SearchFilter;
         // console.log(this.filterState);
@@ -81,7 +81,7 @@ export default {
   methods: {
     search: function() {
       this.victims = [];
-      axios.get('http://localhost:3000/victim/search/keyword?keyword=' + this.query)
+      axios.get(process.env.API_ROUTE+'/victim/search/keyword?keyword=' + this.query)
       .then(response => {
         // JSON responses are automatically parsed.
         this.victims = response.data.data
@@ -92,7 +92,7 @@ export default {
       })
     },
     filteredSearch: function() {
-      axios.get('http://localhost:3000/victim/search/nokk?nokk=' + this.query)
+      axios.get(process.env.API_ROUTE+'/victim/search/nokk?nokk=' + this.query)
       .then(response => {
         // JSON responses are automatically parsed.
         this.victims = response.data.data

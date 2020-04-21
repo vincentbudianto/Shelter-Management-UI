@@ -112,7 +112,7 @@ export default {
   },
   methods: {
     get_placement: function() {
-      axios.get('http://localhost:3000/recommendation')
+      axios.get(process.env.API_ROUTE+'/recommendation')
       .then(response => {
         // JSON responses are automatically parsed.
         this.placements = response.data.data
@@ -123,11 +123,11 @@ export default {
     }, validateUser(){
         var aid = this.$cookies.get('AccountID');
         let currentObj = this;
-        axios.get('http://localhost:3000/check/staff?id=' + aid)
+        axios.get(process.env.API_ROUTE+'/check/staff?id=' + aid)
         .then(response => {
             // JSON responses are automatically parsed.
             if(response.data.data.isStaff == false){
-                axios.get('http://localhost:3000/check/admin?id=' + aid)
+                axios.get(process.env.API_ROUTE+'/check/admin?id=' + aid)
                 .then(response => {
                     // JSON responses are automatically parsed.
                     if(response.data.data.isAdmin == false){
