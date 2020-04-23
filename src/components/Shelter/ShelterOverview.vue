@@ -188,6 +188,7 @@
     </div>
     <updateShelterConditionModal :shelter="details" v-show="conditionModalVisible" @close="closeConditionModal"/>
     <updateShelterNeedsModal :shelter="details" v-show="needsModalVisible" @close="closeNeedsModal"/>
+    <notifications group="update-notification" />
 </div>
 </template>
 
@@ -379,6 +380,26 @@ export default {
         axios.get(process.env.API_ROUTE+'/shelter/needs?id=' + this.$route.params.id)
         .then(response => {
           this.needHist = response.data.data;
+          console.log(needHist[0].Timestamp);
+          var lu;
+          var i, temp;
+          for (i = 0; i < this.needHist.length; i++) {
+              temp = Date.parse(this.needHist[i].Timestamp);
+              if (temp > lu) {
+              lu = temp;
+              }
+          }
+          var cu = Date.now();
+          if(cu - lu > 1000 || this.needHist.length == 0){
+              if (this.$cookie.get('Type') == 'Staff') {
+                  this.$notify({
+                  group: 'update-notification',
+                  title: 'Data is outdated',
+                  text: 'Hello staff! Your shelter data has not been updated for more than a day!',
+                  duration: -1
+                  });
+              }
+          }
         })
         .catch(e => {
           this.errors.push(e);
