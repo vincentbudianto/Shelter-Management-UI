@@ -136,7 +136,7 @@ export default {
     showNotification() {
       let cObj = this;
       if(this.$cookies.get("Type") == 'Admin'){
-        axios.get('http://localhost:3000/shelter/all')
+        axios.get(process.env.API_ROUTE + '/shelter/all')
         .then(function (response) {
           for (let i = 0; i < response.data.data.length; i++){
             let sid = response.data.data[i].ShelterID;
@@ -144,7 +144,8 @@ export default {
             .then(response => {
               let lu = 0;
               let temp = 0;
-              for (let j = 0; j < response.data.data.length; j++) {
+              let condLength = response.data.data.length;
+              for (let j = 0; j < condLength; j++) {
                 temp = Date.parse(response.data.data[j].Timestamp);
                 if (temp > lu) {
                   lu = temp;
@@ -159,7 +160,7 @@ export default {
                   }
                 }
                 let cu = Date.now();
-                if (cu - lu > 86400000 || response.data.data.length == 0) {
+                if (cu - lu > 86400000 || (response.data.data.length == 0 && condLength == 0)) {
                   cObj.$notify({
                     group: 'update-notification',
                     title: 'The Data is Outdated',
@@ -181,7 +182,7 @@ export default {
           console.log(error);
         })
       } else if(this.$cookies.get("Type") == 'Staff'){
-        axios.get('http://localhost:3000/shelter/all')
+        axios.get(process.env.API_ROUTE + '/shelter/all')
         .then(function (response) {
           for (let i = 0; i < response.data.data.length; i++){
             let sid = response.data.data[i].ShelterID;
@@ -192,7 +193,8 @@ export default {
                 .then(response => {
                   let lu = 0;
                   let temp = 0;
-                  for (let j = 0; j < response.data.data.length; j++) {
+                  let condLength = response.data.data.length;
+                  for (let j = 0; j < condLength; j++) {
                     temp = Date.parse(response.data.data[j].Timestamp);
                     if (temp > lu) {
                       lu = temp;
@@ -207,7 +209,7 @@ export default {
                       }
                     }
                     let cu = Date.now();
-                    if (cu - lu > 86400000 || response.data.data.length == 0) {
+                    if (cu - lu > 86400000 || (response.data.data.length == 0 && condLength == 0)) {
                       cObj.$notify({
                         group: 'update-notification',
                         title: 'Data is outdated',
