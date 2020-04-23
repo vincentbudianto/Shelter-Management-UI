@@ -146,7 +146,7 @@
                           <tbody style="max-height:300px">
                             <tr class="cursor-pointer" v-for="(victim, index) in victimList" v-on:click="goToVictimDetails(victim)">
                               <th>{{index + 1}}</th>
-                              <td>{{victim.NIK}}</td>
+                              <td>{{victim.NIK || '-'}}</td>
                               <td>{{victim.Name}}</td>
                               <td>{{victim.Status && 'Alive' || 'Dead'}}</td>
                             </tr>
