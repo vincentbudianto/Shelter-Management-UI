@@ -116,7 +116,7 @@
           "updated": this.$cookies.get("AccountID")
         }
 
-        axios.post('http://localhost:3000/shelter/history/need', inputShelterPostData)
+        axios.post(process.env.API_ROUTE+'/shelter/history/need', inputShelterPostData)
         .then(response => {
           console.log(response)
         })

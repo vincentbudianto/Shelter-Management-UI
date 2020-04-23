@@ -46,7 +46,7 @@
                 <input class="button" id="submit_button" type="submit" value="Register">
             </form> 
 
-            <p>Sudah punya akun? <a :href="'/#/login'">Login disini</a> </p>
+            <p>Sudah punya akun? <a :href="'/login'">Login disini</a> </p>
 
         </div>
     </div>
@@ -189,7 +189,7 @@ import axios from 'axios';
                     document.getElementById("password_error").innerHTML = "";
                     document.getElementById("cpassword_error").innerHTML = "";
                     document.getElementById("username_error").innerHTML = "";
-                    axios.post('http://localhost:3000/register', formData, 
+                    axios.post(process.env.API_ROUTE+'/register', formData, 
                     {
                         headers: {
                             'Content-Type': 'multipart/form-data'
@@ -224,7 +224,7 @@ import axios from 'axios';
             }, handleFileUpload(){
                 this.file = this.$refs.file.files[0];
             }, getShelters(){
-                axios.get('http://localhost:3000/sheltername')
+                axios.get(process.env.API_ROUTE+'/sheltername')
                 .then(response => {
                     // JSON responses are automatically parsed.
                     this.shelters = response.data.data
@@ -233,7 +233,7 @@ import axios from 'axios';
                     this.errors.push(e)
                 })
             }, checkUsername(){
-                axios.post('http://localhost:3000/username',
+                axios.post(process.env.API_ROUTE+'/username',
                 {
                     username: this.username
                 })

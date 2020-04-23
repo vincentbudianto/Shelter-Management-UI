@@ -117,7 +117,7 @@
           "disasterStatus": this.inputStatus
         }
 
-        axios.post('http://localhost:3000/disaster/history/condition', inputDisasterPostData)
+        axios.post(process.env.API_ROUTE+'/disaster/history/condition', inputDisasterPostData)
         .then(response => {
           console.log(response)
         })
