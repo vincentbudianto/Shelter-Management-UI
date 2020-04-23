@@ -13,10 +13,28 @@
           <slot name="body">
             <p class="h4 text-center">Update victim needs</p>
             <v-form ref="form">
-              <v-textarea
+              <v-text-field
                 v-model="needs"
-                outlined="true"
-              ></v-textarea>
+                label="Victim Needs"
+              ></v-text-field>
+            </v-form>
+            <v-form ref="form">
+              <v-text-field
+                v-model="stock"
+                label="Stock ID"
+              ></v-text-field>
+            </v-form>
+            <v-form ref="form">
+              <v-text-field
+                v-model="status"
+                label="Status"
+              ></v-text-field>
+            </v-form>
+            <v-form ref="form">
+              <v-text-field
+                v-model="importance"
+                label="Importance"
+              ></v-text-field>
             </v-form>
             <div class="text-center py-4">
               <v-btn v-on:click="sendVictimNeed">Save Changes</v-btn>
@@ -82,7 +100,10 @@
     name: 'modalNeeds',
     data(){
       return{
-        needs:""
+        needs:"",
+        stock:"",
+        status:"",
+        importance:""
       }
     },
     methods: {
@@ -93,7 +114,11 @@
         axios.post('http://localhost:3000/victim/history/need',
         {
           id:this.$route.params.id,
-          conditionName:this.needs
+          conditionName:this.needs,
+          needStock:this.stock,
+          needStatus:this.status,
+          needImportance:this.importance,
+          updated:this.$cookies.get("AccountID")
         })
         .then(response =>{
           console.log(response)

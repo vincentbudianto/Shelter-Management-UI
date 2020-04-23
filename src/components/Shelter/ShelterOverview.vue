@@ -339,6 +339,7 @@ export default {
           const newCenter = [parseFloat(data.Longitude), parseFloat(data.Latitude)];
 
           this.details = data;
+          this.validateUser();
           this.currCenter = newCenter;
           this.$refs.centerController.animate({zoom: 17});
           this.$refs.centerController.animate({center: newCenter});
@@ -399,6 +400,28 @@ export default {
       closeNeedsModal(){
         this.needsModalVisible = false
         this.getShelterNeedHistory()
+      }, validateUser(){
+          var aid = this.$cookies.get('AccountID');
+          let currentObj = this;
+          axios.get('http://localhost:3000/check/shelter/staff?staffId=' + aid + '&shelterId=' + currentObj.details.ShelterID)
+          .then(response => {
+              // JSON responses are automatically parsed.
+              if(response.data.data.isStaffShelter == false){
+                  axios.get('http://localhost:3000/check/admin?id=' + aid)
+                  .then(response => {
+                      // JSON responses are automatically parsed.
+                      if(response.data.data.isAdmin == false){
+                          currentObj.$router.push('/shelter');
+                      }
+                  })
+                  .catch(e => {
+                      this.errors.push(e)
+                  })
+              }
+          })
+          .catch(e => {
+              this.errors.push(e)
+          })
       }
     },
     filters:{

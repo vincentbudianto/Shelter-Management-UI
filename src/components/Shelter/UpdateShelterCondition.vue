@@ -98,8 +98,7 @@
         inputId: "",
         inputTitle: "",
         inputDescription: "",
-        inputStatus: "",
-        inputUpdate: ""
+        inputStatus: ""
       }
 
       return data;

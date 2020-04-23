@@ -96,7 +96,8 @@
       return{
         condition:"",
         desc:"",
-        status:null
+        status:null,
+        updated:""
       }
     },
     methods: {
@@ -109,7 +110,8 @@
           id:this.$route.params.id,
           conditionName:this.condition,
           conditionDesc:this.desc,
-          conditionStatus:this.status
+          conditionStatus:this.status,
+          updated:this.$cookies.get("AccountID")
         })
         .then(response =>{
           console.log(response)
