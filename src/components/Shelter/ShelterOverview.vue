@@ -316,8 +316,7 @@ export default {
         rotation: 0,
         errors: [],
         conditionModalVisible: false,
-        needsModalVisible: false,
-        switch1: false
+        needsModalVisible: false
       }
     },
     components: {
