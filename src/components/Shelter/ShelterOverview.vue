@@ -334,12 +334,13 @@ export default {
     },
     methods: {
       getShelterDetail: function() {
-        axios.get('http://localhost:3000/shelter?id=' + this.$route.params.id)
+        axios.get(process.env.API_ROUTE+'/shelter?id=' + this.$route.params.id)
         .then(response => {
           const data = response.data.data;
           const newCenter = [parseFloat(data.Longitude), parseFloat(data.Latitude)];
 
           this.details = data;
+          this.validateUser();
           this.currCenter = newCenter;
           this.$refs.centerController.animate({zoom: 17});
           this.$refs.centerController.animate({center: newCenter});
@@ -349,7 +350,7 @@ export default {
         })
       },
       getShelterVictimList: function() {
-        axios.get('http://localhost:3000/shelter/victimList?id=' + this.$route.params.id)
+        axios.get(process.env.API_ROUTE+'/shelter/victimList?id=' + this.$route.params.id)
         .then(response => {
           this.victimList = response.data.data;
         })
@@ -358,7 +359,7 @@ export default {
         })
       },
       getShelterStock: function() {
-        axios.get('http://localhost:3000/shelter/stock?id=' + this.$route.params.id)
+        axios.get(process.env.API_ROUTE+'/shelter/stock?id=' + this.$route.params.id)
         .then(response => {
           this.stocks = response.data.data;
         })
@@ -367,7 +368,7 @@ export default {
         })
       },
       getShelterConditionHistory: function() {
-        axios.get('http://localhost:3000/shelter/conditions?id=' + this.$route.params.id)
+        axios.get(process.env.API_ROUTE+'/shelter/conditions?id=' + this.$route.params.id)
         .then(response => {
           this.conditionHist = response.data.data;
         })
@@ -376,7 +377,7 @@ export default {
         })
       },
       getShelterNeedHistory: function() {
-        axios.get('http://localhost:3000/shelter/needs?id=' + this.$route.params.id)
+        axios.get(process.env.API_ROUTE+'/shelter/needs?id=' + this.$route.params.id)
         .then(response => {
           this.needHist = response.data.data;
           console.log(needHist[0].Timestamp);
@@ -405,7 +406,7 @@ export default {
         })
       },
       goToVictimDetails: function(victim) {
-        window.location.href = '?#/details/' + victim.VictimID;
+        window.location.href = '/details/' + victim.VictimID;
       },
       showConditionModal(){
         this.conditionModalVisible = true
@@ -420,6 +421,28 @@ export default {
       closeNeedsModal(){
         this.needsModalVisible = false
         this.getShelterNeedHistory()
+      }, validateUser(){
+          var aid = this.$cookies.get('AccountID');
+          let currentObj = this;
+          axios.get(process.env.API_ROUTE+'/check/shelter/staff?staffId=' + aid + '&shelterId=' + currentObj.details.ShelterID)
+          .then(response => {
+              // JSON responses are automatically parsed.
+              if(response.data.data.isStaffShelter == false){
+                  axios.get(process.env.API_ROUTE+'/check/admin?id=' + aid)
+                  .then(response => {
+                      // JSON responses are automatically parsed.
+                      if(response.data.data.isAdmin == false){
+                          currentObj.$router.push('/shelter');
+                      }
+                  })
+                  .catch(e => {
+                      this.errors.push(e)
+                  })
+              }
+          })
+          .catch(e => {
+              this.errors.push(e)
+          })
       }
     },
     filters:{

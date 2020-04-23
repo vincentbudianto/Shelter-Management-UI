@@ -112,7 +112,7 @@ h1 {
     },
     mounted: function () {
       //get disaster list
-      axios.get('http://localhost:3000/disaster')
+      axios.get(process.env.API_ROUTE+'/disaster')
             .then(response => {
               // JSON responses are automatically parsed.
               this.disasterList = response.data.data
@@ -142,7 +142,7 @@ h1 {
           "longitude": this.center[0]
         }
 
-        axios.post('http://localhost:3000/disaster', inputDisasterPostData)
+        axios.post(process.env.API_ROUTE+'/disaster', inputDisasterPostData)
         .then(response => {
           console.log(response)
         })
@@ -152,7 +152,23 @@ h1 {
       },
       cancelAddDisasterClick: function (event) {
         this.inputMode = false
+      },
+      validateUser(){
+          var aid = this.$cookies.get('AccountID');
+          let currentObj = this;
+          axios.get(process.env.API_ROUTE+'/check/admin?id=' + aid)
+          .then(response => {
+              // JSON responses are automatically parsed.
+              if(response.data.data.isAdmin == false){
+                  currentObj.$router.push('/login');
+              }
+          })
+          .catch(e => {
+              this.errors.push(e)
+          })
       }
-    }
+    }, beforeMount() {
+      this.validateUser();
+    },
   }
 </script>

@@ -254,7 +254,7 @@ export default {
   // Fetches posts when the component is created.
   methods: {
     getIdentityAndValidateUserAccess: function() {
-      axios.get('http://localhost:3000/victim/detail?id=' + this.$route.params.id)
+      axios.get(process.env.API_ROUTE+'/victim/detail?id=' + this.$route.params.id)
       .then(response => {
         var userID = this.$cookies.get("AccountID")
         var detail = response.data.data
@@ -266,7 +266,7 @@ export default {
         ])
         .then(response => {
           if(!response[0].data.data.isAdmin && !response[1].data.data.isStaff){
-            window.location.replace('http://localhost:8000/#/search')
+            window.location.href = '/search'
           }
           else{
             this.detail = detail
@@ -282,7 +282,7 @@ export default {
       })
     },
     getConditionHistory: function(){
-      axios.get('http://localhost:3000/victim/history/condition?id='+ this.$route.params.id)
+      axios.get(process.env.API_ROUTE+'/victim/history/condition?id='+ this.$route.params.id)
       .then(response =>{
         this.conditions = response.data.data;
         console.log(response.data.data)
@@ -292,7 +292,7 @@ export default {
       })
     },
     getNeedHistory: function(){
-      axios.get('http://localhost:3000/victim/history/need?id=' + this.$route.params.id)
+      axios.get(process.env.API_ROUTE+'/victim/history/need?id=' + this.$route.params.id)
       .then(response =>{
         this.needs = response.data.data;
         console.log(response.data.data)
@@ -302,7 +302,7 @@ export default {
       })
     },
     getLocationHistory:function(){
-      axios.get('http://localhost:3000/victim/history/shelter?id=' + this.$route.params.id)
+      axios.get(process.env.API_ROUTE+'/victim/history/shelter?id=' + this.$route.params.id)
       .then(response =>{
         this.locations = response.data.data;
         this.center[1] = parseFloat(this.locations[0].Latitude);

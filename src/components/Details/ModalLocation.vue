@@ -114,7 +114,7 @@
         this.$emit('close');
       },
       getShelterList: function(){
-        axios.get('http://localhost:3000/shelter')
+        axios.get(process.env.API_ROUTE+'/shelter/all')
         .then(response =>{
           this.shelters = response.data.data;
         })
@@ -123,7 +123,7 @@
         })
       },
       sendVictimShelter: function(){
-        axios.post('http://localhost:3000/victim/history/shelter',
+        axios.post(process.env.API_ROUTE+'/victim/history/shelter',
         {
           id:this.$route.params.id,
           shelterId:this.shelterId,
