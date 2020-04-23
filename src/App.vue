@@ -140,7 +140,7 @@ export default {
         .then(function (response) {
           for (let i = 0; i < response.data.data.length; i++){
             let sid = response.data.data[i].ShelterID;
-            axios.get('http://localhost:3000/shelter/conditions?id=' + sid)
+            axios.get(process.env.API_ROUTE + '/shelter/conditions?id=' + sid)
             .then(response => {
               let lu = 0;
               let temp = 0;
@@ -150,7 +150,7 @@ export default {
                   lu = temp;
                 }
               }
-              axios.get('http://localhost:3000/shelter/needs?id=' + sid)
+              axios.get(process.env.API_ROUTE + '/shelter/needs?id=' + sid)
               .then(response => {
                 for (let j = 0; j < response.data.data.length; j++) {
                   temp = Date.parse(response.data.data[j].Timestamp);
@@ -185,10 +185,10 @@ export default {
         .then(function (response) {
           for (let i = 0; i < response.data.data.length; i++){
             let sid = response.data.data[i].ShelterID;
-            axios.get('http://localhost:3000/check/shelter/staff?staffId=' + cObj.$cookies.get('AccountID') + '&shelterId=' + sid)
+            axios.get(process.env.API_ROUTE + '/check/shelter/staff?staffId=' + cObj.$cookies.get('AccountID') + '&shelterId=' + sid)
             .then(function (response) {
               if (response.data.data.isStaffShelter == true) {
-                axios.get('http://localhost:3000/shelter/conditions?id=' + sid)
+                axios.get(process.env.API_ROUTE + '/shelter/conditions?id=' + sid)
                 .then(response => {
                   let lu = 0;
                   let temp = 0;
@@ -198,7 +198,7 @@ export default {
                       lu = temp;
                     }
                   }
-                  axios.get('http://localhost:3000/shelter/needs?id=' + sid)
+                  axios.get(process.env.API_ROUTE + '/shelter/needs?id=' + sid)
                   .then(response => {
                     for (let j = 0; j < response.data.data.length; j++) {
                       temp = Date.parse(response.data.data[j].Timestamp);
