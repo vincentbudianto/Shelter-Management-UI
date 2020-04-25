@@ -25,12 +25,6 @@
                 label="Description"
               ></v-text-field>
             </v-form>
-            <v-form ref="form">
-              <v-text-field
-                v-model="inputStatus"
-                label="Status"
-              ></v-text-field>
-            </v-form>
             <div class="text-center py-4 mt-3">
               <v-btn v-on:click="submitUpdateShelterConditionClick">Update</v-btn>
             </div>
@@ -97,8 +91,7 @@
       var data = {
         inputId: "",
         inputTitle: "",
-        inputDescription: "",
-        inputStatus: ""
+        inputDescription: ""
       }
 
       return data;
@@ -120,7 +113,6 @@
           "id": this.shelter.ShelterID,
           "shelterTitle": this.inputTitle,
           "shelterDesc": this.inputDescription,
-          "shelterStatus": this.inputStatus,
           "updated": this.$cookies.get("AccountID")
         }
 

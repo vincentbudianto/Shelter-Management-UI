@@ -3,6 +3,9 @@
     <div class="col-md-12 shelter-detail-content-container">
         <h3>Shelter Detail</h3>
         <h4>{{details.Name}} - #{{details.ShelterID}}</h4>
+        <div class="floatingIcon" @click="focusMapCenter">
+          <v-icon>mdi-crosshairs-gps</v-icon>
+        </div>
         <div class="mapContainer">
           <vl-map
               :load-tiles-while-animating="true"
@@ -32,27 +35,27 @@
                         <tbody>
                           <tr>
                             <th scope="row">Bencana</th>
-                            <td>{{details.DisasterName}} {{details.DisasterID}}</td>
+                            <td>{{details.DisasterName}} - #{{details.DisasterID}}</td>
                           </tr>
                           <tr>
                             <th scope="row">Skala</th>
-                            <td>{{details.Scale}}</td>
+                            <td>{{details.Scale || '-'}}</td>
                           </tr>
                           <tr>
                             <th scope="row">District</th>
-                            <td>{{details.District}}</td>
+                            <td>{{details.District || '-'}}</td>
                           </tr>
                           <tr>
                             <th scope="row">City</th>
-                            <td>{{details.City}}</td>
+                            <td>{{details.City || '-'}}</td>
                           </tr>
                           <tr>
                             <th scope="row">Province</th>
-                            <td>{{details.Province}}</td>
+                            <td>{{details.Province || '-'}}</td>
                           </tr>
                           <tr>
                             <th scope="row">Country</th>
-                            <td>{{details.Country}}</td>
+                            <td>{{details.Country || '-'}}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -76,7 +79,7 @@
                           <tbody>
                             <tr v-for="(stock, index) in stocks">
                               <th>{{index + 1}}</th>
-                              <td>{{stock.Name}}</td>
+                              <td>{{stock.Name || '-'}}</td>
                               <td>{{stock.Amount}}</td>
                             </tr>
                           </tbody>
@@ -101,6 +104,7 @@
                             <tr>
                               <th>#</th>
                               <th>Description</th>
+                              <th>Stock #ID</th>
                               <th>Timestamp</th>
                               <th>Status</th>
                             </tr>
@@ -109,6 +113,7 @@
                             <tr v-for="(need, index) in needHist">
                               <th>{{index + 1}}</th>
                               <td>{{need.Description}}</td>
+                              <td>{{need.NeedStockName}} #{{need.NeedStockID}}</td>
                               <td>{{need.Timestamp | moment}}</td>
                               <td>
                                 <v-switch
@@ -180,7 +185,7 @@
                             <tr v-for="(condition, index) in conditionHist">
                               <th>{{index + 1}}</th>
                               <td>{{condition.Title}}</td>
-                              <td>{{condition.Description}}</td>
+                              <td>{{condition.Description || '-'}}</td>
                               <td>{{condition.Timestamp | moment}}</td>
                               <td>
                                 <v-switch
@@ -225,20 +230,30 @@
   margin-bottom: 0.5rem;
 }
 
-.floatingList{
+.floatingIcon{
   position: absolute;
   z-index: 1;
   background-color: white;
-  margin-top: 5rem;
-  margin-left: 1rem;
-  border-radius: 0.5rem;
-  max-height: 30rem;
-  min-width: 15rem;
-  max-width: 20rem;
-  overflow: auto;
+  margin-top: 4.6rem;
+  margin-left: 0.6rem;
+  border-radius: 0.2rem;
+  padding: 0.15rem;
   opacity: 0.9;
-  color: black;
-  font-weight: bold;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 800px) {
+  .floatingIcon {
+    position: absolute;
+    z-index: 1;
+    background-color: white;
+    margin-top: 5.5rem;
+    margin-left: 0.8rem;
+    border-radius: 0.2rem;
+    padding: 0.15rem;
+    opacity: 0.9;
+    cursor: pointer;
+  }
 }
 
 .shelterItem {
@@ -331,6 +346,10 @@ export default {
       this.getShelterNeedHistory();
     },
     methods: {
+      focusMapCenter: function() {
+        this.$refs.centerController.animate({zoom: 17});
+        this.$refs.centerController.animate({center: this.currCenter});
+      },
       getShelterDetail: function() {
         axios.get(process.env.API_ROUTE+'/shelter?id=' + this.$route.params.id)
         .then(response => {
@@ -340,8 +359,7 @@ export default {
           this.details = data;
           this.validateUser();
           this.currCenter = newCenter;
-          this.$refs.centerController.animate({zoom: 17});
-          this.$refs.centerController.animate({center: newCenter});
+          this.focusMapCenter();
         })
         .catch(e => {
           this.errors.push(e);
