@@ -80,7 +80,10 @@ export default {
   // Fetches posts when the component is created.
   methods: {
     search: function() {
-      this.victims = [];
+      if(this.query == ''){
+        this.victims = [];
+        return;
+      }
       axios.get(process.env.API_ROUTE+'/victim/search/keyword?keyword=' + this.query)
       .then(response => {
         // JSON responses are automatically parsed.

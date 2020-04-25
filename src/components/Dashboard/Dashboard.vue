@@ -1,12 +1,12 @@
 <template v-if="userValidated">
   <div class="bg">
-    <div class="content mx-3 pb-3">
+    <div class="content">
     
       <div class="p-5">
         <h3 class="heading-font">Dashboard</h3>
       </div>
 
-      <v-row>
+      <v-row class="map-container">
         <v-col class="pt-0">
           <!-- Map Section-->
           <div>
@@ -32,11 +32,11 @@
                   <vl-overlay :position="[parseFloat(coordinate.Longitude)+0.25, parseFloat(coordinate.Latitude)+0.25]">
                     <div class="overlay-content" v-if="currentDashboardScope == 'Seluruh Bencana' || currentDashboardScope == 'Bencana'">
                       <div v-if="coordinate.Type == 'Disaster'">  
-                        Bencana: {{disasterData[coordinate.ID - 1].Name}}
+                        Bencana: <b>{{disasterData[coordinate.ID - 1].Name}}</b>
                       </div>
                       <div v-if="coordinate.Type == 'Shelter'">  
-                        Posko: {{shelterData[coordinate.ID - 1].Name}} <br/>
-                        Bencana: {{disasterData[renderedCoordinates[0].ID - 1].Name}}
+                        Posko: <b>{{shelterData[coordinate.ID - 1].Name}}</b> <br/>
+                        Bencana: <b>{{disasterData[renderedCoordinates[0].ID - 1].Name}}</b>
                       </div>
                     </div>
                     <div class="overlay-content" v-if="currentDashboardScope == 'Posko'">
@@ -120,19 +120,10 @@
               </v-btn>
             </div>
         </v-col>
-        <v-col>
-          <v-row class="m-3 tile-box" style="position: relative; height:20rem; width:30rem">
+        <v-col class="m-2 px-3 py-5 tile-box dashboard-container">
             <canvas id="victim-by-age"></canvas>
-          </v-row>  
         </v-col>
       </v-row>
-
-      <!-- chart section -->
-      <!-- <canvas id="victim-by-gender"></canvas> -->
-      <!-- <div class="m-3 tile-box" style="position: relative; height:50vh; width:50vw">
-        
-      </div> -->
-      <!-- <canvas id="victim-by-condition"></canvas> -->
     </div>
   </div>
 </template>
@@ -146,14 +137,34 @@
     margin-left: 1%;
   }
   .tile-box {
-    box-shadow: 0 4px 8px 0 rgba(239, 239, 239, 0.25), 0 6px 20px 0 rgba(239, 239, 239, 0.25);
     background-color: rgb(250, 250, 250);
+    border-radius: .5rem;
   }
   .bg {
-    background-color:#232322;
+    background-color:white;
   }
   .content {
-    background-color:#232322;
+    margin: 0rem 4rem 4rem 4rem;
+    padding: 0rem 1.5rem 0rem;
+    box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
+    background-color: #232322;
+  }
+  .dashboard-container {
+    position: relative;
+  }
+  .map-container {
+    padding: 0rem 3rem 0rem;
+  }
+  @media screen and (max-width: 800px){
+    .content {
+      margin: 0rem;
+      padding: 0rem .25rem 0rem;
+      box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
+      background-color: #232322;
+    }
+    .map-container {
+    padding: 0rem .5rem 0rem;
+  }
   }
   .overlay-content{
     background-color:#FFFFFF;
