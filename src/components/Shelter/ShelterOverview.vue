@@ -65,19 +65,19 @@
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
                       <div class="table-responsive">
-                        <table class="table table-fixed">
+                        <table class="table">
                           <thead>
                             <tr>
-                              <th scope="col" class="col-1">#</th>
-                              <th scope="col" class="col-8">Name</th>
-                              <th scope="col" class="col-3">Amount</th>
+                              <th>#</th>
+                              <th>Name</th>
+                              <th>Amount</th>
                             </tr>
                           </thead>
                           <tbody>
                             <tr v-for="(stock, index) in stocks">
-                              <th scope="row" class="col-1">{{index + 1}}</th>
-                              <td class="col-8">{{stock.Name}}</td>
-                              <td class="col-3">{{stock.Amount}}</td>
+                              <th>{{index + 1}}</th>
+                              <td>{{stock.Name}}</td>
+                              <td>{{stock.Amount}}</td>
                             </tr>
                           </tbody>
                         </table>
@@ -96,19 +96,28 @@
                         </v-btn>
                       </div>
                       <div class="table-responsive">
-                        <table class="table table-fixed">
+                        <table class="table">
                           <thead>
                             <tr>
-                              <th scope="col" class="col-1">#</th>
-                              <th scope="col" class="col-8">Description</th>
-                              <th scope="col" class="col-3">Timestamp</th>
+                              <th>#</th>
+                              <th>Description</th>
+                              <th>Timestamp</th>
+                              <th>Status</th>
                             </tr>
                           </thead>
                           <tbody>
                             <tr v-for="(need, index) in needHist">
-                              <th scope="row" class="col-1">{{index + 1}}</th>
-                              <td class="col-8">{{need.Description}}</td>
-                              <td class="col-3">{{need.Timestamp | moment}}</td>
+                              <th>{{index + 1}}</th>
+                              <td>{{need.Description}}</td>
+                              <td>{{need.Timestamp | moment}}</td>
+                              <td>
+                                <v-switch
+                                  class="switch-control"
+                                  v-model="need.Status"
+                                  :disabled="!need.Status"
+                                  @change="changeShelterNeedStatus(need.Id, need.Status)"
+                                ></v-switch>
+                              </td>
                             </tr>
                           </tbody>
                         </table>
@@ -125,21 +134,21 @@
                     <v-expansion-panel-header>Victim List</v-expansion-panel-header>
                     <v-expansion-panel-content>
                       <div class="table-responsive">
-                        <table class="table table-fixed">
+                        <table class="table">
                           <thead>
                             <tr>
-                              <th scope="col" class="col-1">#</th>
-                              <th scope="col" class="col-5">NIK</th>
-                              <th scope="col" class="col-4">Name</th>
-                              <th scope="col" class="col-2">Status</th>
+                              <th>#</th>
+                              <th>NIK</th>
+                              <th>Name</th>
+                              <th>Status</th>
                             </tr>
                           </thead>
                           <tbody style="max-height:300px">
                             <tr class="cursor-pointer" v-for="(victim, index) in victimList" v-on:click="goToVictimDetails(victim)">
-                              <th scope="row" class="col-1">{{index + 1}}</th>
-                              <td class="col-5">{{victim.NIK}}</td>
-                              <td class="col-4">{{victim.Name}}</td>
-                              <td class="col-2">{{victim.Status && 'Alive' || 'Dead'}}</td>
+                              <th>{{index + 1}}</th>
+                              <td>{{victim.NIK || '-'}}</td>
+                              <td>{{victim.Name}}</td>
+                              <td>{{victim.Status && 'Alive' || 'Dead'}}</td>
                             </tr>
                           </tbody>
                         </table>
@@ -158,21 +167,29 @@
                         </v-btn>
                       </div>
                       <div class="table-responsive">
-                        <table class="table table-fixed">
+                        <table class="table">
                           <thead>
                             <tr>
-                              <th scope="col" class="col-3">#</th>
-                              <th scope="col" class="col-3">Title</th>
-                              <th scope="col" class="col-3">Description</th>
-                              <th scope="col" class="col-3">Timestamp</th>
+                              <th>#</th>
+                              <th>Title</th>
+                              <th>Description</th>
+                              <th>Timestamp</th>
                             </tr>
                           </thead>
                           <tbody>
                             <tr v-for="(condition, index) in conditionHist">
-                              <th scope="row" class="col-3">{{index + 1}}</th>
-                              <td class="col-3">{{condition.Title}}</td>
-                              <td class="col-3">{{condition.Description}}</td>
-                              <td class="col-3">{{condition.Timestamp | moment}}</td>
+                              <th>{{index + 1}}</th>
+                              <td>{{condition.Title}}</td>
+                              <td>{{condition.Description}}</td>
+                              <td>{{condition.Timestamp | moment}}</td>
+                              <td>
+                                <v-switch
+                                  class="switch-control"
+                                  v-model="condition.Status"
+                                  :disabled="!condition.Status"
+                                  @change="changeShelterConditionStatus(condition.Id, condition.Status)"
+                                ></v-switch>
+                              </td>
                             </tr>
                           </tbody>
                         </table>
@@ -269,31 +286,13 @@
   cursor: pointer;
 }
 
-.table-fixed tbody {
-    max-height: 300px;
-    overflow-y: auto;
-    width: 100%;
+.table-body {
+  height: 10rem;
 }
 
-.table-fixed thead,
-.table-fixed tbody,
-.table-fixed tr,
-.table-fixed td,
-.table-fixed th {
-    display: block;
-}
-
-.table-fixed tbody td,
-.table-fixed tbody th,
-.table-fixed thead > tr > th {
-    float: left;
-    position: relative;
-
-    &::after {
-        content: '';
-        clear: both;
-        display: block;
-    }
+.switch-control {
+  height: 2rem;
+  margin: 0rem;
 }
 </style>
 <script src="extensions/sticky-header/bootstrap-table-sticky-header.js"></script>
@@ -333,7 +332,7 @@ export default {
     },
     methods: {
       getShelterDetail: function() {
-        axios.get('http://localhost:3000/shelter?id=' + this.$route.params.id)
+        axios.get(process.env.API_ROUTE+'/shelter?id=' + this.$route.params.id)
         .then(response => {
           const data = response.data.data;
           const newCenter = [parseFloat(data.Longitude), parseFloat(data.Latitude)];
@@ -349,7 +348,7 @@ export default {
         })
       },
       getShelterVictimList: function() {
-        axios.get('http://localhost:3000/shelter/victimList?id=' + this.$route.params.id)
+        axios.get(process.env.API_ROUTE+'/shelter/victimList?id=' + this.$route.params.id)
         .then(response => {
           this.victimList = response.data.data;
         })
@@ -358,7 +357,7 @@ export default {
         })
       },
       getShelterStock: function() {
-        axios.get('http://localhost:3000/shelter/stock?id=' + this.$route.params.id)
+        axios.get(process.env.API_ROUTE+'/shelter/stock?id=' + this.$route.params.id)
         .then(response => {
           this.stocks = response.data.data;
         })
@@ -367,7 +366,7 @@ export default {
         })
       },
       getShelterConditionHistory: function() {
-        axios.get('http://localhost:3000/shelter/conditions?id=' + this.$route.params.id)
+        axios.get(process.env.API_ROUTE+'/shelter/conditions?id=' + this.$route.params.id)
         .then(response => {
           this.conditionHist = response.data.data;
         })
@@ -376,7 +375,7 @@ export default {
         })
       },
       getShelterNeedHistory: function() {
-        axios.get('http://localhost:3000/shelter/needs?id=' + this.$route.params.id)
+        axios.get(process.env.API_ROUTE+'/shelter/needs?id=' + this.$route.params.id)
         .then(response => {
           this.needHist = response.data.data;
         })
@@ -385,7 +384,31 @@ export default {
         })
       },
       goToVictimDetails: function(victim) {
-        window.location.href = '?#/details/' + victim.VictimID;
+        window.location.href = '/details/' + victim.VictimID;
+      },
+      changeShelterNeedStatus: function(id, status) {
+        axios.post(process.env.API_ROUTE + '/shelter/history/need/status', {
+          id: id,
+          status: status
+        })
+        .then(response => {
+          console.log(response)
+        })
+        .catch(e => {
+          this.errors.push(e)
+        });
+      },
+      changeShelterConditionStatus: function(id, status) {
+        axios.post(process.env.API_ROUTE + '/shelter/history/condition/status', {
+          id: id,
+          status: status
+        })
+        .then(response => {
+          console.log(response)
+        })
+        .catch(e => {
+          this.errors.push(e)
+        });
       },
       showConditionModal(){
         this.conditionModalVisible = true
@@ -403,11 +426,11 @@ export default {
       }, validateUser(){
           var aid = this.$cookies.get('AccountID');
           let currentObj = this;
-          axios.get('http://localhost:3000/check/shelter/staff?staffId=' + aid + '&shelterId=' + currentObj.details.ShelterID)
+          axios.get(process.env.API_ROUTE+'/check/shelter/staff?staffId=' + aid + '&shelterId=' + currentObj.details.ShelterID)
           .then(response => {
               // JSON responses are automatically parsed.
               if(response.data.data.isStaffShelter == false){
-                  axios.get('http://localhost:3000/check/admin?id=' + aid)
+                  axios.get(process.env.API_ROUTE+'/check/admin?id=' + aid)
                   .then(response => {
                       // JSON responses are automatically parsed.
                       if(response.data.data.isAdmin == false){

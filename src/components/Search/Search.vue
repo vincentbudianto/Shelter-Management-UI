@@ -11,11 +11,11 @@
         </thead>
         <tbody>
           <tr v-for="victim in victims" v-bind:key="victim.VictimID">
-            <td class="result"><a :href="'?#/details/'+victim.VictimID">{{ victim.NIK || 'unknown' }}</a></td>
-            <td class="result"><a :href="'?#/details/'+victim.VictimID">{{ victim.Name }}</a></td>
-            <td v-if="victim.ConditionStatus == 1" class="result"><a :href="'?#/details/'+victim.VictimID">Alive</a></td>
-            <td v-else-if="victim.ConditionStatus == 0" class="result"><a :href="'?#/details/'+victim.VictimID">Deceased</a></td>
-            <td v-else class="result"><a :href="'?#/details/'+victim.VictimID">unknown</a></td>
+            <td class="result"><a :href="'/details/'+victim.VictimID">{{ victim.NIK || 'unknown' }}</a></td>
+            <td class="result"><a :href="'/details/'+victim.VictimID">{{ victim.Name }}</a></td>
+            <td v-if="victim.ConditionStatus == 1" class="result"><a :href="'/details/'+victim.VictimID">Alive</a></td>
+            <td v-else-if="victim.ConditionStatus == 0" class="result"><a :href="'/details/'+victim.VictimID">Deceased</a></td>
+            <td v-else class="result"><a :href="'/details/'+victim.VictimID">unknown</a></td>
           </tr>
         </tbody>
       </table>
@@ -68,7 +68,7 @@ export default {
   },
 
   mounted:function(){
-    axios.get('http://localhost:3000/configs/filter')
+    axios.get(process.env.API_ROUTE+'/configs/filter')
       .then(response => {
         this.filterState = response.data.data[0].SearchFilter;
         // console.log(this.filterState);
@@ -84,7 +84,7 @@ export default {
         this.victims = [];
         return;
       }
-      axios.get('http://localhost:3000/victim/search/keyword?keyword=' + this.query)
+      axios.get(process.env.API_ROUTE+'/victim/search/keyword?keyword=' + this.query)
       .then(response => {
         // JSON responses are automatically parsed.
         this.victims = response.data.data
@@ -95,7 +95,7 @@ export default {
       })
     },
     filteredSearch: function() {
-      axios.get('http://localhost:3000/victim/search/nokk?nokk=' + this.query)
+      axios.get(process.env.API_ROUTE+'/victim/search/nokk?nokk=' + this.query)
       .then(response => {
         // JSON responses are automatically parsed.
         this.victims = response.data.data

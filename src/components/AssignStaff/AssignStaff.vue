@@ -156,7 +156,7 @@ import axios from 'axios';
                     document.getElementById("shelterid_error").innerHTML = "";
                     document.getElementById("staffid_error").innerHTML = ""
 
-                    axios.post('http://localhost:3000/account',
+                    axios.post(process.env.API_ROUTE+'/account',
                     {
                         accountid: this.staffid,
                         shelterid: this.shelterid
@@ -185,7 +185,7 @@ import axios from 'axios';
                 }
 
             }, getShelters(){
-                axios.get('http://localhost:3000/sheltername')
+                axios.get(process.env.API_ROUTE+'/sheltername')
                 .then(response => {
                     // JSON responses are automatically parsed.
                     this.shelters = response.data.data
@@ -194,7 +194,7 @@ import axios from 'axios';
                     this.errors.push(e)
                 })
             }, getAccounts(){
-                axios.get('http://localhost:3000/account')
+                axios.get(process.env.API_ROUTE+'/account')
                 .then(response => {
                     // JSON responses are automatically parsed.
                     this.accounts = response.data.data
@@ -205,7 +205,7 @@ import axios from 'axios';
             }, validateUser(){
                 var aid = this.$cookies.get('AccountID');
                 let currentObj = this;
-                axios.get('http://localhost:3000/check/admin?id=' + aid)
+                axios.get(process.env.API_ROUTE+'/check/admin?id=' + aid)
                 .then(response => {
                     // JSON responses are automatically parsed.
                     if(response.data.data.isAdmin == false){

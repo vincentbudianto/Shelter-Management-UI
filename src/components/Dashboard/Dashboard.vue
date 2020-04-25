@@ -1,85 +1,16 @@
 <template v-if="userValidated">
   <div class="bg">
-    <div class="content mx-1">
-
-      <v-row >
-
-        <!-- Overview Section -->
-        <v-col>
-          <div class="m-3 p-5 tile-box">
-            <h3 v-if="currentDashboardScope == 'Seluruh Bencana'" style="color: red">
-              Menampilkan {{currentDashboardScope}} 
-            </h3>
-            <div v-if="currentDashboardScope == 'Bencana'">
-              <h6>Menampilkan {{currentDashboardScope}} </h6>
-              <h5 class="display-1" style="color: red; font-weight: bold">{{displaySelectedShelterDisasterName}} </h5>
-              <h6>Skala</h6>
-              <h5 class="display-1" style="font-weight: bold">{{selectedShelterDisasterScale}}</h5>
-            </div>
-            <div v-if="currentDashboardScope == 'Posko'">
-              <h6>Menampilkan {{currentDashboardScope}}</h6>
-              <h5 class="display-1"  style="color: red; font-weight: bold">{{displaySelectedShelterName}}</h5>
-            </div>
-            <div>
-              <h6>Jumlah Korban</h6>
-              <h3 class="display-3 font-weight-bold" style="font-size: 5em; color: red">
-                {{countVictimInCurrentScope}}
-              </h3>
-            </div>
-          </div>
-        </v-col>
-        <!-- Selection Section  -->
-          <v-col>
-            <div class="m-3 p-5 tile-box">
-                <h5 class="mb-3">Pilih Cakupan</h5>
-                <v-row>
-                  <v-col id="selection-dropdown" class="w-75 px-2 py-0">
-                      <v-select 
-                        id="selection-dropdown"
-                        :items="shelterDisasterNames"
-                        v-model="selectedShelterDisasterName"
-                        placeholder="Pilih bencana"
-                        ></v-select>
-                  </v-col>
-                  <v-col class="px-2 py-2">
-                    <v-btn id="selection-button" v-on:click="btnClickLihatBencana">
-                      <a style="font-size: .75em">Lihat Bencana</a>
-                    </v-btn>
-                  </v-col>
-                </v-row>
-                <v-row v-if="selectedShelterDisasterName">
-                  <v-col id="selection-dropdown" class="w-75">
-                    <v-select
-                      :items="shelterNames"
-                      v-model="selectedShelterName"
-                      placeholder="Pilih posko"
-                    ></v-select>
-                  </v-col>
-                  <v-col id="selection-button" class="mt-1">
-                    <v-btn v-on:click="btnClickLihatPosko">
-                      <a style="font-size: .75em">Lihat Posko</a>
-                    </v-btn>
-                  </v-col>
-                </v-row>  
-                <v-row>
-                  <v-col>
-                    <v-btn v-on:click="btnClickLihatSeluruhBencana">
-                      <span style="white-space: normal;">
-                        <a style="font-size: .75em">Lihat Seluruh Bencana</a>
-                      </span>
-                    </v-btn>
-                  </v-col>
-                </v-row>
-            </div>
-          </v-col>
-
-      </v-row>
+    <div class="content mx-3 pb-3">
+    
+      <div class="p-5">
+        <h3 class="heading-font">Dashboard</h3>
+      </div>
 
       <v-row>
-        <v-col>
+        <v-col class="pt-0">
           <!-- Map Section-->
           <div>
-            <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true" data-projection="EPSG:4326" style="height: 400px">
+            <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true" data-projection="EPSG:4326" style="height:40rem">
               <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
 
               <vl-layer-tile>
@@ -113,17 +44,94 @@
                     </div>
                   </vl-overlay>
                 </vl-feature>
-
             </vl-map>
           </div>
         </v-col>
       </v-row>
 
+      <v-row class="d-flex flex-wrap p-5">
+        <v-col class="tile-box m-2 py-3 px-5 d-flex flex-row justify-content-between">
+          <!-- Overview Section -->
+            <v-col>
+              <v-row class="d-flex flex-column" v-if="currentDashboardScope == 'Seluruh Bencana'" >
+                  <h3  style="color: red">
+                    Menampilkan {{currentDashboardScope}} 
+                  </h3>
+                  <h5>Jumlah Bencana</h5>
+                  <h1 class="display-4 font-weight-bold" style="font-size: 5em; color: red">
+                    {{disasterData.length}}
+                  </h1>
+              </v-row>
+              <v-row class="d-flex flex-column" v-if="currentDashboardScope == 'Bencana'">
+                <h5>Menampilkan {{currentDashboardScope}} </h5>
+                <h3 class="display-1" style="color: red; font-weight: bold">{{displaySelectedShelterDisasterName}} </h3>
+                <h5>Skala</h5>
+                <h5 class="display-1" style="font-weight: bold">{{selectedShelterDisasterScale}}</h5>
+              </v-row>
+              <v-row class="d-flex flex-column" v-if="currentDashboardScope == 'Posko'">
+                <h5>Menampilkan {{currentDashboardScope}}</h5>
+                <h5 class="display-1"  style="color: red; font-weight: bold">{{displaySelectedShelterName}}</h5>
+              </v-row>
+              <v-row class="d-flex flex-column">
+                <h5>Jumlah Korban</h5>
+                <h1 class="display-4 font-weight-bold" style="font-size: 5em; color: red">
+                  {{countVictimInCurrentScope}}
+                </h1>
+              </v-row>
+            </v-col>
+        </v-col>
+        <v-col class="tile-box m-2 px-3 py-5 d-flex flex-column">
+          <!-- Selection Section  -->
+            <h4 class="my-5">Pilih Cakupan</h4>
+            <div class="d-flex flex-wrap">
+              <div id="selection-dropdown" class="flex-grow-1 w-100 px-2 py-0">
+                  <v-select 
+                    id="selection-dropdown"
+                    :items="shelterDisasterNames"
+                    v-model="selectedShelterDisasterName"
+                    placeholder="Pilih bencana"
+                    ></v-select>
+              </div>
+              <div class="px-2 py-2">
+                <v-btn id="selection-button" v-on:click="btnClickLihatBencana">
+                  <a style="font-size: .75em">Lihat Bencana</a>
+                </v-btn>
+              </div>
+            </div>
+            <div v-if="selectedShelterDisasterName" class="d-flex flex-wrap">
+              <div id="selection-dropdown" class="flex-grow-1 w-100 px-2 py-0">
+                <v-select
+                  :items="shelterNames"
+                  v-model="selectedShelterName"
+                  placeholder="Pilih posko"
+                ></v-select>
+              </div>
+              <div id="selection-button" class="mt-1 px-2 py-2">
+                <v-btn v-on:click="btnClickLihatPosko">
+                  <a style="font-size: .75em">Lihat Posko</a>
+                </v-btn>
+              </div>
+            </div>  
+            <div class="px-2 py-2 flex-grow-1 d-flex flex-row align-items-end">
+              <v-btn v-on:click="btnClickLihatSeluruhBencana">
+                <span style="white-space: normal;">
+                  <a style="font-size: .75em">Lihat Seluruh Bencana</a>
+                </span>
+              </v-btn>
+            </div>
+        </v-col>
+        <v-col>
+          <v-row class="m-3 tile-box" style="position: relative; height:20rem; width:30rem">
+            <canvas id="victim-by-age"></canvas>
+          </v-row>  
+        </v-col>
+      </v-row>
+
       <!-- chart section -->
       <!-- <canvas id="victim-by-gender"></canvas> -->
-      <div class="m-3 tile-box" style="position: relative; height:50vh; width:50vw">
-        <canvas id="victim-by-age"></canvas>
-      </div>
+      <!-- <div class="m-3 tile-box" style="position: relative; height:50vh; width:50vw">
+        
+      </div> -->
       <!-- <canvas id="victim-by-condition"></canvas> -->
     </div>
   </div>
@@ -131,23 +139,27 @@
 
 <style scoped>
   @import "~leaflet/dist/leaflet.css";
+  .heading-font {
+    color: #d9d9d9;
+  }
   #dashboard-title {
     margin-left: 1%;
   }
   .tile-box {
-     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: 0 4px 8px 0 rgba(239, 239, 239, 0.25), 0 6px 20px 0 rgba(239, 239, 239, 0.25);
+    background-color: rgb(250, 250, 250);
   }
   .bg {
-    background-color: #d9d9d9;
+    background-color:#232322;
   }
   .content {
-    background-color: white;
+    background-color:#232322;
   }
   .overlay-content{
-  background-color:#FFFFFF;
-  padding: 10px;
-  width:auto;
-  height: auto;
+    background-color:#FFFFFF;
+    padding: 10px;
+    width:auto;
+    height: auto;
 }
 </style>
 
@@ -250,8 +262,15 @@ export default {
 
   watch: {
       selectedShelterDisasterName: function (val) {
+        var disasterData = this.disasterData
+
         this.shelterNames = this.shelterData.filter(function(obj){
-          return obj.DisasterName == val
+          let selectedShelterDisasterID = disasterData.filter(function(objDisaster){
+            return objDisaster.Name == val 
+          })[0].DisasterID
+
+          console.log("print selected", selectedShelterDisasterID)
+          return obj.DisasterID == selectedShelterDisasterID
           }).map(x=>x.Name)
       },
 
@@ -444,12 +463,12 @@ export default {
 
     getAllDashboardData () {
       axios.all([
-        axios.get("http://localhost:3000/shelter"),
-        axios.get("http://localhost:3000/disaster"),
-        axios.get("http://localhost:3000/dashboard"),
+        axios.get(process.env.API_ROUTE+"/shelter/all"),
+        axios.get(process.env.API_ROUTE+"/disaster"),
+        axios.get(process.env.API_ROUTE+"/dashboard"),
       ])
         .then(response => {
-          console.log(this.$cookies.get("Type"), this.$cookies.get("AccountID"))
+          
           this.shelterData = response[0].data.data
           this.disasterData = response[1].data.data
           this.dashboardData = response[2].data.data
@@ -485,7 +504,7 @@ export default {
           this.getAllDashboardData()
         }
         else{
-          window.location.replace('http://localhost:8000/#/login')
+          window.location.href = '/login'
         }
       })
       .catch(error => {

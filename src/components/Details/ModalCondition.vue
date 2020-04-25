@@ -105,7 +105,7 @@
         this.$emit('close');
       },
       sendVictimCondition: function(){
-        axios.post('http://localhost:3000/victim/history/condition',
+        axios.post(process.env.API_ROUTE+'/victim/history/condition',
         {
           id:this.$route.params.id,
           conditionName:this.condition,

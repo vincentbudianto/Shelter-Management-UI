@@ -15,7 +15,7 @@
         </form>
         <span class="error-message" id="login_failed"></span><br>
         <div class="form-group">
-            <a href="#/register" class="btnForgetPwd">Daftar Akun</a>
+            <a href="/register" class="btnForgetPwd">Daftar Akun</a>
         </div>
     </div>
 </div>
@@ -117,7 +117,7 @@ import axios from 'axios';
                 e.preventDefault();
 
                 let currentObj = this;
-                axios.post('http://localhost:3000/login',  
+                axios.post(process.env.API_ROUTE+'/login',  
                 {
                     username: this.username,
                     password: this.password
