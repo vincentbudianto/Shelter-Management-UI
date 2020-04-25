@@ -20,10 +20,14 @@
               ></v-text-field>
             </v-form>
             <v-form ref="form">
-              <v-text-field
-                v-model="inputStockId"
+              <v-select
+                :items="stockList"
+                item-text='Name'
+                item-value='Id'
+                v-model="selectedStockId"
                 label="Stock ID"
-              ></v-text-field>
+                outlined
+              ></v-select>
             </v-form>
             <div class="text-center py-4 mt-3">
               <v-btn v-on:click="submitUpdateShelterNeedsClick">Update</v-btn>
@@ -91,7 +95,8 @@
       var data = {
         inputId: "",
         inputDescription: "",
-        inputStockId: ""
+        stockList: [],
+        selectedStockId: 0
       }
 
       return data;
@@ -112,7 +117,7 @@
         var inputShelterPostData = {
           "id": this.shelter.ShelterID,
           "shelterNeed": this.inputDescription,
-          "shelterStock": this.inputStockId,
+          "shelterStock": this.selectedStockId,
           "updated": this.$cookies.get("AccountID")
         }
 
@@ -125,7 +130,19 @@
         })
 
         this.close();
+      },
+      getStockList: function() {
+        axios.get(process.env.API_ROUTE + '/stock')
+        .then(response => {
+          this.stockList = response.data.data;
+        })
+        .catch(e => {
+          this.errors.push(e)
+        })
       }
+    },
+    beforeMount() {
+      this.getStockList();
     }
   };
 </script>
