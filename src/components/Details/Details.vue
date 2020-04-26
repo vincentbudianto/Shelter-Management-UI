@@ -33,7 +33,7 @@
             <h3>Profil Korban</h3>
           </div>
           <div class="d-flex justify-content-center m-2 h-75">
-            <img style="max-width: 100%; max-height:100%; display:block" v-bind:src="'data:image/png;base64,' +detail.Photo">
+            <img style="max-width: 100%; max-height:100%; display:block" v-bind:src="'data:image/png;base64,' + (detail.Photo || '')">
           </div>
           <div class="mb-2 d-flex justify-content-center">
             <h5>{{detail.Name}}</h5>
@@ -225,7 +225,7 @@ import modalNeeds from './ModalNeeds.vue';
 export default {
   data() {
     return {
-      detail: null,
+      detail: {},
       conditions: [],
       needs : [],
       locations:[],
@@ -318,6 +318,7 @@ export default {
     },
     closeLocationModal(){
       this.locationModalVisible = false
+      this.getLocationHistory();
     },
 
     showConditionModal(){
@@ -325,6 +326,7 @@ export default {
     },
     closeConditionModal(){
       this.conditionModalVisible = false
+      this.getConditionHistory();
     },
 
     showNeedsModal(){
@@ -332,6 +334,7 @@ export default {
     },
     closeNeedsModal(){
       this.needsModalVisible = false
+      this.getNeedHistory();
     },
   },
 

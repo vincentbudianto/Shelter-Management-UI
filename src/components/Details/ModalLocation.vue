@@ -12,17 +12,25 @@
         <section class="modal-body" id="modalDescription">
           <slot name="body">
             <p class="h4 text-center">Update victim shelter location</p>
-            <form>
-              <label for="shelterName">Shelter Name :</label><br>
-                <select class="shelterList" v-model="shelterId">
-                    <option v-for="shelter in shelters" v-bind:value="shelter.ShelterID">
-                      {{shelter.Name}}
-                    </option>
-                </select>
-            </form>
-            <div class="text-center py-4">
-              <v-btn v-on:click="sendVictimShelter">Save Changes</v-btn>
-            </div>
+            <v-form
+              ref="form"
+              v-model="valid"
+            >
+              <v-select
+                :items="shelters"
+                :rules="shelterRules"
+                item-text='Name'
+                item-value='ShelterID'
+                v-model="shelterId"
+                label="Shelter Name"
+                outlined
+                required
+              ></v-select>
+              <v-btn
+                :disabled="!valid"
+                v-on:click="sendVictimShelter"
+              >Save Changes</v-btn>
+            </v-form>
           </slot>
         </section>
       </div>
@@ -100,41 +108,44 @@
   import axios from 'axios';
   export default {
     name: 'modalLocation',
-    mounted(){
+    beforeMount() {
       this.getShelterList();
     },
-    data(){
+    data() {
       return{
         shelterId:"",
-        shelters:[]
+        shelters:[],
+        valid: true,
+        shelterRules: [ v => !!v || 'Shelter is required' ]
       }
     },
     methods: {
       close() {
         this.$emit('close');
       },
-      getShelterList: function(){
+      getShelterList: function() {
         axios.get(process.env.API_ROUTE+'/shelter/all')
-        .then(response =>{
+        .then(response => {
           this.shelters = response.data.data;
         })
-        .catch(e=>{
+        .catch(e => {
           this.errors.push(e)
         })
       },
-      sendVictimShelter: function(){
+      sendVictimShelter: function() {
         axios.post(process.env.API_ROUTE+'/victim/history/shelter',
         {
           id:this.$route.params.id,
           shelterId:this.shelterId,
         })
-        .then(response =>{
-          console.log(response)
+        .then(response => {
+          this.shelterId = "";
+          this.$refs.form.reset();
+          this.$emit('close');
         })
-        .catch(e=>{
+        .catch(e => {
           this.errors.push(e)
         });
-        this.$emit('close');
       },
     },
   };
