@@ -13,25 +13,31 @@
         <section class="modal-body" id="modalDescription">
           <slot name="body">
             <p class="h4 text-center py-4">Update shelter {{shelter.Name}} needs</p>
-            <v-form ref="form">
+            <v-form
+              ref="form"
+              v-model="valid"
+            >
               <v-text-field
                 v-model="inputDescription"
+                :rules="descRules"
                 label="Description"
+                required
               ></v-text-field>
-            </v-form>
-            <v-form ref="form">
               <v-select
                 :items="stockList"
+                :rules="stockRules"
                 item-text='Name'
                 item-value='Id'
                 v-model="selectedStockId"
                 label="Stock ID"
                 outlined
+                required
               ></v-select>
+              <v-btn
+                :disabled="!valid"
+                v-on:click="submitUpdateShelterNeedsClick"
+              >Update</v-btn>
             </v-form>
-            <div class="text-center py-4 mt-3">
-              <v-btn v-on:click="submitUpdateShelterNeedsClick">Update</v-btn>
-            </div>
           </slot>
         </section>
       </div>
@@ -93,21 +99,15 @@
     props: ['shelter'],
     data () {
       var data = {
-        inputId: "",
+        valid: true,
         inputDescription: "",
         stockList: [],
-        selectedStockId: 0
+        selectedStockId: 0,
+        descRules: [ v => !!v || 'Description is required' ],
+        stockRules: [ v => !!v || 'Stock is required' ]
       }
 
       return data;
-    },
-    watch: {
-      shelter: {
-        handler() {
-          this.inputId = this.shelter.ShelterID;
-          // this.inputUpdate = this.$cookie.get("AccountID");
-        }
-      }
     },
     methods: {
       close() {
@@ -123,13 +123,14 @@
 
         axios.post(process.env.API_ROUTE+'/shelter/history/need', inputShelterPostData)
         .then(response => {
-          console.log(response)
+          this.inputDescription = "";
+          this.selectedStockId = 0;
+          this.$refs.form.reset();
+          this.close();
         })
         .catch(e => {
           this.errors.push(e)
         })
-
-        this.close();
       },
       getStockList: function() {
         axios.get(process.env.API_ROUTE + '/stock')

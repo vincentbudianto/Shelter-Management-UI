@@ -12,15 +12,25 @@
         <section class="modal-body" id="modalDescription">
           <slot name="body">
             <p class="h4 text-center">Pindahkan Posko Korban</p>
-              <v-select 
-                id="selection-dropdown"
-                :items="shelterListDropdown"
+            <v-form
+              ref="form"
+              v-model="valid"
+            >
+              <v-select
+                :items="shelters"
+                :rules="shelterRules"
+                item-text='Name'
+                item-value='ShelterID'
                 v-model="shelterId"
-                placeholder="Pilih Posko Sekarang"
+                label="Shelter Name"
+                outlined
+                required
               ></v-select>
-            <div class="text-center py-4">
-              <v-btn v-on:click="sendVictimShelter">Simpan</v-btn>
-            </div>
+              <v-btn
+                :disabled="!valid"
+                v-on:click="sendVictimShelter"
+              >Save Changes</v-btn>
+            </v-form>
           </slot>
         </section>
       </div>
@@ -98,13 +108,15 @@
   import axios from 'axios';
   export default {
     name: 'modalLocation',
-    mounted(){
+    beforeMount() {
       this.getShelterList();
     },
-    data(){
+    data() {
       return{
         shelterId:"",
-        shelterListDropdown: [],
+        shelters:[],
+        valid: true,
+        shelterRules: [ v => !!v || 'Shelter is required' ]
       }
     },
 
@@ -117,36 +129,29 @@
       close() {
         this.$emit('close');
       },
-      getShelterList: function(){
+      getShelterList: function() {
         axios.get(process.env.API_ROUTE+'/shelter/all')
-        .then(response =>{
-          this.shelterListDropdown = response.data.data.map(x=>({"text":x.Name, "value":x.ShelterID}));
+        .then(response => {
+          this.shelters = response.data.data;
         })
-        .catch(e=>{
+        .catch(e => {
           this.errors.push(e)
         })
       },
-      isUpdateValid: function () {
-        return (
-          this.shelterId != ""
-        )
-      },
-      sendVictimShelter: function(){
-        if (this.isUpdateValid()){
-          axios.post(process.env.API_ROUTE+'/victim/history/shelter',
-          {
-            id:this.$route.params.id,
-            shelterId:this.shelterId,
-          })
-          .then(response =>{
-            console.log(response)
-          })
-          .catch(e=>{
-            this.errors.push(e)
-          });
+      sendVictimShelter: function() {
+        axios.post(process.env.API_ROUTE+'/victim/history/shelter',
+        {
+          id:this.$route.params.id,
+          shelterId:this.shelterId,
+        })
+        .then(response => {
+          this.shelterId = "";
+          this.$refs.form.reset();
           this.$emit('close');
-          location.reload()
-        }
+        })
+        .catch(e => {
+          this.errors.push(e)
+        });
       },
     },
   };

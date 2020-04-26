@@ -13,21 +13,25 @@
         <section class="modal-body" id="modalDescription">
           <slot name="body">
             <p class="h4 text-center py-4">Update shelter {{shelter.Name}} condition</p>
-            <v-form ref="form">
+            <v-form
+              ref="form"
+              v-model="valid"
+            >
               <v-text-field
                 v-model="inputTitle"
+                :rules="titleRules"
                 label="Title"
+                required
               ></v-text-field>
-            </v-form>
-            <v-form ref="form">
               <v-text-field
                 v-model="inputDescription"
                 label="Description"
               ></v-text-field>
+              <v-btn 
+                :disabled="!valid"
+                v-on:click="submitUpdateShelterConditionClick"
+              >Update</v-btn>
             </v-form>
-            <div class="text-center py-4 mt-3">
-              <v-btn v-on:click="submitUpdateShelterConditionClick">Update</v-btn>
-            </div>
           </slot>
         </section>
       </div>
@@ -91,7 +95,9 @@
       var data = {
         inputId: "",
         inputTitle: "",
-        inputDescription: ""
+        inputDescription: "",
+        valid: true,
+        titleRules: [ v => !!v || 'Title is required' ]
       }
 
       return data;
@@ -100,7 +106,6 @@
       shelter: {
         handler() {
           this.inputId = this.shelter.ShelterID;
-          // this.inputUpdate = $cookie.get("AccountID");
         }
       }
     },
@@ -112,19 +117,20 @@
         var inputShelterPostData = {
           "id": this.shelter.ShelterID,
           "shelterTitle": this.inputTitle,
-          "shelterDesc": this.inputDescription,
+          "shelterDesc": this.inputDescription || '-',
           "updated": this.$cookies.get("AccountID")
         }
 
         axios.post(process.env.API_ROUTE+'/shelter/history/condition', inputShelterPostData)
         .then(response => {
-          console.log(response)
+          this.inputTitle = "";
+          this.inputDescription = "";
+          this.$refs.form.reset();
+          this.close()
         })
         .catch(e => {
           this.errors.push(e)
         })
-
-        this.close()
       }
     }
   };
