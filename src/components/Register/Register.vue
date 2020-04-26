@@ -252,10 +252,15 @@ import axios from 'axios';
                     currentObj.output = error;
 
                 });
+            }, validateUser() {
+                if(this.$cookies.get('Type') == 'Admin' || this.$cookies.get('Type') == 'Staff') {
+                    this.$router.push('/');
+                }
             }
 
         },
         beforeMount(){
+            this.validateUser()
             this.getShelters()
         }
 

@@ -27,7 +27,7 @@
             <li class="nav-item" v-if="$cookies.get('Type') == 'Admin' || $cookies.get('Type') == 'Staff'">
               <router-link class="nav-link text-light" :to="links[5].to">{{ links[5].name }}</router-link>
             </li>
-            <li class="nav-item" v-if="$cookies.get('Type') == 'Guest'">
+            <li class="nav-item" v-if="$cookies.get('Type') == 'Guest' || $cookies.get('Type') == null">
               <router-link class="nav-link text-light" :to="links[6].to">{{ links[6].name }}</router-link>
             </li>
             <li class="nav-item" v-if="$cookies.get('Type') == 'Admin'">
@@ -120,17 +120,14 @@ export default {
         icon: 'home',
         link: '/static/assets/Red Cross Icon.png'
       }
-    ],
-    needHist: [],
-    conditionHist: [],
-    shelters: []
+    ]
   }),
 
   methods: {
     fillInGuestCookie () {
       if (this.$cookies.get("AccountID") == null && this.$cookies.get("Type") == null){
-        this.$cookies.set('AccountID', "null", 1);
-        this.$cookies.set('Type', 'Guest', 1);
+        this.$cookies.set('AccountID', "null", -1);
+        this.$cookies.set('Type', 'Guest', -1);
       }
     },
     showNotification() {
