@@ -29,7 +29,7 @@
                     </vl-style-circle>
                   </vl-style-box>
 
-                  <vl-overlay :position="[parseFloat(coordinate.Longitude)+0.25, parseFloat(coordinate.Latitude)+0.25]">
+                  <vl-overlay :position="[parseFloat(coordinate.Longitude), parseFloat(coordinate.Latitude)]">
                     <div class="overlay-content" v-if="currentDashboardScope == 'Seluruh Bencana' || currentDashboardScope == 'Bencana'">
                       <div v-if="coordinate.Type == 'Disaster'">  
                         Bencana: <b>{{disasterData[coordinate.ID - 1].Name}}</b>
@@ -300,33 +300,33 @@ export default {
         "Latitude":selectedData.Latitude, 
         "Longitude":selectedData.Longitude, 
         "Type":"Disaster"}]
-      this.renderedCoordinates = this.renderedCoordinates.concat(this.getDisasterShelterCoordinates(selectedData.Name))
+      this.renderedCoordinates = this.renderedCoordinates.concat(this.getDisasterShelterCoordinates(selectedData.DisasterID))
+      console.log(this.renderedCoordinates)
       this.center = [parseFloat(selectedData.Longitude), parseFloat(selectedData.Latitude)]
       this.countVictimInCurrentScope = this.countVictimInScope(selectedData.DisasterID, 'disaster')
-      this.renderedDashboardData = this.searchSelectedDashboardData(selectedData.DisasterID)
+      this.renderedDashboardData = this.searchSelectedDashboardData(selectedData.DisasterID, 'disaster')
       this.currentDashboardScope = "Bencana"
       this.displaySelectedShelterDisasterName = this.selectedShelterDisasterName
+      this.selectedShelterName = ""
     },
 
     btnClickLihatPosko (event) {
       var selectedData = this.searchSelectedShelterData(this.selectedShelterName)[0]
       this.selectedShelterDisasterScale = ""
       this.renderedCoordinates = [{
-        "idx":0,
         "ID":selectedData.ShelterID, 
         "Latitude":selectedData.Latitude, 
         "Longitude":selectedData.Longitude, 
         "Type":"Shelter"}]
       this.center = [parseFloat(selectedData.Longitude), parseFloat(selectedData.Latitude)]
       this.countVictimInCurrentScope = this.countVictimInScope(selectedData.ShelterID, 'shelter')
-      this.renderedDashboardData = this.searchSelectedDashboardData(selectedData.ShelterID)
+      this.renderedDashboardData = this.searchSelectedDashboardData(selectedData.ShelterID, 'shelter')
       this.currentDashboardScope = "Posko"
       this.displaySelectedShelterName = this.selectedShelterName
     }, 
 
     btnClickLihatSeluruhBencana (event) {
-      this.renderedCoordinates = this.disasterData.map((x, idx)=>({
-          "idx": idx,
+      this.renderedCoordinates = this.disasterData.map((x)=>({
           "ID":x.DisasterID, 
           "Latitude":parseFloat(x.Latitude), 
           "Longitude":parseFloat(x.Longitude), 
@@ -375,7 +375,7 @@ export default {
 
     getDisasterShelterCoordinates (val) {
       return this.shelterData.filter(function(obj){
-          return obj.DisasterName == val
+          return obj.DisasterID == val
           })
           .map(x=>({
               "ID":x.ShelterID,
@@ -485,8 +485,7 @@ export default {
           this.dashboardData = response[2].data.data
 
           this.shelterDisasterNames = this.disasterData.map(x=>x.Name)
-          this.renderedCoordinates = this.disasterData.map((x, idx)=>({
-            "idx": idx,
+          this.renderedCoordinates = this.disasterData.map((x)=>({
             "ID":x.DisasterID, 
             "Latitude":parseFloat(x.Latitude), 
             "Longitude":parseFloat(x.Longitude), 
@@ -507,7 +506,7 @@ export default {
     validateUserAccess () {
       var userID = this.$cookies.get("AccountID")
 
-      axios.get(`http://localhost:3000/check/admin?id=${userID}`)
+      axios.get(process.env.API_ROUTE+`/check/admin?id=${userID}`)
       .then(response => {
         console.log(response)
         if(response.data.data.isAdmin){

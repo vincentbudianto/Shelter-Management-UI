@@ -11,7 +11,7 @@
         </header>
         <section class="modal-body" id="modalDescription">
           <slot name="body">
-            <p class="h4 text-center">Update victim shelter location</p>
+            <p class="h4 text-center">Pindahkan Posko Korban</p>
             <v-form
               ref="form"
               v-model="valid"
@@ -119,6 +119,12 @@
         shelterRules: [ v => !!v || 'Shelter is required' ]
       }
     },
+
+    watch: {
+      shelterId: function (val) {
+      }
+    },
+
     methods: {
       close() {
         this.$emit('close');

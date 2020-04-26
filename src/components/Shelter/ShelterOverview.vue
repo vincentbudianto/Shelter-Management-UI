@@ -42,6 +42,10 @@
                             <td>{{details.Scale || '-'}}</td>
                           </tr>
                           <tr>
+                            <th scope="row">Total Victim</th>
+                            <td>{{victimList.length}}</td>
+                          </tr>
+                          <tr>
                             <th scope="row">District</th>
                             <td>{{details.District || '-'}}</td>
                           </tr>
