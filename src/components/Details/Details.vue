@@ -285,8 +285,8 @@ export default {
         var victimShelterID = detail.ShelterID
 
         return axios.all([
-          axios.get(`http://localhost:3000/check/admin?id=${userID}`),
-          axios.get(`http://localhost:3000/check/staff?id=${userID}`)
+          axios.get(process.env.API_ROUTE+`/check/admin?id=${userID}`),
+          axios.get(process.env.API_ROUTE+`/check/staff?id=${userID}`)
         ])
         .then(response => {
           if(!response[0].data.data.isAdmin && !response[1].data.data.isStaff){

@@ -25,12 +25,6 @@
                 label="Deskripsi Kondisi Korban"
               ></v-text-field>
             </v-form>
-            <!-- <v-form ref="form">
-              <v-text-field
-                v-model="status"
-                label="Victim Condition Status"
-              ></v-text-field>
-            </v-form> -->
             <div class="text-center py-4">
               <v-btn v-on:click="sendVictimCondition">Simpan</v-btn>
             </div>

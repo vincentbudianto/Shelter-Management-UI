@@ -110,7 +110,6 @@
 
     watch: {
       shelterId: function (val) {
-        console.log(val)
       }
     },
 
@@ -122,7 +121,6 @@
         axios.get(process.env.API_ROUTE+'/shelter/all')
         .then(response =>{
           this.shelterListDropdown = response.data.data.map(x=>({"text":x.Name, "value":x.ShelterID}));
-          console.log(this.shelterListDropdown)
         })
         .catch(e=>{
           this.errors.push(e)

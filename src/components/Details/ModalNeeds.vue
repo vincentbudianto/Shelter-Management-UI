@@ -26,12 +26,6 @@
                 placeholder="Barang yang Dibutuhkan"
               ></v-select>
             </v-form>
-            <!-- <v-form ref="form">
-              <v-text-field
-                v-model="status"
-                label="Status"
-              ></v-text-field>
-            </v-form> -->
             <v-form ref="form">
               <v-text-field
                 v-model="importance"
@@ -114,7 +108,6 @@
     },
     watch: {
       selectedStock: function (val) {
-        console.log(val)
       },
     },
     methods: {
@@ -122,10 +115,9 @@
         this.$emit('close');
       },
       getStockList: function (){
-        axios.get("http://localhost:3000/stock")
+        axios.get(process.env.API_ROUTE+"/stock")
         .then(response => {
           this.stockListDropdown = response.data.data.map(x=>({"text":x.Name, "value":x.Id}))
-          console.log(stockListDropdown)
         })
         .catch(e => {
           this.errors.push(e)

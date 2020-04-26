@@ -506,7 +506,7 @@ export default {
     validateUserAccess () {
       var userID = this.$cookies.get("AccountID")
 
-      axios.get(`http://localhost:3000/check/admin?id=${userID}`)
+      axios.get(process.env.API_ROUTE+`/check/admin?id=${userID}`)
       .then(response => {
         console.log(response)
         if(response.data.data.isAdmin){
