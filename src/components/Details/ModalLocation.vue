@@ -11,17 +11,15 @@
         </header>
         <section class="modal-body" id="modalDescription">
           <slot name="body">
-            <p class="h4 text-center">Update victim shelter location</p>
-            <form>
-              <label for="shelterName">Shelter Name :</label><br>
-                <select class="shelterList" v-model="shelterId">
-                    <option v-for="shelter in shelters" v-bind:value="shelter.ShelterID">
-                      {{shelter.Name}}
-                    </option>
-                </select>
-            </form>
+            <p class="h4 text-center">Pindahkan Posko Korban</p>
+              <v-select 
+                id="selection-dropdown"
+                :items="shelterListDropdown"
+                v-model="shelterId"
+                placeholder="Pilih Posko Sekarang"
+              ></v-select>
             <div class="text-center py-4">
-              <v-btn v-on:click="sendVictimShelter">Save Changes</v-btn>
+              <v-btn v-on:click="sendVictimShelter">Simpan</v-btn>
             </div>
           </slot>
         </section>
@@ -106,9 +104,15 @@
     data(){
       return{
         shelterId:"",
-        shelters:[]
+        shelterListDropdown: [],
       }
     },
+
+    watch: {
+      shelterId: function (val) {
+      }
+    },
+
     methods: {
       close() {
         this.$emit('close');
@@ -116,25 +120,33 @@
       getShelterList: function(){
         axios.get(process.env.API_ROUTE+'/shelter/all')
         .then(response =>{
-          this.shelters = response.data.data;
+          this.shelterListDropdown = response.data.data.map(x=>({"text":x.Name, "value":x.ShelterID}));
         })
         .catch(e=>{
           this.errors.push(e)
         })
       },
+      isUpdateValid: function () {
+        return (
+          this.shelterId != ""
+        )
+      },
       sendVictimShelter: function(){
-        axios.post(process.env.API_ROUTE+'/victim/history/shelter',
-        {
-          id:this.$route.params.id,
-          shelterId:this.shelterId,
-        })
-        .then(response =>{
-          console.log(response)
-        })
-        .catch(e=>{
-          this.errors.push(e)
-        });
-        this.$emit('close');
+        if (this.isUpdateValid()){
+          axios.post(process.env.API_ROUTE+'/victim/history/shelter',
+          {
+            id:this.$route.params.id,
+            shelterId:this.shelterId,
+          })
+          .then(response =>{
+            console.log(response)
+          })
+          .catch(e=>{
+            this.errors.push(e)
+          });
+          this.$emit('close');
+          location.reload()
+        }
       },
     },
   };

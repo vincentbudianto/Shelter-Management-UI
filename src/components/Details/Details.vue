@@ -27,7 +27,7 @@
       </div> -->
 
       <v-row class="d-flex justify-content-center w-100">
-        <div class=" d-flex flex-column justify-content-center m-5 p-3 box" style="width: 300px; height: 500px">
+        <div class=" d-flex flex-column justify-content-center m-5 p-3 box" style="width: 300px; height: 550px">
           <!-- Identity Block -->
           <div class="m-2 d-flex justify-content-center">
             <h3>Profil Korban</h3>
@@ -38,15 +38,21 @@
           <div class="mb-2 d-flex justify-content-center">
             <h5>{{detail.Name}}</h5>
           </div>
-          <div class="mh-50"> 
+          <div class="mh-70"> 
             <div>
-              <div class="font-weight-bold">NIK</div> <div class="mb-3">{{detail.NIK}}</div>
+              <div class="font-weight-bold">NIK</div> 
+              <div v-if="detail.NIK" class="mb-3">{{detail.NIK}}</div>
+              <div v-if="!detail.NIK" class="">-</div>
             </div>
             <div>
-              <div class="font-weight-bold">NOKK</div> <div class="mb-3">{{detail.NOKK}}</div>
+              <div class="font-weight-bold">NOKK</div> 
+              <div v-if="detail.NOKK" class="mb-3">{{detail.NOKK}}</div>
+              <div v-if="!detail.NOKK" class="">-</div>
             </div>
             <div>
-              <div class="font-weight-bold">Umur</div> <div class="mb-3">{{detail.Age}}</div>
+              <div class="font-weight-bold">Umur</div> 
+              <div v-if="detail.Age" class="mb-3">{{detail.Age}}</div>
+              <div v-if="!detail.Age" class="">-</div>
             </div>
           </div>
         </div>
@@ -71,7 +77,7 @@
                 </thead>
                 <tbody>
                   <tr v-for="(location, index) in locations" :key="index">
-                    <td>{{location.Name}}</td>
+                    <td><a :href="'/shelter/'+location.ShelterID">{{location.Name}}</a></td>
                     <td>{{location.Timestamp | moment}}</td>
                   </tr>
                 </tbody>
@@ -79,7 +85,7 @@
           </v-row>
           <v-row class="d-flex justify-content-center align-items-end">
             <v-btn class="w-25" @click="showLocationModal">
-                    Tambah
+                    Pindah
             </v-btn>
           </v-row>
         </v-col>
@@ -103,7 +109,14 @@
                   <tr class="table-light" v-for="(condition, index) in conditions" :key="index">
                     <td>{{condition.Name}}</td>
                     <td>{{condition.Desc}}</td>
-                    <td>{{condition.Status}}</td>
+                    <td>
+                      <v-switch
+                        class="switch-control"
+                        v-model="condition.Status"
+                        :disabled="!condition.Status"
+                        @change="changeVictimConditionStatus(condition.ID, condition.Status)"
+                      ></v-switch>
+                    </td>
                     <td>{{condition.Timestamp | moment}}</td>
                   </tr>
                 </tbody>
@@ -126,12 +139,23 @@
                 <thead class="thead-dark">
                   <tr>
                     <th scope="col">Kebutuhan</th>
+                    <th scope="col">Urgensi</th>
+                    <th scope="col">Status</th>
                     <th scope="col">Waktu</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(need, index) in needs" :key="index">
                     <td>{{need.Needs}}</td>
+                    <td>{{need.Urgency}}</td>
+                    <td>
+                      <v-switch
+                        class="switch-control"
+                        v-model="need.Status"
+                        :disabled="!need.Status"
+                        @change="changeVictimNeedStatus(need.ID, need.Status)"
+                      ></v-switch>
+                    </td>
                     <td>{{need.Timestamp | moment}}</td>
                   </tr>
                 </tbody>
@@ -261,8 +285,8 @@ export default {
         var victimShelterID = detail.ShelterID
 
         return axios.all([
-          axios.get(`http://localhost:3000/check/admin?id=${userID}`),
-          axios.get(`http://localhost:3000/check/staff?id=${userID}`)
+          axios.get(process.env.API_ROUTE+`/check/admin?id=${userID}`),
+          axios.get(process.env.API_ROUTE+`/check/staff?id=${userID}`)
         ])
         .then(response => {
           if(!response[0].data.data.isAdmin && !response[1].data.data.isStaff){
@@ -285,7 +309,6 @@ export default {
       axios.get(process.env.API_ROUTE+'/victim/history/condition?id='+ this.$route.params.id)
       .then(response =>{
         this.conditions = response.data.data;
-        console.log(response.data.data)
       })
       .catch(e=>{
         this.errors.push(e)
@@ -295,7 +318,6 @@ export default {
       axios.get(process.env.API_ROUTE+'/victim/history/need?id=' + this.$route.params.id)
       .then(response =>{
         this.needs = response.data.data;
-        console.log(response.data.data)
       })
       .catch(e =>{
         this.errors.push(e)
@@ -312,12 +334,36 @@ export default {
         this.errors.push(e)
       })
     },
-
+    changeVictimNeedStatus: function(id, status) {
+      axios.post(process.env.API_ROUTE + '/victim/history/need/status', {
+        id: id,
+        status: status
+      })
+      .then(response => {
+        console.log(response)
+      })
+      .catch(e => {
+        this.errors.push(e)
+      });
+    },
+    changeVictimConditionStatus: function(id, status) {
+      axios.post(process.env.API_ROUTE + '/victim/history/condition/status', {
+        id: id,
+        status: status
+      })
+      .then(response => {
+        console.log(response)
+      })
+      .catch(e => {
+        this.errors.push(e)
+      });
+    },
     showLocationModal(){
       this.locationModalVisible = true
     },
     closeLocationModal(){
       this.locationModalVisible = false
+      this.getLocationHistory()
     },
 
     showConditionModal(){
@@ -325,6 +371,7 @@ export default {
     },
     closeConditionModal(){
       this.conditionModalVisible = false
+      this.getConditionHistory()
     },
 
     showNeedsModal(){
@@ -332,6 +379,7 @@ export default {
     },
     closeNeedsModal(){
       this.needsModalVisible = false
+      this.getNeedHistory()
     },
   },
 
