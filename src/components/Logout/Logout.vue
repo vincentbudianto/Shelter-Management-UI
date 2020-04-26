@@ -78,12 +78,20 @@
 
                 this.$cookies.set("AccountID", "null")
                 this.$cookies.set("Type", "Guest")
-                this.$router.push('/')
+                this.$router.go('/')
 
             },
             back() {
                 this.$router.push('/')
+            },
+            validateUser() {
+                if(this.$cookies.get('Type') == 'Guest' || this.$cookies.get('Type') == null) {
+                    this.$router.push('/');
+                }
             }
+        },
+        beforeMount() {
+            this.validateUser();
         }
     }
 </script>

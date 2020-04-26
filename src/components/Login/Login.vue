@@ -129,7 +129,7 @@ import axios from 'axios';
                     if (currentObj.data.length > 0) {
                         currentObj.$cookies.set("AccountID", currentObj.data[0].AccountID, "43200s")
                         currentObj.$cookies.set("Type", currentObj.data[0].Type, "43200s")
-                        currentObj.$router.push('/');
+                        currentObj.$router.go('/');
                     } else {
                         document.getElementById("login_failed").innerHTML = "Login gagal"
                     }
@@ -142,8 +142,14 @@ import axios from 'axios';
 
                 });
 
+            }, validateUser() {
+                if(this.$cookies.get('Type') == 'Admin' || this.$cookies.get('Type') == 'Staff') {
+                    this.$router.push('/');
+                }
             }
 
+        }, beforeMount() {
+            this.validateUser();
         }
 
     }
