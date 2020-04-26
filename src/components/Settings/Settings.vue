@@ -1,23 +1,25 @@
 <template>
   <div class="bg">
-    <div class="content">
-        <v-row class="m-3 p-5 tile-box">
+    <div class="content m-3 p-5 tile-box">
+        <v-row>
                 <v-col>
                     Add Disaster
                 </v-col>
                     <v-btn @click="openAddDisaster">Open</v-btn>
         </v-row>
-        <v-row class="m-3 p-5 tile-box">
+        <v-divider/>
+        <v-row>
                 <v-col>
                     Add Shelter
                 </v-col>
                     <v-btn @click="openAddShelter">Open</v-btn>
         </v-row>
-        <v-row class="m-3 p-5 tile-box">
+        <v-divider/>
+        <v-row>
                 <v-col>
                     Search Filter by NoKK
                 </v-col>
-                <v-switch v-model="filterState"/>
+                <v-switch v-model="filterState" inset/>
         </v-row>
     </div>
     <add-disaster-modal v-show="addDisasterVisible" @close="closeAddDisaster"/>
