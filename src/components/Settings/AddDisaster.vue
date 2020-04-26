@@ -52,10 +52,10 @@
                 </vl-interaction-select>
               </vl-map>
             </div>
-            <div>
+            <v-row style="justify-content: flex-end">
                 <v-btn v-on:click="submitAddDisasterClick">Tambahkan</v-btn>
                 <v-btn v-on:click="close">Kembali</v-btn>
-            </div>
+            </v-row>
           </slot>
         </section>
       </div>

@@ -77,7 +77,7 @@
                 </vl-interaction-select>
               </vl-map>
             </div>
-            <v-row>
+            <v-row style="justify-content: flex-end">
                 <v-btn v-on:click="submitAddShelterClick">Tambahkan</v-btn>
                 <v-btn v-on:click="close">Kembali</v-btn>
             </v-row>
