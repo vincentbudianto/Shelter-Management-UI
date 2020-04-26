@@ -4,6 +4,7 @@
       <div class="modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalDescription">
         <header class="modal-header" id="modalTitle">
           <slot name="header">
+            <h4>Masukan Data Bencana</h4>
             <button type="button" class="btn-close" @click="close" aria-label="Close modal">
               x
             </button>
@@ -11,9 +12,6 @@
         </header>
         <section class="modal-body" id="modalDescription">
           <slot name="body">
-            <div>
-              <h4>Masukan Data Bencana</h4>
-            </div>
             <div>
               <v-form ref="form">
                 <v-text-field
@@ -36,10 +34,11 @@
               <div class="h6 mb-0 mt-2">Koordinat Terpilih</div>
               <div><small>Lat: {{center[1].toFixed(2)}}, Long: {{center[0].toFixed(2)}}</small></div>
               <vl-map ref="map" :load-tiles-while-animating="true" :load-tiles-while-interacting="true" data-projection="EPSG:4326" style="height: 300px; max-width: 400px">
-                <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
+                <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation" ></vl-view>
                 <vl-layer-tile>
                   <vl-source-osm></vl-source-osm>
                 </vl-layer-tile>
+                <vl-interaction-select>
                   <vl-feature>
                     <vl-geom-point
                       :coordinates="center"
@@ -50,6 +49,7 @@
                       </vl-style-circle>
                     </vl-style-box>
                   </vl-feature>
+                </vl-interaction-select>
               </vl-map>
             </div>
             <div>
@@ -89,7 +89,7 @@
     padding: 10px;
     display: flex;
     border-bottom: 1px solid #232322;
-    justify-content: flex-end;
+    justify-content: space-between;
   }
 
   .modal-body {
@@ -123,8 +123,8 @@ export default {
           var addDisasterPostData = {
             'name' : this.inputNamaBencana,
             'scale' : this.inputSkalaBencana,
-            'latitude' : this.center[1],
-            'longitude' : this.center[0]
+            'latitude' : this.center[1].toFixed(6),
+            'longitude' : this.center[0].toFixed(6)
           }
           console.log(addDisasterPostData);
           axios.post(process.env.API_ROUTE+'/disaster', addDisasterPostData)
