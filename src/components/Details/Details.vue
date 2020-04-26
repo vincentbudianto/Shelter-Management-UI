@@ -27,7 +27,7 @@
       </div> -->
 
       <v-row class="d-flex justify-content-center w-100">
-        <div class=" d-flex flex-column justify-content-center m-5 p-3 box" style="width: 300px; height: 500px">
+        <div class=" d-flex flex-column justify-content-center m-5 p-3 box" style="width: 300px; height: 550px">
           <!-- Identity Block -->
           <div class="m-2 d-flex justify-content-center">
             <h3>Profil Korban</h3>
@@ -38,15 +38,21 @@
           <div class="mb-2 d-flex justify-content-center">
             <h5>{{detail.Name}}</h5>
           </div>
-          <div class="mh-50"> 
+          <div class="mh-70"> 
             <div>
-              <div class="font-weight-bold">NIK</div> <div class="mb-3">{{detail.NIK}}</div>
+              <div class="font-weight-bold">NIK</div> 
+              <div v-if="detail.NIK" class="mb-3">{{detail.NIK}}</div>
+              <div v-if="!detail.NIK" class="">-</div>
             </div>
             <div>
-              <div class="font-weight-bold">NOKK</div> <div class="mb-3">{{detail.NOKK}}</div>
+              <div class="font-weight-bold">NOKK</div> 
+              <div v-if="detail.NOKK" class="mb-3">{{detail.NOKK}}</div>
+              <div v-if="!detail.NOKK" class="">-</div>
             </div>
             <div>
-              <div class="font-weight-bold">Umur</div> <div class="mb-3">{{detail.Age}}</div>
+              <div class="font-weight-bold">Umur</div> 
+              <div v-if="detail.Age" class="mb-3">{{detail.Age}}</div>
+              <div v-if="!detail.Age" class="">-</div>
             </div>
           </div>
         </div>
