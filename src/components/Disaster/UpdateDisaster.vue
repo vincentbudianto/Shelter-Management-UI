@@ -19,12 +19,6 @@
                 label="Disaster Description"
               ></v-text-field>
             </v-form>
-            <v-form ref="form">
-              <v-text-field
-                v-model="inputStatus"
-                label="Disaster Status"
-              ></v-text-field>
-            </v-form>
             <div class="text-center py-4 mt-3">
               <v-btn v-on:click="submitUpdateDisasterClick">Update</v-btn>
             </div>
@@ -114,7 +108,7 @@
           "id": this.inputId,
           "disasterTitle": this.inputTitle,
           "disasterDesc": this.inputDescription,
-          "disasterStatus": this.inputStatus
+          "disasterStatus": 1
         }
 
         axios.post('http://localhost:3000/disaster/history/condition', inputDisasterPostData)
