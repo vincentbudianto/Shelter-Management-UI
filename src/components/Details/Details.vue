@@ -103,7 +103,14 @@
                   <tr class="table-light" v-for="(condition, index) in conditions" :key="index">
                     <td>{{condition.Name}}</td>
                     <td>{{condition.Desc}}</td>
-                    <td>{{condition.Status}}</td>
+                    <td>
+                      <v-switch
+                        class="switch-control"
+                        v-model="condition.Status"
+                        :disabled="!condition.Status"
+                        @change="changeVictimConditionStatus(condition.ID, condition.Status)"
+                      ></v-switch>
+                    </td>
                     <td>{{condition.Timestamp | moment}}</td>
                   </tr>
                 </tbody>
@@ -126,12 +133,21 @@
                 <thead class="thead-dark">
                   <tr>
                     <th scope="col">Kebutuhan</th>
+                    <th scope="col">Status</th>
                     <th scope="col">Waktu</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(need, index) in needs" :key="index">
                     <td>{{need.Needs}}</td>
+                    <td>
+                      <v-switch
+                        class="switch-control"
+                        v-model="need.Status"
+                        :disabled="!need.Status"
+                        @change="changeVictimNeedStatus(need.ID, need.Status)"
+                      ></v-switch>
+                    </td>
                     <td>{{need.Timestamp | moment}}</td>
                   </tr>
                 </tbody>
@@ -250,6 +266,8 @@ export default {
     this.getLocationHistory();
     this.getConditionHistory();
     this.getNeedHistory();
+    console.log("condition", this.conditions)
+    console.log("needs", this.needs)
   },
   // Fetches posts when the component is created.
   methods: {
@@ -312,7 +330,30 @@ export default {
         this.errors.push(e)
       })
     },
-
+    changeVictimNeedStatus: function(id, status) {
+      axios.post(process.env.API_ROUTE + '/victim/history/need/status', {
+        id: id,
+        status: status
+      })
+      .then(response => {
+        console.log(response)
+      })
+      .catch(e => {
+        this.errors.push(e)
+      });
+    },
+    changeVictimConditionStatus: function(id, status) {
+      axios.post(process.env.API_ROUTE + '/victim/history/condition/status', {
+        id: id,
+        status: status
+      })
+      .then(response => {
+        console.log(response)
+      })
+      .catch(e => {
+        this.errors.push(e)
+      });
+    },
     showLocationModal(){
       this.locationModalVisible = true
     },

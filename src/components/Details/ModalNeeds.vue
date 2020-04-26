@@ -24,12 +24,12 @@
                 label="Stock ID"
               ></v-text-field>
             </v-form>
-            <v-form ref="form">
+            <!-- <v-form ref="form">
               <v-text-field
                 v-model="status"
                 label="Status"
               ></v-text-field>
-            </v-form>
+            </v-form> -->
             <v-form ref="form">
               <v-text-field
                 v-model="importance"
@@ -116,7 +116,7 @@
           id:this.$route.params.id,
           conditionName:this.needs,
           needStock:this.stock,
-          needStatus:this.status,
+          needStatus:1,
           needImportance:this.importance,
           updated:this.$cookies.get("AccountID")
         })
