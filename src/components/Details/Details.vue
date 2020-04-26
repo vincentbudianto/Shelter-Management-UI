@@ -71,7 +71,7 @@
                 </thead>
                 <tbody>
                   <tr v-for="(location, index) in locations" :key="index">
-                    <td>{{location.Name}}</td>
+                    <td><a :href="'/shelter/'+location.ShelterID">{{location.Name}}</a></td>
                     <td>{{location.Timestamp | moment}}</td>
                   </tr>
                 </tbody>
@@ -79,7 +79,7 @@
           </v-row>
           <v-row class="d-flex justify-content-center align-items-end">
             <v-btn class="w-25" @click="showLocationModal">
-                    Tambah
+                    Pindah
             </v-btn>
           </v-row>
         </v-col>
@@ -133,6 +133,7 @@
                 <thead class="thead-dark">
                   <tr>
                     <th scope="col">Kebutuhan</th>
+                    <th scope="col">Urgensi</th>
                     <th scope="col">Status</th>
                     <th scope="col">Waktu</th>
                   </tr>
@@ -140,6 +141,7 @@
                 <tbody>
                   <tr v-for="(need, index) in needs" :key="index">
                     <td>{{need.Needs}}</td>
+                    <td>{{need.Urgency}}</td>
                     <td>
                       <v-switch
                         class="switch-control"
@@ -266,8 +268,6 @@ export default {
     this.getLocationHistory();
     this.getConditionHistory();
     this.getNeedHistory();
-    console.log("condition", this.conditions)
-    console.log("needs", this.needs)
   },
   // Fetches posts when the component is created.
   methods: {
@@ -303,7 +303,6 @@ export default {
       axios.get(process.env.API_ROUTE+'/victim/history/condition?id='+ this.$route.params.id)
       .then(response =>{
         this.conditions = response.data.data;
-        console.log(response.data.data)
       })
       .catch(e=>{
         this.errors.push(e)
@@ -313,7 +312,6 @@ export default {
       axios.get(process.env.API_ROUTE+'/victim/history/need?id=' + this.$route.params.id)
       .then(response =>{
         this.needs = response.data.data;
-        console.log(response.data.data)
       })
       .catch(e =>{
         this.errors.push(e)
@@ -359,6 +357,7 @@ export default {
     },
     closeLocationModal(){
       this.locationModalVisible = false
+      this.getLocationHistory()
     },
 
     showConditionModal(){
@@ -366,6 +365,7 @@ export default {
     },
     closeConditionModal(){
       this.conditionModalVisible = false
+      this.getConditionHistory()
     },
 
     showNeedsModal(){
@@ -373,6 +373,7 @@ export default {
     },
     closeNeedsModal(){
       this.needsModalVisible = false
+      this.getNeedHistory()
     },
   },
 
