@@ -1,85 +1,16 @@
 <template v-if="userValidated">
   <div class="bg">
-    <div class="content mx-1">
+    <div class="content">
+    
+      <div class="p-5">
+        <h3 class="heading-font">Dashboard</h3>
+      </div>
 
-      <v-row >
-
-        <!-- Overview Section -->
-        <v-col>
-          <div class="m-3 p-5 tile-box">
-            <h3 v-if="currentDashboardScope == 'Seluruh Bencana'" style="color: red">
-              Menampilkan {{currentDashboardScope}} 
-            </h3>
-            <div v-if="currentDashboardScope == 'Bencana'">
-              <h6>Menampilkan {{currentDashboardScope}} </h6>
-              <h5 class="display-1" style="color: red; font-weight: bold">{{displaySelectedShelterDisasterName}} </h5>
-              <h6>Skala</h6>
-              <h5 class="display-1" style="font-weight: bold">{{selectedShelterDisasterScale}}</h5>
-            </div>
-            <div v-if="currentDashboardScope == 'Posko'">
-              <h6>Menampilkan {{currentDashboardScope}}</h6>
-              <h5 class="display-1"  style="color: red; font-weight: bold">{{displaySelectedShelterName}}</h5>
-            </div>
-            <div>
-              <h6>Jumlah Korban</h6>
-              <h3 class="display-3 font-weight-bold" style="font-size: 5em; color: red">
-                {{countVictimInCurrentScope}}
-              </h3>
-            </div>
-          </div>
-        </v-col>
-        <!-- Selection Section  -->
-          <v-col>
-            <div class="m-3 p-5 tile-box">
-                <h5 class="mb-3">Pilih Cakupan</h5>
-                <v-row>
-                  <v-col id="selection-dropdown" class="w-75 px-2 py-0">
-                      <v-select 
-                        id="selection-dropdown"
-                        :items="shelterDisasterNames"
-                        v-model="selectedShelterDisasterName"
-                        placeholder="Pilih bencana"
-                        ></v-select>
-                  </v-col>
-                  <v-col class="px-2 py-2">
-                    <v-btn id="selection-button" v-on:click="btnClickLihatBencana">
-                      <a style="font-size: .75em">Lihat Bencana</a>
-                    </v-btn>
-                  </v-col>
-                </v-row>
-                <v-row v-if="selectedShelterDisasterName">
-                  <v-col id="selection-dropdown" class="w-75">
-                    <v-select
-                      :items="shelterNames"
-                      v-model="selectedShelterName"
-                      placeholder="Pilih posko"
-                    ></v-select>
-                  </v-col>
-                  <v-col id="selection-button" class="mt-1">
-                    <v-btn v-on:click="btnClickLihatPosko">
-                      <a style="font-size: .75em">Lihat Posko</a>
-                    </v-btn>
-                  </v-col>
-                </v-row>  
-                <v-row>
-                  <v-col>
-                    <v-btn v-on:click="btnClickLihatSeluruhBencana">
-                      <span style="white-space: normal;">
-                        <a style="font-size: .75em">Lihat Seluruh Bencana</a>
-                      </span>
-                    </v-btn>
-                  </v-col>
-                </v-row>
-            </div>
-          </v-col>
-
-      </v-row>
-
-      <v-row>
-        <v-col>
+      <v-row class="map-container">
+        <v-col class="pt-0">
           <!-- Map Section-->
           <div>
-            <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true" data-projection="EPSG:4326" style="height: 400px">
+            <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true" data-projection="EPSG:4326" style="height:40rem">
               <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
 
               <vl-layer-tile>
@@ -98,14 +29,14 @@
                     </vl-style-circle>
                   </vl-style-box>
 
-                  <vl-overlay :position="[parseFloat(coordinate.Longitude)+0.25, parseFloat(coordinate.Latitude)+0.25]">
+                  <vl-overlay :position="[parseFloat(coordinate.Longitude), parseFloat(coordinate.Latitude)]">
                     <div class="overlay-content" v-if="currentDashboardScope == 'Seluruh Bencana' || currentDashboardScope == 'Bencana'">
                       <div v-if="coordinate.Type == 'Disaster'">  
-                        Bencana: {{disasterData[coordinate.ID - 1].Name}}
+                        Bencana: <b>{{disasterData[coordinate.ID - 1].Name}}</b>
                       </div>
                       <div v-if="coordinate.Type == 'Shelter'">  
-                        Posko: {{shelterData[coordinate.ID - 1].Name}} <br/>
-                        Bencana: {{disasterData[renderedCoordinates[0].ID - 1].Name}}
+                        Posko: <b>{{shelterData[coordinate.ID - 1].Name}}</b> <br/>
+                        Bencana: <b>{{disasterData[renderedCoordinates[0].ID - 1].Name}}</b>
                       </div>
                     </div>
                     <div class="overlay-content" v-if="currentDashboardScope == 'Posko'">
@@ -113,41 +44,133 @@
                     </div>
                   </vl-overlay>
                 </vl-feature>
-
             </vl-map>
           </div>
         </v-col>
       </v-row>
 
-      <!-- chart section -->
-      <!-- <canvas id="victim-by-gender"></canvas> -->
-      <div class="m-3 tile-box" style="position: relative; height:50vh; width:50vw">
-        <canvas id="victim-by-age"></canvas>
-      </div>
-      <!-- <canvas id="victim-by-condition"></canvas> -->
+      <v-row class="d-flex flex-wrap p-5">
+        <v-col class="tile-box m-2 py-3 px-5 d-flex flex-row justify-content-between">
+          <!-- Overview Section -->
+            <v-col>
+              <v-row class="d-flex flex-column" v-if="currentDashboardScope == 'Seluruh Bencana'" >
+                  <h3  style="color: red">
+                    Menampilkan {{currentDashboardScope}} 
+                  </h3>
+                  <h5>Jumlah Bencana</h5>
+                  <h1 class="display-4 font-weight-bold" style="font-size: 5em; color: red">
+                    {{disasterData.length}}
+                  </h1>
+              </v-row>
+              <v-row class="d-flex flex-column" v-if="currentDashboardScope == 'Bencana'">
+                <h5>Menampilkan {{currentDashboardScope}} </h5>
+                <h3 class="display-1" style="color: red; font-weight: bold">{{displaySelectedShelterDisasterName}} </h3>
+                <h5>Skala</h5>
+                <h5 class="display-1" style="font-weight: bold">{{selectedShelterDisasterScale}}</h5>
+              </v-row>
+              <v-row class="d-flex flex-column" v-if="currentDashboardScope == 'Posko'">
+                <h5>Menampilkan {{currentDashboardScope}}</h5>
+                <h5 class="display-1"  style="color: red; font-weight: bold">{{displaySelectedShelterName}}</h5>
+              </v-row>
+              <v-row class="d-flex flex-column">
+                <h5>Jumlah Korban</h5>
+                <h1 class="display-4 font-weight-bold" style="font-size: 5em; color: red">
+                  {{countVictimInCurrentScope}}
+                </h1>
+              </v-row>
+            </v-col>
+        </v-col>
+        <v-col class="tile-box m-2 px-3 py-5 d-flex flex-column">
+          <!-- Selection Section  -->
+            <h4 class="my-5">Pilih Cakupan</h4>
+            <div class="d-flex flex-wrap">
+              <div id="selection-dropdown" class="flex-grow-1 w-100 px-2 py-0">
+                  <v-select 
+                    id="selection-dropdown"
+                    :items="shelterDisasterNames"
+                    v-model="selectedShelterDisasterName"
+                    placeholder="Pilih bencana"
+                    ></v-select>
+              </div>
+              <div class="px-2 py-2">
+                <v-btn id="selection-button" v-on:click="btnClickLihatBencana">
+                  <a style="font-size: .75em">Lihat Bencana</a>
+                </v-btn>
+              </div>
+            </div>
+            <div v-if="selectedShelterDisasterName" class="d-flex flex-wrap">
+              <div id="selection-dropdown" class="flex-grow-1 w-100 px-2 py-0">
+                <v-select
+                  :items="shelterNames"
+                  v-model="selectedShelterName"
+                  placeholder="Pilih posko"
+                ></v-select>
+              </div>
+              <div id="selection-button" class="mt-1 px-2 py-2">
+                <v-btn v-on:click="btnClickLihatPosko">
+                  <a style="font-size: .75em">Lihat Posko</a>
+                </v-btn>
+              </div>
+            </div>  
+            <div class="px-2 py-2 flex-grow-1 d-flex flex-row align-items-end">
+              <v-btn v-on:click="btnClickLihatSeluruhBencana">
+                <span style="white-space: normal;">
+                  <a style="font-size: .75em">Lihat Seluruh Bencana</a>
+                </span>
+              </v-btn>
+            </div>
+        </v-col>
+        <v-col class="m-2 px-3 py-5 tile-box dashboard-container">
+            <canvas id="victim-by-age"></canvas>
+        </v-col>
+      </v-row>
     </div>
   </div>
 </template>
 
 <style scoped>
   @import "~leaflet/dist/leaflet.css";
+  .heading-font {
+    color: #d9d9d9;
+  }
   #dashboard-title {
     margin-left: 1%;
   }
   .tile-box {
-     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    background-color: rgb(250, 250, 250);
+    border-radius: .5rem;
   }
   .bg {
-    background-color: #d9d9d9;
+    background-color:white;
   }
   .content {
-    background-color: white;
+    margin: 0rem 4rem 4rem 4rem;
+    padding: 0rem 1.5rem 0rem;
+    box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
+    background-color: #232322;
+  }
+  .dashboard-container {
+    position: relative;
+  }
+  .map-container {
+    padding: 0rem 3rem 0rem;
+  }
+  @media screen and (max-width: 800px){
+    .content {
+      margin: 0rem;
+      padding: 0rem .25rem 0rem;
+      box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
+      background-color: #232322;
+    }
+    .map-container {
+    padding: 0rem .5rem 0rem;
+  }
   }
   .overlay-content{
-  background-color:#FFFFFF;
-  padding: 10px;
-  width:auto;
-  height: auto;
+    background-color:#FFFFFF;
+    padding: 10px;
+    width:auto;
+    height: auto;
 }
 </style>
 
@@ -250,8 +273,15 @@ export default {
 
   watch: {
       selectedShelterDisasterName: function (val) {
+        var disasterData = this.disasterData
+
         this.shelterNames = this.shelterData.filter(function(obj){
-          return obj.DisasterName == val
+          let selectedShelterDisasterID = disasterData.filter(function(objDisaster){
+            return objDisaster.Name == val 
+          })[0].DisasterID
+
+          console.log("print selected", selectedShelterDisasterID)
+          return obj.DisasterID == selectedShelterDisasterID
           }).map(x=>x.Name)
       },
 
@@ -270,33 +300,33 @@ export default {
         "Latitude":selectedData.Latitude, 
         "Longitude":selectedData.Longitude, 
         "Type":"Disaster"}]
-      this.renderedCoordinates = this.renderedCoordinates.concat(this.getDisasterShelterCoordinates(selectedData.Name))
+      this.renderedCoordinates = this.renderedCoordinates.concat(this.getDisasterShelterCoordinates(selectedData.DisasterID))
+      console.log(this.renderedCoordinates)
       this.center = [parseFloat(selectedData.Longitude), parseFloat(selectedData.Latitude)]
       this.countVictimInCurrentScope = this.countVictimInScope(selectedData.DisasterID, 'disaster')
-      this.renderedDashboardData = this.searchSelectedDashboardData(selectedData.DisasterID)
+      this.renderedDashboardData = this.searchSelectedDashboardData(selectedData.DisasterID, 'disaster')
       this.currentDashboardScope = "Bencana"
       this.displaySelectedShelterDisasterName = this.selectedShelterDisasterName
+      this.selectedShelterName = ""
     },
 
     btnClickLihatPosko (event) {
       var selectedData = this.searchSelectedShelterData(this.selectedShelterName)[0]
       this.selectedShelterDisasterScale = ""
       this.renderedCoordinates = [{
-        "idx":0,
         "ID":selectedData.ShelterID, 
         "Latitude":selectedData.Latitude, 
         "Longitude":selectedData.Longitude, 
         "Type":"Shelter"}]
       this.center = [parseFloat(selectedData.Longitude), parseFloat(selectedData.Latitude)]
       this.countVictimInCurrentScope = this.countVictimInScope(selectedData.ShelterID, 'shelter')
-      this.renderedDashboardData = this.searchSelectedDashboardData(selectedData.ShelterID)
+      this.renderedDashboardData = this.searchSelectedDashboardData(selectedData.ShelterID, 'shelter')
       this.currentDashboardScope = "Posko"
       this.displaySelectedShelterName = this.selectedShelterName
     }, 
 
     btnClickLihatSeluruhBencana (event) {
-      this.renderedCoordinates = this.disasterData.map((x, idx)=>({
-          "idx": idx,
+      this.renderedCoordinates = this.disasterData.map((x)=>({
           "ID":x.DisasterID, 
           "Latitude":parseFloat(x.Latitude), 
           "Longitude":parseFloat(x.Longitude), 
@@ -345,7 +375,7 @@ export default {
 
     getDisasterShelterCoordinates (val) {
       return this.shelterData.filter(function(obj){
-          return obj.DisasterName == val
+          return obj.DisasterID == val
           })
           .map(x=>({
               "ID":x.ShelterID,
@@ -444,19 +474,18 @@ export default {
 
     getAllDashboardData () {
       axios.all([
-        axios.get("http://localhost:3000/shelter"),
-        axios.get("http://localhost:3000/disaster"),
-        axios.get("http://localhost:3000/dashboard"),
+        axios.get(process.env.API_ROUTE+"/shelter/all"),
+        axios.get(process.env.API_ROUTE+"/disaster"),
+        axios.get(process.env.API_ROUTE+"/dashboard"),
       ])
         .then(response => {
-          console.log(this.$cookies.get("Type"), this.$cookies.get("AccountID"))
+          
           this.shelterData = response[0].data.data
           this.disasterData = response[1].data.data
           this.dashboardData = response[2].data.data
 
           this.shelterDisasterNames = this.disasterData.map(x=>x.Name)
-          this.renderedCoordinates = this.disasterData.map((x, idx)=>({
-            "idx": idx,
+          this.renderedCoordinates = this.disasterData.map((x)=>({
             "ID":x.DisasterID, 
             "Latitude":parseFloat(x.Latitude), 
             "Longitude":parseFloat(x.Longitude), 
@@ -477,7 +506,7 @@ export default {
     validateUserAccess () {
       var userID = this.$cookies.get("AccountID")
 
-      axios.get(`http://localhost:3000/check/admin?id=${userID}`)
+      axios.get(process.env.API_ROUTE+`/check/admin?id=${userID}`)
       .then(response => {
         console.log(response)
         if(response.data.data.isAdmin){
@@ -485,7 +514,7 @@ export default {
           this.getAllDashboardData()
         }
         else{
-          window.location.replace('http://localhost:8000/#/login')
+          window.location.href = '/login'
         }
       })
       .catch(error => {

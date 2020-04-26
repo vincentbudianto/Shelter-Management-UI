@@ -16,23 +16,17 @@
             <v-form ref="form">
               <v-text-field
                 v-model="condition"
-                label="Victim Condition"
+                label="Kondisi Korban"
               ></v-text-field>
             </v-form>
             <v-form ref="form">
               <v-text-field
                 v-model="desc"
-                label="Victim Condition Description"
-              ></v-text-field>
-            </v-form>
-            <v-form ref="form">
-              <v-text-field
-                v-model="status"
-                label="Victim Condition Status"
+                label="Deskripsi Kondisi Korban"
               ></v-text-field>
             </v-form>
             <div class="text-center py-4">
-              <v-btn v-on:click="sendVictimCondition">Save Changes</v-btn>
+              <v-btn v-on:click="sendVictimCondition">Simpan</v-btn>
             </div>
           </slot>
         </section>
@@ -104,22 +98,30 @@
       close() {
         this.$emit('close');
       },
+      isValidUpdate: function (){
+        return (
+          this.condition != "" &&
+          this.desc != ""        
+        )
+      },
       sendVictimCondition: function(){
-        axios.post('http://localhost:3000/victim/history/condition',
-        {
-          id:this.$route.params.id,
-          conditionName:this.condition,
-          conditionDesc:this.desc,
-          conditionStatus:this.status,
-          updated:this.$cookies.get("AccountID")
-        })
-        .then(response =>{
-          console.log(response)
-        })
-        .catch(e=>{
-          this.errors.push(e)
-        });
-        this.$emit('close');
+        if (this.isValidUpdate()) {
+          axios.post(process.env.API_ROUTE+'/victim/history/condition',
+          {
+            id:this.$route.params.id,
+            conditionName:this.condition,
+            conditionDesc:this.desc,
+            conditionStatus:1,
+            updated:this.$cookies.get("AccountID")
+          })
+          .then(response =>{
+            console.log(response)
+          })
+          .catch(e=>{
+            this.errors.push(e)
+          });
+          this.$emit('close');
+        }
       },
     },
   };

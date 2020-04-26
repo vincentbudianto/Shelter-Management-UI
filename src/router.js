@@ -28,6 +28,7 @@ Vue.use(Vuelayers, {
 })
 
 export default new Router({
+  mode: "history",
   routes: [
     {
       path: '/',
@@ -98,6 +99,11 @@ export default new Router({
       path: '/assign-staff',
       name: 'Assign Staff',
       component: AssignStaff
+    },
+    {
+      path: '*',
+      name: 'Return To Default',
+      component: Home
     }
   ]
 })

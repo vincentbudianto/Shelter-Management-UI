@@ -127,7 +127,7 @@ export default {
             'longitude' : this.center[0]
           }
           console.log(addDisasterPostData);
-          axios.post('http://localhost:3000/disaster', addDisasterPostData)
+          axios.post(process.env.API_ROUTE+'/disaster', addDisasterPostData)
           .then(response => {
             console.log(response)
           })

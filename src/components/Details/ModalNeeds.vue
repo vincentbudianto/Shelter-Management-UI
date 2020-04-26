@@ -11,33 +11,29 @@
         </header>
         <section class="modal-body" id="modalDescription">
           <slot name="body">
-            <p class="h4 text-center">Update victim needs</p>
+            <p class="h4 text-center">Tambah Kebutuhan Korban</p>
             <v-form ref="form">
               <v-text-field
                 v-model="needs"
-                label="Victim Needs"
+                label="Deskripsi Kebutuhan"
               ></v-text-field>
             </v-form>
             <v-form ref="form">
-              <v-text-field
-                v-model="stock"
-                label="Stock ID"
-              ></v-text-field>
-            </v-form>
-            <v-form ref="form">
-              <v-text-field
-                v-model="status"
-                label="Status"
-              ></v-text-field>
+              <v-select 
+                id="selection-dropdown"
+                :items="stockListDropdown"
+                v-model="selectedStock"
+                placeholder="Barang yang Dibutuhkan"
+              ></v-select>
             </v-form>
             <v-form ref="form">
               <v-text-field
                 v-model="importance"
-                label="Importance"
+                label="Tingkat Kepentingan"
               ></v-text-field>
             </v-form>
             <div class="text-center py-4">
-              <v-btn v-on:click="sendVictimNeed">Save Changes</v-btn>
+              <v-btn v-on:click="sendVictimNeed">Simpan</v-btn>
             </div>
           </slot>
         </section>
@@ -102,31 +98,58 @@
       return{
         needs:"",
         stock:"",
-        status:"",
-        importance:""
+        importance:"",
+        selectedStock:"",
+        stockListDropdown: [],
       }
+    },
+    mounted() {
+      this.getStockList()
+    },
+    watch: {
+      selectedStock: function (val) {
+      },
     },
     methods: {
       close() {
         this.$emit('close');
       },
-      sendVictimNeed: function(){
-        axios.post('http://localhost:3000/victim/history/need',
-        {
-          id:this.$route.params.id,
-          conditionName:this.needs,
-          needStock:this.stock,
-          needStatus:this.status,
-          needImportance:this.importance,
-          updated:this.$cookies.get("AccountID")
+      getStockList: function (){
+        axios.get(process.env.API_ROUTE+"/stock")
+        .then(response => {
+          this.stockListDropdown = response.data.data.map(x=>({"text":x.Name, "value":x.Id}))
         })
-        .then(response =>{
-          console.log(response)
-        })
-        .catch(e=>{
+        .catch(e => {
           this.errors.push(e)
-        });
-        this.$emit('close');
+        })
+      },
+      isValidUpdate: function (){
+        return (
+          this.needs != "" &&
+          this.stock != "" &&
+          this.importance != "" &&
+          this.selectedStock != ""        
+        )
+      },
+      sendVictimNeed: function(){
+        if(this.isValidUpdate()) {
+          axios.post(process.env.API_ROUTE+'/victim/history/need',
+          {
+            id:this.$route.params.id,
+            conditionName:this.needs,
+            needStock:this.selectedStock,
+            needStatus:1,
+            needImportance:this.importance,
+            updated:this.$cookies.get("AccountID")
+          })
+          .then(response =>{
+            console.log(response)
+          })
+          .catch(e=>{
+            this.errors.push(e)
+          });
+          this.$emit('close');
+        }
       },
     },
   };

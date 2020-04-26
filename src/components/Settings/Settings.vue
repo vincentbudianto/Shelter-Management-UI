@@ -46,7 +46,7 @@
             addShelterModal,
         },
         mounted : function(){
-        axios.get('http://localhost:3000/configs/filter')
+        axios.get(process.env.API_ROUTE+'/configs/filter')
             .then(response => {
                 this.filterState = response.data.data[0].SearchFilter;
                 // console.log(this.filterState);
@@ -67,7 +67,7 @@
                 var filterStatePost = {
                     'SearchFilter' : this.filterState,
                 };
-                axios.post('http://localhost:3000/configs/filter', filterStatePost)
+                axios.post(process.env.API_ROUTE+'/configs/filter', filterStatePost)
                 .then(response => {
                     // console.log(response)
                 })
@@ -92,7 +92,7 @@
             validateUser(){
                 var aid = this.$cookies.get('AccountID');
                 let currentObj = this;
-                axios.get('http://localhost:3000/check/admin?id=' + aid)
+                axios.get(process.env.API_ROUTE+'/check/admin?id=' + aid)
                 .then(response => {
                     // JSON responses are automatically parsed.
                     if(response.data.data.isAdmin == false){
