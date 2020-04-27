@@ -276,16 +276,11 @@ export default {
         var disasterData = this.disasterData
 
         this.shelterNames = this.shelterData.filter(function(obj){
-          let selectedShelterDisasterID = disasterData.filter(function(objDisaster){
-            return objDisaster.Name == val 
-          })[0].DisasterID
-
-          console.log("print selected", selectedShelterDisasterID)
-          return obj.DisasterID == selectedShelterDisasterID
-          }).map(x=>x.Name)
+          return obj.DisasterID == val
+          }).map((x)=>({"text":x.Name, "value":x.ShelterID}))
       },
 
-      renderedDashboardData: function () {
+      renderedDashboardData: function (val) {
         this.createChart('victim-by-age');
       }
     },
@@ -293,7 +288,7 @@ export default {
   methods: {
     btnClickLihatBencana (event) {
       //filter data to current disaster only
-      var selectedData = this.searchSelectedDisasterData(this.selectedShelterDisasterName)[0]
+      var selectedData = this.disasterData[this.selectedShelterDisasterName-1]
       this.selectedShelterDisasterScale = selectedData.Scale
       this.renderedCoordinates = [{
         "ID":selectedData.DisasterID, 
@@ -306,12 +301,12 @@ export default {
       this.countVictimInCurrentScope = this.countVictimInScope(selectedData.DisasterID, 'disaster')
       this.renderedDashboardData = this.searchSelectedDashboardData(selectedData.DisasterID, 'disaster')
       this.currentDashboardScope = "Bencana"
-      this.displaySelectedShelterDisasterName = this.selectedShelterDisasterName
+      this.displaySelectedShelterDisasterName = selectedData.Name
       this.selectedShelterName = ""
     },
 
     btnClickLihatPosko (event) {
-      var selectedData = this.searchSelectedShelterData(this.selectedShelterName)[0]
+      var selectedData = this.shelterData[this.selectedShelterName-1]
       this.selectedShelterDisasterScale = ""
       this.renderedCoordinates = [{
         "ID":selectedData.ShelterID, 
@@ -322,7 +317,7 @@ export default {
       this.countVictimInCurrentScope = this.countVictimInScope(selectedData.ShelterID, 'shelter')
       this.renderedDashboardData = this.searchSelectedDashboardData(selectedData.ShelterID, 'shelter')
       this.currentDashboardScope = "Posko"
-      this.displaySelectedShelterName = this.selectedShelterName
+      this.displaySelectedShelterName = selectedData.Name
     }, 
 
     btnClickLihatSeluruhBencana (event) {
@@ -484,7 +479,7 @@ export default {
           this.disasterData = response[1].data.data
           this.dashboardData = response[2].data.data
 
-          this.shelterDisasterNames = this.disasterData.map(x=>x.Name)
+          this.shelterDisasterNames = this.disasterData.map((x)=>({"text":x.Name, "value":x.DisasterID}))
           this.renderedCoordinates = this.disasterData.map((x)=>({
             "ID":x.DisasterID, 
             "Latitude":parseFloat(x.Latitude), 
