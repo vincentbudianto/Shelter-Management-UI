@@ -258,6 +258,11 @@
     opacity: 0.9;
     cursor: pointer;
   }
+
+  .mapContainer{
+    width: 100%;
+    height: 14rem;
+  }
 }
 
 .shelterItem {
