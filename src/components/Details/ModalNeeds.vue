@@ -127,7 +127,6 @@
       isValidUpdate: function (){
         return (
           this.needs != "" &&
-          this.stock != "" &&
           this.importance != "" &&
           this.selectedStock != ""        
         )
