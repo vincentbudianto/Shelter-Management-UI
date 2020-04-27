@@ -32,11 +32,11 @@
                   <vl-overlay :position="[parseFloat(coordinate.Longitude), parseFloat(coordinate.Latitude)]">
                     <div class="overlay-content" v-if="currentDashboardScope == 'Seluruh Bencana' || currentDashboardScope == 'Bencana'">
                       <div v-if="coordinate.Type == 'Disaster'">  
-                        Bencana: <b>{{disasterData[coordinate.ID - 1].Name}}</b>
+                        Bencana: <b>{{coordinate.DisasterName}}</b>
                       </div>
                       <div v-if="coordinate.Type == 'Shelter'">  
-                        Posko: <b>{{shelterData[coordinate.ID - 1].Name}}</b> <br/>
-                        Bencana: <b>{{disasterData[renderedCoordinates[0].ID - 1].Name}}</b>
+                        Posko: <b>{{coordinate.ShelterName}}</b> <br/>
+                        <!-- Bencana: <b>{{disasterData[renderedCoordinates[0].ID - 1].Name}}</b> -->
                       </div>
                     </div>
                     <div class="overlay-content" v-if="currentDashboardScope == 'Posko'">
@@ -299,10 +299,15 @@ export default {
   methods: {
     btnClickLihatBencana (event) {
       //filter data to current disaster only
-      var selectedData = this.disasterData[this.selectedShelterDisasterName-1]
+      var selectedDisasterIndex = this.selectedShelterDisasterName
+      var selectedData = this.disasterData.filter(function(obj){
+        return obj.DisasterID === selectedDisasterIndex
+      })[0]
       this.selectedShelterDisasterScale = selectedData.Scale
       this.renderedCoordinates = [{
         "ID":selectedData.DisasterID, 
+        "DisasterName":selectedData.Name,
+        "ShelterName":"",
         "Latitude":selectedData.Latitude, 
         "Longitude":selectedData.Longitude, 
         "Type":"Disaster"}]
@@ -317,10 +322,15 @@ export default {
     },
 
     btnClickLihatPosko (event) {
-      var selectedData = this.shelterData[this.selectedShelterName-1]
+      var selectedShelterIndex = this.selectedShelterName
+      var selectedData = this.shelterData.filter(function(obj){
+        return obj.ShelterID === selectedShelterIndex
+      })[0]
       this.selectedShelterDisasterScale = ""
       this.renderedCoordinates = [{
-        "ID":selectedData.ShelterID, 
+        "ID":selectedData.ShelterID,
+        "ShelterName":selectedData.Name,
+        "DisasterName":"", 
         "Latitude":selectedData.Latitude, 
         "Longitude":selectedData.Longitude, 
         "Type":"Shelter"}]
@@ -334,6 +344,8 @@ export default {
     btnClickLihatSeluruhBencana (event) {
       this.renderedCoordinates = this.disasterData.map((x)=>({
           "ID":x.DisasterID, 
+          "ShelterName":"",
+          "DisasterName":x.Name,  
           "Latitude":parseFloat(x.Latitude), 
           "Longitude":parseFloat(x.Longitude), 
           "Type":"Disaster"}))
@@ -385,6 +397,8 @@ export default {
           })
           .map(x=>({
               "ID":x.ShelterID,
+              "DisasterName":"",
+              "ShelterName":x.Name,
               "Latitude":x.Latitude,
               "Longitude":x.Longitude,
               "Type":"Shelter"
@@ -424,6 +438,7 @@ export default {
         chartData.data.datasets[0].backgroundColor = bgColor
 
         chartData.options.maintainAspectRatio = false
+        console.log("ChartData", chartData)
       }
       else if (chartId == 'victim-by-condition') {
         var chartData = this.fillData("Condition")
@@ -437,30 +452,34 @@ export default {
     },
 
     countAgeData () {
-      var result = [0, 0, 0, 0, 0, 0]
-
-      this.renderedDashboardData.forEach(data => {
-        // bins: "<10", "10-19", "20-39", "40-59", "60-79", ">79"
-        if(data.VictimAge < 10){
-          result[0] += 1
+      if (this.renderedDashboardData.length > 0){
+        var result = [0, 0, 0, 0, 0, 0]
+        this.renderedDashboardData.forEach(data => {
+          // bins: "<10", "10-19", "20-39", "40-59", "60-79", ">79"
+          if(data.VictimAge < 10){
+            result[0] += 1
+            }
+          else if(data.VictimAge >= 10 && data.VictimAge < 20){
+            result[1] += 1
+            }
+          else if(data.VictimAge >= 20 && data.VictimAge < 40){
+            result[2] += 1
+            }
+          else if(data.VictimAge >= 40 && data.VictimAge < 60){
+            result[3] += 1
+            }
+          else if(data.VictimAge >= 60 && data.VictimAge < 80){
+            result[4] += 1
+            }
+          else if(data.VictimAge > 79){
+            result[5] += 1
           }
-        else if(data.VictimAge >= 10 && data.VictimAge < 20){
-          result[1] += 1
-          }
-        else if(data.VictimAge >= 20 && data.VictimAge < 40){
-          result[2] += 1
-          }
-        else if(data.VictimAge >= 40 && data.VictimAge < 60){
-          result[3] += 1
-          }
-        else if(data.VictimAge >= 60 && data.VictimAge < 80){
-          result[4] += 1
-          }
-        else if(data.VictimAge > 79){
-          result[5] += 1
-        }
-      });
-      return result
+        });
+        return result
+      }
+      else {
+        return []
+      }
     },
 
     fillData(idx){
@@ -493,6 +512,8 @@ export default {
           this.shelterDisasterNames = this.disasterData.map((x)=>({"text":x.Name, "value":x.DisasterID}))
           this.renderedCoordinates = this.disasterData.map((x)=>({
             "ID":x.DisasterID, 
+            "DisasterName":x.Name,
+            "ShelterName":"",
             "Latitude":parseFloat(x.Latitude), 
             "Longitude":parseFloat(x.Longitude), 
             "Type":"Disaster"}))
@@ -514,7 +535,6 @@ export default {
 
       axios.get(process.env.API_ROUTE+`/check/admin?id=${userID}`)
       .then(response => {
-        console.log(response)
         if(response.data.data.isAdmin){
           this.userValidated = true
           this.getAllDashboardData()
