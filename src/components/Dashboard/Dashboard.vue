@@ -6,10 +6,10 @@
         <h3 class="heading-font">Dashboard</h3>
       </div>
 
-      <v-row class="map-container">
-        <v-col class="pt-0">
+      <v-row class="">
+        <v-col class="">
           <!-- Map Section-->
-          <div>
+          <div class="overflow-scroll">
             <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true" data-projection="EPSG:4326" style="height:40rem">
               <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
 
@@ -49,7 +49,7 @@
         </v-col>
       </v-row>
 
-      <v-row class="d-flex flex-wrap p-5">
+      <v-row class="d-flex flex-wrap p-3 overflow-hidden">
         <v-col class="tile-box m-2 py-3 px-5 d-flex flex-row justify-content-between">
           <!-- Overview Section -->
             <v-col>
@@ -120,7 +120,7 @@
               </v-btn>
             </div>
         </v-col>
-        <v-col class="m-2 px-3 py-5 tile-box dashboard-container">
+        <v-col class="m-2 px-3 py-5 tile-box">
             <canvas id="victim-by-age"></canvas>
         </v-col>
       </v-row>
@@ -150,10 +150,12 @@
     background-color: #232322;
   }
   .dashboard-container {
-    position: relative;
+    /* position: relative; */
+    /* padding: 0rem 1rem 0rem; */
   }
   .map-container {
     padding: 0rem 3rem 0rem;
+    
   }
   @media screen and (max-width: 800px){
     .content {
@@ -163,8 +165,12 @@
       background-color: #232322;
     }
     .map-container {
-    padding: 0rem .5rem 0rem;
-  }
+    padding: 0rem .25rem 0rem;
+    }
+    .dashboard-container {
+      /* position: relative; */
+      /* padding: 0rem .5rem 0rem; */
+    }
   }
   .overlay-content{
     background-color:#FFFFFF;
@@ -276,16 +282,11 @@ export default {
         var disasterData = this.disasterData
 
         this.shelterNames = this.shelterData.filter(function(obj){
-          let selectedShelterDisasterID = disasterData.filter(function(objDisaster){
-            return objDisaster.Name == val 
-          })[0].DisasterID
-
-          console.log("print selected", selectedShelterDisasterID)
-          return obj.DisasterID == selectedShelterDisasterID
-          }).map(x=>x.Name)
+          return obj.DisasterID == val
+          }).map((x)=>({"text":x.Name, "value":x.ShelterID}))
       },
 
-      renderedDashboardData: function () {
+      renderedDashboardData: function (val) {
         this.createChart('victim-by-age');
       }
     },
@@ -293,7 +294,7 @@ export default {
   methods: {
     btnClickLihatBencana (event) {
       //filter data to current disaster only
-      var selectedData = this.searchSelectedDisasterData(this.selectedShelterDisasterName)[0]
+      var selectedData = this.disasterData[this.selectedShelterDisasterName-1]
       this.selectedShelterDisasterScale = selectedData.Scale
       this.renderedCoordinates = [{
         "ID":selectedData.DisasterID, 
@@ -306,12 +307,12 @@ export default {
       this.countVictimInCurrentScope = this.countVictimInScope(selectedData.DisasterID, 'disaster')
       this.renderedDashboardData = this.searchSelectedDashboardData(selectedData.DisasterID, 'disaster')
       this.currentDashboardScope = "Bencana"
-      this.displaySelectedShelterDisasterName = this.selectedShelterDisasterName
+      this.displaySelectedShelterDisasterName = selectedData.Name
       this.selectedShelterName = ""
     },
 
     btnClickLihatPosko (event) {
-      var selectedData = this.searchSelectedShelterData(this.selectedShelterName)[0]
+      var selectedData = this.shelterData[this.selectedShelterName-1]
       this.selectedShelterDisasterScale = ""
       this.renderedCoordinates = [{
         "ID":selectedData.ShelterID, 
@@ -322,7 +323,7 @@ export default {
       this.countVictimInCurrentScope = this.countVictimInScope(selectedData.ShelterID, 'shelter')
       this.renderedDashboardData = this.searchSelectedDashboardData(selectedData.ShelterID, 'shelter')
       this.currentDashboardScope = "Posko"
-      this.displaySelectedShelterName = this.selectedShelterName
+      this.displaySelectedShelterName = selectedData.Name
     }, 
 
     btnClickLihatSeluruhBencana (event) {
@@ -484,7 +485,7 @@ export default {
           this.disasterData = response[1].data.data
           this.dashboardData = response[2].data.data
 
-          this.shelterDisasterNames = this.disasterData.map(x=>x.Name)
+          this.shelterDisasterNames = this.disasterData.map((x)=>({"text":x.Name, "value":x.DisasterID}))
           this.renderedCoordinates = this.disasterData.map((x)=>({
             "ID":x.DisasterID, 
             "Latitude":parseFloat(x.Latitude), 
