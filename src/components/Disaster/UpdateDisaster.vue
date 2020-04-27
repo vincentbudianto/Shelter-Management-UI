@@ -13,14 +13,37 @@
         <section class="modal-body" id="modalDescription">
           <slot name="body">
             <p class="h4 text-center py-4">Update disaster {{disaster.Name}}</p>
-            <v-form ref="form">
+            <v-form ref="form" v-model="valid">
+              <v-text-field
+                v-model="inputTitle"
+                label="Judul Kondisi Bencana"
+                :rules="titleRules"
+                :counter=25
+                required
+              ></v-text-field>
               <v-text-field
                 v-model="inputDescription"
-                label="Disaster Description"
+                label="Deskripsi Kondisi Bencana"
+                :rules="descRules"
+                required
               ></v-text-field>
+              <v-select
+                :items="statusItems"
+                :rules="statusRules"
+                item-text='Name'
+                item-value='Value'
+                v-model="selectedStatus"
+                label="Status Bencana"
+                outlined
+                required
+              ></v-select>
+              <v-btn
+                :disabled="!valid"
+                v-on:click="submitUpdateDisasterClick"
+              >Update</v-btn>
             </v-form>
             <div class="text-center py-4 mt-3">
-              <v-btn v-on:click="submitUpdateDisasterClick">Update</v-btn>
+              
             </div>
           </slot>
         </section>
@@ -86,18 +109,20 @@
         inputId: "",
         inputTitle: "",
         inputDescription: "",
-        inputStatus: ""
+        inputStatus: "",
+        statusItems: [
+          { Name: 'Bencana masih berlangsung', Value: 1 },
+          { Name: 'Bencana sudah berakhir', Value: 0}
+        ],
+        titleRules: [ v => !!v || 'Judul tidak boleh kosong',
+          v => v.length <= 25 || 'Judul tidak boleh lebih dari 25 karakter', ],
+        descRules: [ v => !!v || 'Deskripsi tidak boleh kosong' ],
+        statusRules: [ v => !!v || v === 0 || 'Status bencana diperlukan' ],
+        selectedStatus: 1,
+        valid: true
       }
 
       return data;
-    },
-    watch: {
-      disaster: {
-        handler() {
-          this.inputId = this.disaster.DisasterID;
-          this.inputTitle = this.disaster.Name;
-        }
-      }
     },
     methods: {
       close() {
@@ -105,15 +130,15 @@
       },
       submitUpdateDisasterClick: function (event) {
         var inputDisasterPostData = {
-          "id": this.inputId,
+          "id": this.disaster.DisasterID,
           "disasterTitle": this.inputTitle,
           "disasterDesc": this.inputDescription,
-          "disasterStatus": 1
+          "disasterStatus": this.selectedStatus
         }
 
         axios.post(process.env.API_ROUTE+'/disaster/history/condition', inputDisasterPostData)
         .then(response => {
-          console.log(response)
+          this.close()
         })
         .catch(e => {
           this.errors.push(e)
