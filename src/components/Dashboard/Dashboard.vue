@@ -120,7 +120,7 @@
               </v-btn>
             </div>
         </v-col>
-        <v-col class="m-2 px-3 py-5 tile-box dashboard-container">
+        <v-col class="m-2 px-3 py-5 dashboard-container">
             <canvas id="victim-by-age"></canvas>
         </v-col>
       </v-row>
@@ -151,6 +151,10 @@
   }
   .dashboard-container {
     position: relative;
+    height: 23rem;
+    width: 23rem;
+    background-color: rgb(250, 250, 250);
+    border-radius: .5rem;
   }
   .map-container {
     padding: 0rem 3rem 0rem;
@@ -164,7 +168,14 @@
     }
     .map-container {
     padding: 0rem .5rem 0rem;
-  }
+    }
+    .dashboard-container {
+      position: relative;
+      height: 15rem;
+      width: 15rem;
+      background-color: rgb(250, 250, 250);
+      border-radius: .5rem;
+    }
   }
   .overlay-content{
     background-color:#FFFFFF;
