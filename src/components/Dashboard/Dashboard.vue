@@ -32,11 +32,11 @@
                   <vl-overlay :position="[parseFloat(coordinate.Longitude), parseFloat(coordinate.Latitude)]">
                     <div class="overlay-content" v-if="currentDashboardScope == 'Seluruh Bencana' || currentDashboardScope == 'Bencana'">
                       <div v-if="coordinate.Type == 'Disaster'">  
-                        Bencana: <b>{{disasterData[coordinate.ID - 1].Name}}</b>
+                        Bencana: <b>{{coordinate.DisasterName}}</b>
                       </div>
                       <div v-if="coordinate.Type == 'Shelter'">  
-                        Posko: <b>{{shelterData[coordinate.ID - 1].Name}}</b> <br/>
-                        Bencana: <b>{{disasterData[renderedCoordinates[0].ID - 1].Name}}</b>
+                        Posko: <b>{{coordinate.ShelterName}}</b> <br/>
+                        <!-- Bencana: <b>{{disasterData[renderedCoordinates[0].ID - 1].Name}}</b> -->
                       </div>
                     </div>
                     <div class="overlay-content" v-if="currentDashboardScope == 'Posko'">
@@ -306,6 +306,8 @@ export default {
       this.selectedShelterDisasterScale = selectedData.Scale
       this.renderedCoordinates = [{
         "ID":selectedData.DisasterID, 
+        "DisasterName":selectedData.Name,
+        "ShelterName":"",
         "Latitude":selectedData.Latitude, 
         "Longitude":selectedData.Longitude, 
         "Type":"Disaster"}]
@@ -326,7 +328,9 @@ export default {
       })[0]
       this.selectedShelterDisasterScale = ""
       this.renderedCoordinates = [{
-        "ID":selectedData.ShelterID, 
+        "ID":selectedData.ShelterID,
+        "ShelterName":selectedData.Name,
+        "DisasterName":"", 
         "Latitude":selectedData.Latitude, 
         "Longitude":selectedData.Longitude, 
         "Type":"Shelter"}]
@@ -340,6 +344,8 @@ export default {
     btnClickLihatSeluruhBencana (event) {
       this.renderedCoordinates = this.disasterData.map((x)=>({
           "ID":x.DisasterID, 
+          "ShelterName":"",
+          "DisasterName":x.Name,  
           "Latitude":parseFloat(x.Latitude), 
           "Longitude":parseFloat(x.Longitude), 
           "Type":"Disaster"}))
@@ -391,6 +397,8 @@ export default {
           })
           .map(x=>({
               "ID":x.ShelterID,
+              "DisasterName":"",
+              "ShelterName":x.Name,
               "Latitude":x.Latitude,
               "Longitude":x.Longitude,
               "Type":"Shelter"
@@ -502,6 +510,8 @@ export default {
           this.shelterDisasterNames = this.disasterData.map((x)=>({"text":x.Name, "value":x.DisasterID}))
           this.renderedCoordinates = this.disasterData.map((x)=>({
             "ID":x.DisasterID, 
+            "DisasterName":x.Name,
+            "ShelterName":"",
             "Latitude":parseFloat(x.Latitude), 
             "Longitude":parseFloat(x.Longitude), 
             "Type":"Disaster"}))
