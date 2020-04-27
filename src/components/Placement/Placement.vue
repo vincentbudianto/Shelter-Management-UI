@@ -2,42 +2,44 @@
 <div class="container placement-container d-flex justify-content-center">
     <div class="col-md-12 recommendation-table-container">
         <h3>Placement Recommendation</h3>
-        <table class="table table-striped">
-          <thead class="thead-light">
-            <tr>
-              <th scope="col">No.</th>
-              <th scope="col">NIK</th>
-              <th scope="col">Name</th>
-              <th scope="col">Status</th>
-              <th scope="col">Current Shelter</th>
-              <th scope="col">Recommended Shelter</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(placement, index) in sortedPlacement" :key="placement.NIK">
-              <th v-if="placement.Urgency == 0" class="table-not-urgent" scope="row">{{index+1}}</th>
-              <td v-if="placement.Urgency == 0" class="table-not-urgent"><a :href="'/details/'+placement.VictimID">{{placement.NIK || '-'}}</a></td>
-              <td v-if="placement.Urgency == 0" class="table-not-urgent"><a :href="'/details/'+placement.VictimID">{{placement.Name}}</a></td>
-              <td v-if="placement.Urgency == 0" class="table-not-urgent">{{placement.NeedDesc}}</td>
-              <td v-if="placement.Urgency == 0" class="table-not-urgent"><a :href="'/shelter/'+placement.CurrentShelterID">{{placement.CurrentShelterName}}</a></td>
-              <td v-if="placement.Urgency == 0" class="table-not-urgent"><a :href="'/shelter/'+placement.RecommendedShelterID">{{placement.RecommendedShelterName}}</a></td>
+        <div class="overflow-container">
+          <table class="table table-striped">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">No.</th>
+                <th scope="col">NIK</th>
+                <th scope="col">Name</th>
+                <th scope="col">Status</th>
+                <th scope="col">Current Shelter</th>
+                <th scope="col">Recommended Shelter</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(placement, index) in sortedPlacement" :key="placement.NIK">
+                <th v-if="placement.Urgency == 0" class="table-not-urgent" scope="row">{{index+1}}</th>
+                <td v-if="placement.Urgency == 0" class="table-not-urgent"><a :href="'/details/'+placement.VictimID">{{placement.NIK || '-'}}</a></td>
+                <td v-if="placement.Urgency == 0" class="table-not-urgent"><a :href="'/details/'+placement.VictimID">{{placement.Name}}</a></td>
+                <td v-if="placement.Urgency == 0" class="table-not-urgent">{{placement.NeedDesc}}</td>
+                <td v-if="placement.Urgency == 0" class="table-not-urgent"><a :href="'/shelter/'+placement.CurrentShelterID">{{placement.CurrentShelterName}}</a></td>
+                <td v-if="placement.Urgency == 0" class="table-not-urgent"><a :href="'/shelter/'+placement.RecommendedShelterID">{{placement.RecommendedShelterName}}</a></td>
 
-              <th v-if="placement.Urgency == 1" class="table-warning" scope="row">{{index+1}}</th>
-              <td v-if="placement.Urgency == 1" class="table-warning"><a :href="'/details/'+placement.VictimID">{{placement.NIK || '-'}}</a></td>
-              <td v-if="placement.Urgency == 1" class="table-warning"><a :href="'/details/'+placement.VictimID">{{placement.Name}}</a></td>
-              <td v-if="placement.Urgency == 1" class="table-warning">{{placement.NeedDesc}}</td>
-              <td v-if="placement.Urgency == 1" class="table-warning"><a :href="'/shelter/'+placement.CurrentShelterID">{{placement.CurrentShelterName}}</a></td>
-              <td v-if="placement.Urgency == 1" class="table-warning"><a :href="'/shelter/'+placement.RecommendedShelterID">{{placement.RecommendedShelterName}}</a></td>
+                <th v-if="placement.Urgency == 1" class="table-warning" scope="row">{{index+1}}</th>
+                <td v-if="placement.Urgency == 1" class="table-warning"><a :href="'/details/'+placement.VictimID">{{placement.NIK || '-'}}</a></td>
+                <td v-if="placement.Urgency == 1" class="table-warning"><a :href="'/details/'+placement.VictimID">{{placement.Name}}</a></td>
+                <td v-if="placement.Urgency == 1" class="table-warning">{{placement.NeedDesc}}</td>
+                <td v-if="placement.Urgency == 1" class="table-warning"><a :href="'/shelter/'+placement.CurrentShelterID">{{placement.CurrentShelterName}}</a></td>
+                <td v-if="placement.Urgency == 1" class="table-warning"><a :href="'/shelter/'+placement.RecommendedShelterID">{{placement.RecommendedShelterName}}</a></td>
 
-              <th v-if="placement.Urgency == 2" class="table-danger" scope="row">{{index+1}}</th>
-              <td v-if="placement.Urgency == 2" class="table-danger"><a :href="'/details/'+placement.VictimID">{{placement.NIK || '-'}}</a></td>
-              <td v-if="placement.Urgency == 2" class="table-danger"><a :href="'/details/'+placement.VictimID">{{placement.Name}}</a></td>
-              <td v-if="placement.Urgency == 2" class="table-danger">{{placement.NeedDesc}}</td>
-              <td v-if="placement.Urgency == 2" class="table-danger"><a :href="'/shelter/'+placement.CurrentShelterID">{{placement.CurrentShelterName}}</a></td>
-              <td v-if="placement.Urgency == 2" class="table-danger"><a :href="'/shelter/'+placement.RecommendedShelterID">{{placement.RecommendedShelterName}}</a></td>
-            </tr>
-          </tbody>
-        </table>
+                <th v-if="placement.Urgency == 2" class="table-danger" scope="row">{{index+1}}</th>
+                <td v-if="placement.Urgency == 2" class="table-danger"><a :href="'/details/'+placement.VictimID">{{placement.NIK || '-'}}</a></td>
+                <td v-if="placement.Urgency == 2" class="table-danger"><a :href="'/details/'+placement.VictimID">{{placement.Name}}</a></td>
+                <td v-if="placement.Urgency == 2" class="table-danger">{{placement.NeedDesc}}</td>
+                <td v-if="placement.Urgency == 2" class="table-danger"><a :href="'/shelter/'+placement.CurrentShelterID">{{placement.CurrentShelterName}}</a></td>
+                <td v-if="placement.Urgency == 2" class="table-danger"><a :href="'/shelter/'+placement.RecommendedShelterID">{{placement.RecommendedShelterName}}</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
     </div>
 </div>
 </template>
@@ -47,6 +49,9 @@
     margin-bottom: 5%;
     margin-top: -3%;
     padding-top: 3%;
+}
+.overflow-container {
+    overflow: auto;
 }
 .recommendation-table-container{
     padding: 3%;

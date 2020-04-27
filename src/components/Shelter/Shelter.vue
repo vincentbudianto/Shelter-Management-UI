@@ -91,6 +91,29 @@
   font-weight: bold;
 }
 
+@media screen and (max-width: 800px) {
+  .floatingList {
+    position: absolute;
+    z-index: 1;
+    background-color: white;
+    margin-top: 1rem;
+    margin-left: 3.5rem;
+    border-radius: 0.5rem;
+    max-height: 30rem;
+    min-width: 6rem;
+    max-width: 13.2rem;
+    overflow: auto;
+    opacity: 0.9;
+    color: black;
+    font-weight: bold;
+  }
+
+  .mapContainer{
+    width: 100%;
+    height: 27rem;
+  }
+}
+
 .shelterItem {
   padding-bottom: 0.5rem;
   margin-top: 0.5rem;
