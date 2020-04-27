@@ -432,9 +432,15 @@ export default {
         var chartData = this.fillData("Age")
         
         var bgColor = []
-        for(let i = 0; i < chartData.data.datasets[0].data.length; i++){
-        bgColor.push('red')
-        }
+        chartData.data.datasets[0].data.forEach((element, index) => {
+          if (element === 0) {
+            chartData.data.datasets[0].data[index] = null
+            bgColor.push(null)
+          }
+          else {
+            bgColor.push("red")
+          }
+        });
         chartData.data.datasets[0].backgroundColor = bgColor
 
         chartData.options.maintainAspectRatio = false
@@ -477,9 +483,7 @@ export default {
         });
         return result
       }
-      else {
-        return []
-      }
+      return []
     },
 
     fillData(idx){
