@@ -6,10 +6,10 @@
         <h3 class="heading-font">Dashboard</h3>
       </div>
 
-      <v-row class="">
-        <v-col class="">
+      <v-row class="map-container">
+        <v-col class="pt-0">
           <!-- Map Section-->
-          <div class="overflow-scroll">
+          <div>
             <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true" data-projection="EPSG:4326" style="height:40rem">
               <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
 
@@ -49,7 +49,7 @@
         </v-col>
       </v-row>
 
-      <v-row class="d-flex flex-wrap p-3 overflow-hidden">
+      <v-row class="d-flex flex-wrap p-5">
         <v-col class="tile-box m-2 py-3 px-5 d-flex flex-row justify-content-between">
           <!-- Overview Section -->
             <v-col>
@@ -120,7 +120,7 @@
               </v-btn>
             </div>
         </v-col>
-        <v-col class="m-2 px-3 py-5 tile-box">
+        <v-col class="m-2 px-3 py-5 tile-box dashboard-container">
             <canvas id="victim-by-age"></canvas>
         </v-col>
       </v-row>
@@ -150,12 +150,10 @@
     background-color: #232322;
   }
   .dashboard-container {
-    /* position: relative; */
-    /* padding: 0rem 1rem 0rem; */
+    position: relative;
   }
   .map-container {
     padding: 0rem 3rem 0rem;
-    
   }
   @media screen and (max-width: 800px){
     .content {
@@ -165,12 +163,8 @@
       background-color: #232322;
     }
     .map-container {
-    padding: 0rem .25rem 0rem;
-    }
-    .dashboard-container {
-      /* position: relative; */
-      /* padding: 0rem .5rem 0rem; */
-    }
+    padding: 0rem .5rem 0rem;
+  }
   }
   .overlay-content{
     background-color:#FFFFFF;
