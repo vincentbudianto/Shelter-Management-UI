@@ -299,7 +299,10 @@ export default {
   methods: {
     btnClickLihatBencana (event) {
       //filter data to current disaster only
-      var selectedData = this.disasterData[this.selectedShelterDisasterName-1]
+      var selectedDisasterIndex = this.selectedShelterDisasterName
+      var selectedData = this.disasterData.filter(function(obj){
+        return obj.DisasterID === selectedDisasterIndex
+      })[0]
       this.selectedShelterDisasterScale = selectedData.Scale
       this.renderedCoordinates = [{
         "ID":selectedData.DisasterID, 
@@ -317,7 +320,10 @@ export default {
     },
 
     btnClickLihatPosko (event) {
-      var selectedData = this.shelterData[this.selectedShelterName-1]
+      var selectedShelterIndex = this.selectedShelterName
+      var selectedData = this.shelterData.filter(function(obj){
+        return obj.ShelterID === selectedShelterIndex
+      })[0]
       this.selectedShelterDisasterScale = ""
       this.renderedCoordinates = [{
         "ID":selectedData.ShelterID, 
@@ -417,13 +423,16 @@ export default {
       else if (chartId == 'victim-by-age') {
         var chartData = this.fillData("Age")
         
-        var bgColor = []
-        for(let i = 0; i < chartData.data.datasets[0].data.length; i++){
-        bgColor.push('red')
-        }
-        chartData.data.datasets[0].backgroundColor = bgColor
+        // var bgColor = []
+        // if (chartData.data.datasets[0].data.length > 0){
+        //   for(let i = 0; i < chartData.data.datasets[0].data.length; i++){
+        //   bgColor.push('red')
+        //   }
+        // }
+        // chartData.data.datasets[0].backgroundColor = bgColor
 
         chartData.options.maintainAspectRatio = false
+        console.log("ChartData", chartData)
       }
       else if (chartId == 'victim-by-condition') {
         var chartData = this.fillData("Condition")
@@ -514,7 +523,6 @@ export default {
 
       axios.get(process.env.API_ROUTE+`/check/admin?id=${userID}`)
       .then(response => {
-        console.log(response)
         if(response.data.data.isAdmin){
           this.userValidated = true
           this.getAllDashboardData()
