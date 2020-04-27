@@ -431,13 +431,11 @@ export default {
       else if (chartId == 'victim-by-age') {
         var chartData = this.fillData("Age")
         
-        // var bgColor = []
-        // if (chartData.data.datasets[0].data.length > 0){
-        //   for(let i = 0; i < chartData.data.datasets[0].data.length; i++){
-        //   bgColor.push('red')
-        //   }
-        // }
-        // chartData.data.datasets[0].backgroundColor = bgColor
+        var bgColor = []
+        for(let i = 0; i < chartData.data.datasets[0].data.length; i++){
+        bgColor.push('red')
+        }
+        chartData.data.datasets[0].backgroundColor = bgColor
 
         chartData.options.maintainAspectRatio = false
         console.log("ChartData", chartData)
@@ -454,30 +452,34 @@ export default {
     },
 
     countAgeData () {
-      var result = [0, 0, 0, 0, 0, 0]
-
-      this.renderedDashboardData.forEach(data => {
-        // bins: "<10", "10-19", "20-39", "40-59", "60-79", ">79"
-        if(data.VictimAge < 10){
-          result[0] += 1
+      if (this.renderedDashboardData.length > 0){
+        var result = [0, 0, 0, 0, 0, 0]
+        this.renderedDashboardData.forEach(data => {
+          // bins: "<10", "10-19", "20-39", "40-59", "60-79", ">79"
+          if(data.VictimAge < 10){
+            result[0] += 1
+            }
+          else if(data.VictimAge >= 10 && data.VictimAge < 20){
+            result[1] += 1
+            }
+          else if(data.VictimAge >= 20 && data.VictimAge < 40){
+            result[2] += 1
+            }
+          else if(data.VictimAge >= 40 && data.VictimAge < 60){
+            result[3] += 1
+            }
+          else if(data.VictimAge >= 60 && data.VictimAge < 80){
+            result[4] += 1
+            }
+          else if(data.VictimAge > 79){
+            result[5] += 1
           }
-        else if(data.VictimAge >= 10 && data.VictimAge < 20){
-          result[1] += 1
-          }
-        else if(data.VictimAge >= 20 && data.VictimAge < 40){
-          result[2] += 1
-          }
-        else if(data.VictimAge >= 40 && data.VictimAge < 60){
-          result[3] += 1
-          }
-        else if(data.VictimAge >= 60 && data.VictimAge < 80){
-          result[4] += 1
-          }
-        else if(data.VictimAge > 79){
-          result[5] += 1
-        }
-      });
-      return result
+        });
+        return result
+      }
+      else {
+        return []
+      }
     },
 
     fillData(idx){
