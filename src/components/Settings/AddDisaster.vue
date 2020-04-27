@@ -4,6 +4,7 @@
       <div class="modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalDescription">
         <header class="modal-header" id="modalTitle">
           <slot name="header">
+            <h4>Masukan Data Bencana</h4>
             <button type="button" class="btn-close" @click="close" aria-label="Close modal">
               x
             </button>
@@ -12,23 +13,21 @@
         <section class="modal-body" id="modalDescription">
           <slot name="body">
             <div>
-              <h4>Masukan Data Bencana</h4>
-            </div>
-            <div>
               <v-form ref="form">
                 <v-text-field
                   v-model="inputNamaBencana"
                   label="Nama Bencana"
                 ></v-text-field>
               </v-form>
+              <span class="error-message" id="nama_error"></span><br>
             </div>
             <div>
-              <v-form ref="form">
-                <v-text-field
-                  v-model="inputSkalaBencana"
-                  label="Skala Bencana"
-                ></v-text-field>
-              </v-form>
+              <v-select 
+              label="Skala Bencana"
+              :items="scaleItem"
+              v-model="inputSkalaBencana">
+              </v-select>
+              <span class="error-message" id="skala_error"></span><br>
             </div>
             <div>
               <div class="h5 mb-0">Masukkan Koordinat Bencana</div>
@@ -36,10 +35,11 @@
               <div class="h6 mb-0 mt-2">Koordinat Terpilih</div>
               <div><small>Lat: {{center[1].toFixed(2)}}, Long: {{center[0].toFixed(2)}}</small></div>
               <vl-map ref="map" :load-tiles-while-animating="true" :load-tiles-while-interacting="true" data-projection="EPSG:4326" style="height: 300px; max-width: 400px">
-                <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
+                <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation" ></vl-view>
                 <vl-layer-tile>
                   <vl-source-osm></vl-source-osm>
                 </vl-layer-tile>
+                <vl-interaction-select>
                   <vl-feature>
                     <vl-geom-point
                       :coordinates="center"
@@ -50,12 +50,13 @@
                       </vl-style-circle>
                     </vl-style-box>
                   </vl-feature>
+                </vl-interaction-select>
               </vl-map>
             </div>
-            <div>
+            <v-row>
                 <v-btn v-on:click="submitAddDisasterClick">Tambahkan</v-btn>
                 <v-btn v-on:click="close">Kembali</v-btn>
-            </div>
+            </v-row>
           </slot>
         </section>
       </div>
@@ -90,7 +91,7 @@
     padding: 10px;
     display: flex;
     border-bottom: 1px solid #232322;
-    justify-content: flex-end;
+    justify-content: space-between;
   }
 
   .modal-body {
@@ -108,6 +109,12 @@
     color: #B7141F;
     background: transparent;
   }
+
+  .error-message{
+    color: red!important;
+    font-size: 0.6em!important;
+  }
+
 </style>
 <script>
 import axios from 'axios';
@@ -121,21 +128,37 @@ export default {
           this.$emit('close');
         },
         submitAddDisasterClick(){
-          var addDisasterPostData = {
-            'name' : this.inputNamaBencana,
-            'scale' : this.inputSkalaBencana,
-            'latitude' : this.center[1],
-            'longitude' : this.center[0]
+          if (this.inputNamaBencana != "" && this.inputSkalaBencana != ""){
+            var addDisasterPostData = {
+              'name' : this.inputNamaBencana,
+              'scale' : this.inputSkalaBencana,
+              'latitude' : this.center[1].toFixed(6),
+              'longitude' : this.center[0].toFixed(6)
+            }
+            console.log(addDisasterPostData);
+            axios.post(process.env.API_ROUTE+'/disaster', addDisasterPostData)
+            .then(response => {
+              console.log(response)
+            })
+            .catch(e => {
+              this.errors.push(e)
+            })
+            this.$emit('close');
           }
-          console.log(addDisasterPostData);
-          axios.post(process.env.API_ROUTE+'/disaster', addDisasterPostData)
-          .then(response => {
-            console.log(response)
-          })
-          .catch(e => {
-            this.errors.push(e)
-          })
-          this.$emit('close');
+          else{
+            if (this.inputNamaBencana == "") {
+              document.getElementById("nama_error").innerHTML = "Tidak boleh kosong";
+            }
+            else{
+              document.getElementById("nama_error").innerHTML = "";
+            }
+            if (this.inputSkalaBencana == "") {
+              document.getElementById("skala_error").innerHTML = "Tidak boleh kosong";
+            }
+            else{
+              document.getElementById("skala_error").innerHTML = "";
+            }
+          }
         },
         checkRefreshMap() {
           this.$refs.map.refresh();
@@ -145,6 +168,7 @@ export default {
       var data = {
         inputNamaBencana: "",
         inputSkalaBencana: "",
+        scaleItem: ['Small', 'Medium', 'Large'],
         center: [106.0, -6.0],
         zoom: 6,
         rotation: 0,
