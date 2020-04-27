@@ -22,12 +22,11 @@
               <span class="error-message" id="nama_error"></span><br>
             </div>
             <div>
-              <v-form ref="form">
-                <v-text-field
-                  v-model="inputSkalaBencana"
-                  label="Skala Bencana"
-                ></v-text-field>
-              </v-form>
+              <v-select 
+              label="Skala Bencana"
+              :items="scaleItem"
+              v-model="inputSkalaBencana">
+              </v-select>
               <span class="error-message" id="skala_error"></span><br>
             </div>
             <div>
@@ -54,7 +53,7 @@
                 </vl-interaction-select>
               </vl-map>
             </div>
-            <v-row style="justify-content: flex-end">
+            <v-row>
                 <v-btn v-on:click="submitAddDisasterClick">Tambahkan</v-btn>
                 <v-btn v-on:click="close">Kembali</v-btn>
             </v-row>
@@ -169,6 +168,7 @@ export default {
       var data = {
         inputNamaBencana: "",
         inputSkalaBencana: "",
+        scaleItem: ['Small', 'Medium', 'Large'],
         center: [106.0, -6.0],
         zoom: 6,
         rotation: 0,
