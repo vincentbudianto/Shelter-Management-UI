@@ -19,6 +19,7 @@
                   label="Nama Bencana"
                 ></v-text-field>
               </v-form>
+              <span class="error-message" id="nama_error"></span><br>
             </div>
             <div>
               <v-form ref="form">
@@ -27,6 +28,7 @@
                   label="Skala Bencana"
                 ></v-text-field>
               </v-form>
+              <span class="error-message" id="skala_error"></span><br>
             </div>
             <div>
               <div class="h5 mb-0">Masukkan Koordinat Bencana</div>
@@ -107,6 +109,12 @@
     color: #B7141F;
     background: transparent;
   }
+
+  .error-message{
+    color: red!important;
+    font-size: 0.6em!important;
+  }
+
 </style>
 <script>
 import axios from 'axios';
@@ -120,21 +128,37 @@ export default {
           this.$emit('close');
         },
         submitAddDisasterClick(){
-          var addDisasterPostData = {
-            'name' : this.inputNamaBencana,
-            'scale' : this.inputSkalaBencana,
-            'latitude' : this.center[1].toFixed(6),
-            'longitude' : this.center[0].toFixed(6)
+          if (this.inputNamaBencana != "" && this.inputSkalaBencana != ""){
+            var addDisasterPostData = {
+              'name' : this.inputNamaBencana,
+              'scale' : this.inputSkalaBencana,
+              'latitude' : this.center[1].toFixed(6),
+              'longitude' : this.center[0].toFixed(6)
+            }
+            console.log(addDisasterPostData);
+            axios.post(process.env.API_ROUTE+'/disaster', addDisasterPostData)
+            .then(response => {
+              console.log(response)
+            })
+            .catch(e => {
+              this.errors.push(e)
+            })
+            this.$emit('close');
           }
-          console.log(addDisasterPostData);
-          axios.post(process.env.API_ROUTE+'/disaster', addDisasterPostData)
-          .then(response => {
-            console.log(response)
-          })
-          .catch(e => {
-            this.errors.push(e)
-          })
-          this.$emit('close');
+          else{
+            if (this.inputNamaBencana == "") {
+              document.getElementById("nama_error").innerHTML = "Tidak boleh kosong";
+            }
+            else{
+              document.getElementById("nama_error").innerHTML = "";
+            }
+            if (this.inputSkalaBencana == "") {
+              document.getElementById("skala_error").innerHTML = "Tidak boleh kosong";
+            }
+            else{
+              document.getElementById("skala_error").innerHTML = "";
+            }
+          }
         },
         checkRefreshMap() {
           this.$refs.map.refresh();

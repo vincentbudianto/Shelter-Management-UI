@@ -20,18 +20,21 @@
                   item-text="Name" 
                   item-value="DisasterID"
                   v-model="inputDisasterID"/>
+                <span class="error-message" id="bencana_error"></span><br>
                 <v-form ref="form">
                     <v-text-field
                     v-model="inputNamaShelter"
                     label="Nama Shelter"
                     ></v-text-field>
                 </v-form>
+                <span class="error-message" id="shelter_error"></span><br>
                 <v-form ref="form">
                     <v-text-field
                     v-model="inputNamaWilayah"
                     label="Wilayah"
                     ></v-text-field>
                 </v-form>
+                <span class="error-message" id="wilayah_error"></span><br>
               </v-col>
               <v-col>
                 <v-form ref="form">
@@ -40,18 +43,21 @@
                     label="Kota"
                     ></v-text-field>
                 </v-form>
+                <span class="error-message" id="kota_error"></span><br>
                 <v-form ref="form">
                     <v-text-field
                     v-model="inputNamaProvinsi"
                     label="Provinsi"
                     ></v-text-field>
                 </v-form>
+                <span class="error-message" id="provinsi_error"></span><br>
                 <v-form ref="form">
                     <v-text-field
-                    v-model="inputNamaCountry"
+                    v-model="inputNamaNegara"
                     label="Negara"
                     ></v-text-field>
                 </v-form>
+                <span class="error-message" id="negara_error"></span><br>
               </v-col>
             </v-row>
             <div>
@@ -77,7 +83,7 @@
                 </vl-interaction-select>
               </vl-map>
             </div>
-            <v-row style="justify-content: flex-end">
+            <v-row>
                 <v-btn v-on:click="submitAddShelterClick">Tambahkan</v-btn>
                 <v-btn v-on:click="close">Kembali</v-btn>
             </v-row>
@@ -132,6 +138,11 @@
     color: #B7141F;
     background: transparent;
   }
+
+  .error-message{
+    color: red!important;
+    font-size: 0.6em!important;
+}
 </style>
 <script>
 import axios from 'axios';
@@ -154,24 +165,76 @@ export default {
             this.$emit('close');
         },
         submitAddShelterClick(){
-          var addShelterPostData = {
-            'disasterID' : this.inputDisasterID,
-            'name' : this.inputNamaShelter,
-            'district': this.inputNamaWilayah,
-            'city' : this.inputNamaKota,
-            'province' : this.inputNamaProvinsi,
-            'country' : this.inputNamaCountry,
-            'longitude' : this.center[0].toFixed(6),
-            'latitude' : this.center[1].toFixed(6),
+          if (
+            this.inputDisasterID != "" &&
+            this.inputNamaShelter != "" &&
+            this.inputNamaWilayah != "" &&
+            this.inputNamaKota != "" &&
+            this.inputNamaProvinsi != "" &&
+            this.inputNamaNegara != ""
+          ){
+            var addShelterPostData = {
+              'disasterID' : this.inputDisasterID,
+              'name' : this.inputNamaShelter,
+              'district': this.inputNamaWilayah,
+              'city' : this.inputNamaKota,
+              'province' : this.inputNamaProvinsi,
+              'country' : this.inputNamaNegara,
+              'longitude' : this.center[0].toFixed(6),
+              'latitude' : this.center[1].toFixed(6),
+            }
+            axios.post(process.env.API_ROUTE+'/shelter', addShelterPostData)
+            .then(response => {
+              console.log(response)
+            })
+            .catch(e => {
+              this.errors.push(e)
+            })
+            this.$emit('close');
           }
-          axios.post(process.env.API_ROUTE+'/shelter', addShelterPostData)
-          .then(response => {
-            console.log(response)
-          })
-          .catch(e => {
-            this.errors.push(e)
-          })
-          this.$emit('close');
+          else{
+            if (this.inputDisasterID == "") {
+              document.getElementById("bencana_error").innerHTML = "Tidak boleh kosong";
+            }
+            else{
+              document.getElementById("bencana_error").innerHTML = "";
+            }
+
+            if (this.inputNamaShelter == "") {
+              document.getElementById("shelter_error").innerHTML = "Tidak boleh kosong";
+            }
+            else{
+              document.getElementById("shelter_error").innerHTML = "";
+            }
+
+            if (this.inputNamaWilayah == "") {
+              document.getElementById("wilayah_error").innerHTML = "Tidak boleh kosong";
+            }
+            else{
+              document.getElementById("wilayah_error").innerHTML = "";
+            }
+
+            if (this.inputNamaKota == "") {
+              document.getElementById("kota_error").innerHTML = "Tidak boleh kosong";
+            }
+            else{
+              document.getElementById("kota_error").innerHTML = "";
+            }
+
+            if (this.inputNamaProvinsi == "") {
+              document.getElementById("provinsi_error").innerHTML = "Tidak boleh kosong";
+            }
+            else{
+              document.getElementById("provinsi_error").innerHTML = "";
+            }
+
+            if (this.inputNamaNegara == "") {
+              document.getElementById("negara_error").innerHTML = "Tidak boleh kosong";
+            }
+            else{
+              document.getElementById("negara_error").innerHTML = "";
+            }
+          }
         },
         checkRefreshMap() {
           this.$refs.map.refresh();
@@ -184,7 +247,7 @@ export default {
         inputNamaWilayah: "",
         inputNamaKota: "",
         inputNamaProvinsi: "",
-        inputNamaCountry: "",
+        inputNamaNegara: "",
         center: [106.0, -6.0],
         zoom: 6,
         rotation: 0,
