@@ -3,8 +3,10 @@
     <div>
       <nav class="navbar navbar-expand-lg navbar-light bg-dark">
         <div class="w-75">
-          <img src='/static/assets/RedCrossIcon.png' width=50px height=50px>
-          <router-link class="navbar-brand text-light" :to="links[0].to">{{ links[0].name }}</router-link>
+          <router-link class="navbar-brand text-light" :to="links[0].to">
+            <img class="mr-2" src='/static/assets/RedCrossIcon.png' width=50px height=50px>
+            {{ links[0].name }}
+          </router-link>
         </div>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -13,28 +15,28 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active" v-if="$cookies.get('Type') == 'Admin'">
-              <router-link class="nav-link text-light" :to="links[1].to">{{ links[1].name }}</router-link>
+              <router-link class="nav-link text-light" :to="links[1].to" data-toggle="collapse" data-target=".navbar-collapse.show">{{ links[1].name }}</router-link>
             </li>
             <li class="nav-item active" v-if="$cookies.get('Type') == 'Admin'">
-              <router-link class="nav-link text-light" :to="links[2].to">{{ links[2].name }}</router-link>
+              <router-link class="nav-link text-light" :to="links[2].to" data-toggle="collapse" data-target=".navbar-collapse.show">{{ links[2].name }}</router-link>
             </li>
             <li class="nav-item" v-if="$cookies.get('Type') == 'Admin' || $cookies.get('Type') == 'Staff'">
-              <router-link class="nav-link text-light" :to="links[3].to">{{ links[3].name }}</router-link>
+              <router-link class="nav-link text-light" :to="links[3].to" data-toggle="collapse" data-target=".navbar-collapse.show">{{ links[3].name }}</router-link>
             </li>
             <li class="nav-item" v-if="$cookies.get('Type') == 'Admin' || $cookies.get('Type') == 'Staff'">
-              <router-link class="nav-link text-light" :to="links[4].to">{{ links[4].name }}</router-link>
+              <router-link class="nav-link text-light" :to="links[4].to" data-toggle="collapse" data-target=".navbar-collapse.show">{{ links[4].name }}</router-link>
             </li>
             <li class="nav-item" v-if="$cookies.get('Type') == 'Admin' || $cookies.get('Type') == 'Staff'">
-              <router-link class="nav-link text-light" :to="links[5].to">{{ links[5].name }}</router-link>
+              <router-link class="nav-link text-light" :to="links[5].to" data-toggle="collapse" data-target=".navbar-collapse.show">{{ links[5].name }}</router-link>
             </li>
             <li class="nav-item" v-if="$cookies.get('Type') == 'Guest' || $cookies.get('Type') == null">
-              <router-link class="nav-link text-light" :to="links[6].to">{{ links[6].name }}</router-link>
+              <router-link class="nav-link text-light" :to="links[6].to" data-toggle="collapse" data-target=".navbar-collapse.show">{{ links[6].name }}</router-link>
             </li>
             <li class="nav-item" v-if="$cookies.get('Type') == 'Admin'">
-              <router-link class="nav-link text-light" :to="links[7].to">{{ links[7].name }}</router-link>
+              <router-link class="nav-link text-light" :to="links[7].to" data-toggle="collapse" data-target=".navbar-collapse.show">{{ links[7].name }}</router-link>
             </li>
             <li class="nav-item" v-if="$cookies.get('Type') == 'Admin' || $cookies.get('Type') == 'Staff'">
-              <router-link class="nav-link text-light" :to="links[8].to">{{ links[8].name }}</router-link>
+              <router-link class="nav-link text-light" :to="links[8].to" data-toggle="collapse" data-target=".navbar-collapse.show">{{ links[8].name }}</router-link>
             </li>
           </ul>
           <!-- <form class="form-inline my-2 my-lg-0">
@@ -124,6 +126,13 @@ export default {
   }),
 
   methods: {
+    onResize() {
+      if (window.innerWidth > 960) {
+        this.links[0].name = 'Disaster Management System'
+      } else {
+        this.links[0].name = ''
+      }
+    },
     fillInGuestCookie () {
       if (this.$cookies.get("AccountID") == null && this.$cookies.get("Type") == null){
         this.$cookies.set('AccountID', "null", -1);
@@ -239,6 +248,14 @@ export default {
   mounted () {
     this.fillInGuestCookie ()
     this.showNotification()
+    this.onResize()
+  },
+  created() {
+    window.addEventListener('resize', this.onResize)
+  },
+
+  beforeDestroy() {
+    window.removeEventListener('resize', this.onResize)
   },
 }
 </script>
