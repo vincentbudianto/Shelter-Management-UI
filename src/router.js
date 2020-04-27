@@ -17,7 +17,6 @@ import Placement from '@/components/Placement/Placement'
 import Settings from '@/components/Settings/Settings'
 import InputVictim from '@/components/InputVictim/InputVictim'
 import Register from '@/components/Register/Register'
-import AssignStaff from '@/components/AssignStaff/AssignStaff'
 
 // Fallback page
 // import PageNotFound from '@/components/PageNotFound'
@@ -94,11 +93,6 @@ export default new Router({
       path: '/register',
       name: 'Register',
       component: Register
-    },
-    {
-      path: '/assign-staff',
-      name: 'Assign Staff',
-      component: AssignStaff
     },
     {
       path: '*',

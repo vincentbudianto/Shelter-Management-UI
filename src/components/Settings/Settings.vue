@@ -17,6 +17,13 @@
         <v-divider/>
         <v-row>
                 <v-col>
+                    Assign Staff
+                </v-col>
+                    <v-btn @click="openAssignStaff">Open</v-btn>
+        </v-row>
+        <v-divider/>
+        <v-row>
+                <v-col>
                     Search Filter by NoKK
                 </v-col>
                 <v-switch v-model="filterState" inset/>
@@ -24,6 +31,7 @@
     </div>
     <add-disaster-modal v-show="addDisasterVisible" @close="closeAddDisaster"/>
     <add-shelter-modal v-show="addShelterVisible" @close="closeAddShelter"/>
+    <assign-staff-modal v-show="assignStaffVisible" @close="closeAssignStaff"/>
   </div>
 </template>
 
@@ -37,13 +45,15 @@
 
 <script>
     import addDisasterModal from './AddDisaster.vue';
-    import addShelterModal from './AddShelter.vue'
+    import addShelterModal from './AddShelter.vue';
+    import assignStaffModal from './AssignStaff.vue';
     import axios from 'axios';
     export default {
         name: 'settings',
         components: {
             addDisasterModal,
             addShelterModal,
+            assignStaffModal,
         },
         mounted : function(){
         axios.get(process.env.API_ROUTE+'/configs/filter')
@@ -59,6 +69,7 @@
             return {
                 addDisasterVisible : false,
                 addShelterVisible : false,
+                assignStaffVisible: false,
                 filterState: undefined,
             }
         },
@@ -88,6 +99,12 @@
             },
             closeAddShelter(){
                 this.addShelterVisible = false;
+            },
+            openAssignStaff(){
+                this.assignStaffVisible = true;
+            },
+            closeAssignStaff(){
+                this.assignStaffVisible = false;
             },
             validateUser(){
                 var aid = this.$cookies.get('AccountID');
