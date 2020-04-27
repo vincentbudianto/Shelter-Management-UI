@@ -171,7 +171,7 @@
     }
     .dashboard-container {
       position: relative;
-      height: 15rem;
+      height: 18rem;
       width: 15rem;
       background-color: rgb(250, 250, 250);
       border-radius: .5rem;
