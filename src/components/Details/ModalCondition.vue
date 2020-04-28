@@ -52,7 +52,6 @@
   .modal {
     background: #FFFFFF;
     box-shadow: 2px 2px 20px 1px;
-    width: 50%;
     overflow-x: auto;
     display: flex;
     flex-direction: column;
