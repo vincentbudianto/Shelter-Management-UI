@@ -63,11 +63,12 @@
   .modal {
     background: #FFFFFF;
     box-shadow: 2px 2px 20px 1px;
-    overflow-x: auto;
     display: flex;
     flex-direction: column;
     padding-bottom: 15px;
     margin: 5% 5% 5% 5%;
+    overflow: auto;
+    max-height: 90%;
   }
 
   .modal-header {
