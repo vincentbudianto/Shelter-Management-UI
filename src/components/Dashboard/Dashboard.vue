@@ -9,8 +9,8 @@
       <v-row class="map-container">
         <v-col class="pt-0">
           <!-- Map Section-->
-          <div>
-            <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true" data-projection="EPSG:4326" style="height:40rem">
+          <div class="mapContainer">
+            <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true" data-projection="EPSG:4326">
               <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
 
               <vl-layer-tile>
@@ -49,7 +49,7 @@
         </v-col>
       </v-row>
 
-      <v-row class="d-flex flex-wrap p-5">
+      <v-row class="d-flex flex-wrap p-1">
         <v-col class="tile-box m-2 py-3 px-5 d-flex flex-row justify-content-between">
           <!-- Overview Section -->
             <v-col>
@@ -182,7 +182,21 @@
     padding: 10px;
     width:auto;
     height: auto;
-}
+  }
+  .row{
+    margin-left: 0rem;
+    margin-right: 0rem;
+  }
+  .mapContainer{
+    width: 100%;
+    height: 600px;
+  }
+  @media screen and (max-width: 800px) {
+    .mapContainer{
+      width: 100%;
+      height: 27rem;
+    }
+  }
 </style>
 
 <script>
