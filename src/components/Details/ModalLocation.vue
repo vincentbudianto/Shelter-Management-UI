@@ -60,6 +60,7 @@
     display: flex;
     flex-direction: column;
     overflow: auto;
+    max-height: 90%;
   }
 
   .modal-header {

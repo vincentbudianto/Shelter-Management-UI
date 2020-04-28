@@ -68,6 +68,7 @@
     padding-bottom: 15px;
     margin: 5% 5% 5% 5%;
     overflow: auto;
+    max-height: 90%;
   }
 
   .modal-header {
