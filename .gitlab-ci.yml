@@ -2,10 +2,14 @@ image: node:latest
 
 #This command is run before all the jobs
 before_script:
+  - apt-get update -qy
+  - apt-get install -y ruby-dev
+  - gem install dpl
   - npm install
 
 stages:
   - test
+  - deploy
 
 # lint and test are two different jobs in the same stage.
 # This allows us to run these two in parallel and making build faster
@@ -17,3 +21,14 @@ lint:
     - shelter-management-linting
   script:
     - npm run pretest
+
+# Job 2:
+deployToHeroku:
+  type: deploy
+  stage: deploy
+  image: ruby:latest
+  only:
+    - master
+    - staging
+  script:
+    - dpl --provider=heroku --app=$HEROKU_APP --api-key=$HEROKU_API_KEY
