@@ -1,0 +1,19 @@
+image: node:latest
+
+#This command is run before all the jobs
+before_script:
+  - npm install
+
+stages:
+  - test
+
+# lint and test are two different jobs in the same stage.
+# This allows us to run these two in parallel and making build faster
+
+# Job 1:
+lint:
+  stage: test
+  tags:
+    - shelter-management-linting
+  script:
+    - npm run pretest

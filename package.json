@@ -8,7 +8,8 @@
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",
     "build": "node build/build.js",
-    "lint": "eslint --ext .js,.vue src"
+    "lint": "eslint --ext .js,.vue src",
+    "pretest": "eslint --ignore-path .gitignore ."
   },
   "dependencies": {
     "axios": "^0.19.2",
@@ -42,8 +43,9 @@
     "css-loader": "^0.28.7",
     "cssnano": "^3.10.0",
     "deepmerge": "^4.2.2",
-    "eslint": "^4.9.0",
+    "eslint": "^4.19.1",
     "eslint-config-standard": "^10.2.1",
+    "eslint-config-strongloop": "^2.1.0",
     "eslint-friendly-formatter": "^3.0.0",
     "eslint-loader": "^1.9.0",
     "eslint-plugin-html": "^3.2.2",
